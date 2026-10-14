@@ -37,7 +37,7 @@ const dirty = git('status --porcelain')
 console.log(`\n▶ ${name}  (commit ${commit}${dirty ? ', with uncommitted changes' : ''})\n`);
 
 // 1. Build
-const result = spawnSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit', shell: true });
+const result = spawnSync('npm run build', { cwd: root, stdio: 'inherit', shell: true });
 if (result.status !== 0) {
   console.error('\nBuild failed; build number not used.');
   process.exit(result.status ?? 1);
