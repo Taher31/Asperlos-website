@@ -1,0 +1,103 @@
+---
+// The signature element (docs/brand-guide.md, section 11): two origin lines converge on the destination line.
+import { localizePath, useTranslations, type Lang } from '../i18n';
+import { channelLink } from '../lib/contact';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { dict } = useTranslations(lang);
+const whatsapp = channelLink('whatsapp', dict.messenger.general);
+---
+<section class="hero">
+  <div class="wrap">
+    <h1 class="route" id="route">
+      <svg aria-hidden="true" focusable="false"></svg>
+      <span class="legs">
+        <span class="leg">{dict.hero.l1}</span>
+        <span class="leg">{dict.hero.l2}</span>
+        <span class="leg">{dict.hero.l3}</span>
+      </span>
+    </h1>
+    <div class="hero-foot">
+      <div>
+        <p class="lead">{dict.hero.lead}</p>
+        <div class="actions">
+          <a class="btn btn-primary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+          <a class="btn btn-secondary" href={whatsapp.href ?? localizePath(lang, '/contact/')}>{dict.cta.whatsapp}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const route = document.getElementById('route');
+  const svg = route?.querySelector('svg');
+
+  function draw(animate = false) {
+    if (!route || !svg) return;
+    const legs = [...route.querySelectorAll<HTMLElement>('.leg')];
+    const top = route.getBoundingClientRect().top;
+    const w = svg.getBoundingClientRect().width;
+    // Vertical centre of each leg's first line.
+    const [y1, y2, y3] = legs.map((leg) => {
+      const lh = parseFloat(getComputedStyle(leg).lineHeight);
+      return leg.getBoundingClientRect().top - top + lh / 2;
+    });
+    const nx = w - 28;
+    const a = `M${nx},${y1} C${w * 0.02},${y1} ${w * 0.02},${y3} ${nx},${y3}`;
+    const b = `M${nx},${y2} C${w * 0.45},${y2} ${w * 0.45},${y3} ${nx},${y3}`;
+    svg.innerHTML =
+      `<path class="line" d="${a}"/><path class="line b" d="${b}"/>` +
+      `<circle class="node" cx="${nx}" cy="${y1}" r="6"/><circle class="node" cx="${nx}" cy="${y2}" r="6"/>` +
+      `<circle class="node end" cx="${nx}" cy="${y3}" r="8"/>`;
+    if (animate) {
+      svg.querySelectorAll<SVGPathElement>('.line').forEach((p) => {
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = `${len}`;
+        p.style.strokeDashoffset = `${len}`;
+      });
+      route.classList.add('draw');
+    }
+  }
+
+  // Animate once when the fonts are in; afterwards keep the nodes aligned whenever the text reflows.
+  document.fonts.ready.then(() => {
+    draw(true);
+    const legs = route?.querySelector('.legs');
+    if (legs) new ResizeObserver(() => draw()).observe(legs);
+  });
+</script>
+
+<style>
+  .hero { padding-block: clamp(56px, 9vw, 112px) clamp(56px, 8vw, 96px); }
+  .route { display: grid; grid-template-columns: var(--route-w) 1fr; margin: 0; font-weight: 500; }
+  .route svg { grid-column: 1; grid-row: 1; width: 100%; height: 100%; overflow: visible; }
+  :global([dir='rtl']) .route svg { transform: scaleX(-1); }
+  .legs { grid-column: 2; grid-row: 1; display: block; }
+  .leg {
+    display: block; font-size: var(--fs-hero); line-height: var(--lh-hero);
+    letter-spacing: var(--track-tight); color: var(--navy); text-wrap: balance;
+  }
+  .leg + .leg { margin-top: 0.12em; }
+  .leg:last-child { color: var(--ink); font-weight: 600; }
+  .route :global(.line) { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; }
+  .route :global(.node) { fill: var(--paper); stroke: var(--navy); stroke-width: 3; }
+  .route :global(.node.end) { fill: var(--gold); }
+  @media (prefers-reduced-motion: no-preference) {
+    .route:global(.draw) :global(.line) { animation: draw 1.4s cubic-bezier(0.6, 0.05, 0.3, 1) forwards; }
+    .route:global(.draw) :global(.line.b) { animation-delay: 0.25s; }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .hero-foot { display: grid; grid-template-columns: var(--route-w) 1fr; margin-top: 40px; }
+  .hero-foot > div { grid-column: 2; }
+  .lead { font-size: var(--fs-lead); color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
+
+  /* Where the page margin allows, hang the route in the margin so the hero text aligns with the rest of the page. */
+  @media (min-width: 1300px) {
+    .route, .hero-foot { margin-inline-start: calc(-1 * var(--route-w)); }
+  }
+</style>

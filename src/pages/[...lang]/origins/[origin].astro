@@ -1,0 +1,55 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import ProductTable from '../../../components/ProductTable.astro';
+import { getOriginPages, getProducts, slugOf, type OriginPage } from '../../../lib/content';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../../i18n';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const { params, props } of langPaths()) {
+    for (const page of await getOriginPages(props.lang)) {
+      paths.push({ params: { ...params, origin: slugOf(page) }, props: { ...props, page } });
+    }
+  }
+  return paths;
+}
+
+const { lang, page } = Astro.props as { lang: Lang; page: OriginPage };
+const { dict, t, h } = useTranslations(lang);
+const { Content } = await render(page);
+const products = (await getProducts(lang)).filter((p) => p.data.origin === slugOf(page));
+---
+<BaseLayout lang={lang} title={page.data.title} description={page.data.summary}>
+  <PageHeader
+    lang={lang}
+    title={page.data.title}
+    intro={page.data.summary}
+    trail={[{ href: localizePath(lang, '/origins/'), label: dict.origins.title }]}
+  />
+  <section class="section">
+    <div class="wrap">
+      <dl class="facts">
+        <dt>{dict.origins.regions}</dt>
+        <dd set:html={h(page.data.regions)} />
+      </dl>
+      <div class="prose"><Content /></div>
+    </div>
+  </section>
+  <section class="section alt">
+    <div class="wrap">
+      <h2 class="h2">{t(dict.origins.productsFrom, { country: page.data.title })}</h2>
+      <ProductTable lang={lang} products={products} grouped={false} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .facts { display: grid; grid-template-columns: 220px 1fr; gap: 16px; margin: 0 0 32px; padding: 14px 0; border-block: 1px solid var(--rule); max-width: var(--measure); }
+  dt { color: var(--muted); }
+  dd { margin: 0; font-weight: 500; }
+  @media (max-width: 640px) {
+    .facts { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

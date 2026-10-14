@@ -1,0 +1,35 @@
+---
+// Dark band with the inquiry form and direct channels (home page and inquiry page).
+import InquiryForm from './InquiryForm.astro';
+import ContactChannels from './ContactChannels.astro';
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Heading level: h1 on the inquiry page, h2 elsewhere */
+  as?: 'h1' | 'h2';
+}
+const { lang, as: Heading = 'h2' } = Astro.props;
+const { dict, h } = useTranslations(lang);
+---
+<section class="section dark" id="inquiry">
+  <div class="wrap grid">
+    <div>
+      <Heading class="h2">{dict.inquiry.title}</Heading>
+      <p class="section-intro" set:html={h(dict.inquiry.lead)} />
+      <InquiryForm lang={lang} />
+    </div>
+    <div>
+      <h2 class="channels-title">{dict.contact.direct}</h2>
+      <ContactChannels lang={lang} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .channels-title { font-size: 1.125rem; font-weight: 600; margin: 0 0 16px; }
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

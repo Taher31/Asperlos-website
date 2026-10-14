@@ -1,0 +1,139 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../../components/PageHeader.astro';
+import StatusMark from '../../../../components/StatusMark.astro';
+import { getProducts, slugOf, type Product } from '../../../../lib/content';
+import { channelLink, messengersFor } from '../../../../lib/contact';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../../../i18n';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const { params, props } of langPaths()) {
+    for (const product of await getProducts(props.lang)) {
+      paths.push({
+        params: { ...params, category: product.data.category, slug: slugOf(product) },
+        props: { ...props, product },
+      });
+    }
+  }
+  return paths;
+}
+
+const { lang, product } = Astro.props as { lang: Lang; product: Product };
+const { dict, t, h } = useTranslations(lang);
+const { Content } = await render(product);
+const p = product.data;
+const slug = slugOf(product);
+const message = t(dict.messenger.product, { product: p.title });
+const messengers = messengersFor(lang).map((c) => ({ ...channelLink(c, message), label: dict.cta[c] }));
+const inquiryHref = `${localizePath(lang, '/inquiry/')}?product=${slug}`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.title,
+    description: p.summary,
+    category: dict.categories[p.category].name,
+    countryOfOrigin: { '@type': 'Country', name: dict.origins[p.origin] },
+  },
+];
+---
+<BaseLayout lang={lang} title={p.title} description={p.summary} schema={schema}>
+  <PageHeader
+    lang={lang}
+    title={p.title}
+    intro={p.summary}
+    trail={[
+      { href: localizePath(lang, '/products/'), label: dict.products.title },
+      { href: localizePath(lang, `/products/${p.category}/`), label: dict.categories[p.category].name },
+    ]}
+  />
+
+  <section class="section alt">
+    <div class="wrap layout">
+      <div class="main">
+        {p.image && <Image src={p.image} alt={p.imageAlt ?? p.title} widths={[480, 800, 1200]} sizes="(max-width: 960px) 100vw, 60vw" class="photo" />}
+
+        <dl class="facts">
+          <div>
+            <dt>{dict.products.origin}</dt>
+            <dd><a href={localizePath(lang, `/origins/${p.origin}/`)}>{dict.origins[p.origin]}</a></dd>
+          </div>
+          <div>
+            <dt>{dict.products.packaging}</dt>
+            <dd>{p.packaging?.length ? p.packaging.join(', ') : <span set:html={h(dict.products.packagingTbd)} />}</dd>
+          </div>
+          {p.moq && (
+            <div>
+              <dt>{dict.products.moq}</dt>
+              <dd>{p.moq}</dd>
+            </div>
+          )}
+          <div>
+            <dt>{dict.products.availability}</dt>
+            <dd><StatusMark lang={lang} status={p.availability} /></dd>
+          </div>
+          {p.certificates.length > 0 && (
+            <div>
+              <dt>{dict.products.certificates}</dt>
+              <dd>{p.certificates.map((c) => dict.certificates[c]).join(', ')}</dd>
+            </div>
+          )}
+        </dl>
+
+        <h2 class="specs-title">{dict.products.specs}</h2>
+        {p.specs?.length ? (
+          <table class="specs">
+            <thead>
+              <tr><th scope="col">{dict.products.specParameter}</th><th scope="col">{dict.products.specValue}</th></tr>
+            </thead>
+            <tbody>
+              {p.specs.map((s) => <tr><th scope="row">{s.label}</th><td>{s.value}</td></tr>)}
+            </tbody>
+          </table>
+        ) : (
+          <p set:html={h(dict.products.specsTbd)} />
+        )}
+        <p class="spec-note">{dict.products.specNote}</p>
+
+        <div class="prose body"><Content /></div>
+      </div>
+
+      <aside class="side">
+        <a class="btn btn-primary" href={inquiryHref}>{dict.cta.quoteProduct}</a>
+        {messengers.map((m) => (
+          <a class="btn btn-secondary" href={m.href ?? localizePath(lang, '/contact/')}>{m.label}</a>
+        ))}
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1fr 300px; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .photo { border-radius: 4px; margin-bottom: 32px; }
+  .facts { margin: 0; display: grid; border-top: 1px solid var(--rule); }
+  .facts div { display: grid; grid-template-columns: 220px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  dt { color: var(--muted); }
+  dd { margin: 0; font-weight: 500; }
+  dd a { color: var(--navy); text-underline-offset: 4px; }
+  .specs-title { font-size: var(--fs-h3); font-weight: 600; margin: 48px 0 16px; }
+  .specs { width: 100%; border-collapse: collapse; }
+  .specs th, .specs td { text-align: start; padding: 12px; border-bottom: 1px solid var(--rule); }
+  .specs thead th { font-size: var(--fs-sm); font-weight: 500; color: var(--muted); }
+  .specs tbody th { font-weight: 400; color: var(--muted); }
+  .specs td { font-weight: 500; }
+  .spec-note { font-size: var(--fs-sm); color: var(--muted); margin: 16px 0 0; }
+  .body { margin-top: 40px; }
+  .side { display: grid; gap: 12px; position: sticky; top: 24px; }
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    .side { position: static; grid-row: 1; }
+  }
+  @media (max-width: 640px) {
+    .facts div { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import InquirySection from '../../../components/InquirySection.astro';
+import { langPaths, useTranslations, type Lang } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const { dict } = useTranslations(lang);
+---
+<BaseLayout lang={lang} title={dict.inquiry.title} description={dict.meta.inquiryDescription}>
+  <InquirySection lang={lang} as="h1" />
+</BaseLayout>

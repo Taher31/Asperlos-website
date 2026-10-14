@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import { getOriginPages, slugOf } from '../../../lib/content';
+import { origins } from '../../../content.config';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const { dict } = useTranslations(lang);
+const pages = (await getOriginPages(lang)).sort(
+  (a, b) => origins.indexOf(slugOf(a) as (typeof origins)[number]) - origins.indexOf(slugOf(b) as (typeof origins)[number]),
+);
+---
+<BaseLayout lang={lang} title={dict.origins.title} description={dict.origins.intro}>
+  <PageHeader lang={lang} title={dict.origins.title} intro={dict.origins.intro} />
+  <section class="section alt">
+    <div class="wrap list">
+      {pages.map((o) => (
+        <a class="origin" href={localizePath(lang, `/origins/${slugOf(o)}/`)}>
+          <h2>{o.data.title}</h2>
+          <p>{o.data.summary}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+  .origin { display: block; text-decoration: none; color: inherit; border-top: 2px solid var(--navy); padding-top: 20px; }
+  .origin h2 { font-size: var(--fs-h3); font-weight: 600; margin: 0 0 8px; }
+  .origin p { margin: 0; color: var(--muted); }
+  .origin:hover h2 { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 6px; }
+  @media (max-width: 640px) {
+    .list { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>

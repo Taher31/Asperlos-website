@@ -1,0 +1,61 @@
+---
+// Suggests the visitor's browser language when it differs from the page (no automatic redirect; ADR-0001).
+import { languages, localizePath, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang, path } = Astro.props;
+const options = languages
+  .filter((l) => l !== lang)
+  .map((l) => ({ lang: l, href: localizePath(l, path), ...useTranslations(l).dict.langSuggest }));
+---
+<div class="lang-suggest" hidden data-current={lang}>
+  {options.map((o) => (
+    <p lang={o.lang} dir={o.lang === 'fa' ? 'rtl' : 'ltr'} data-for={o.lang} hidden>
+      <span>{o.text}</span>
+      <a href={o.href} data-lang-choice={o.lang}>{o.link}</a>
+      <button type="button" aria-label={o.close}>×</button>
+    </p>
+  ))}
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.lang-suggest');
+  if (bar) {
+    let stored: string | null = null;
+    try { stored = localStorage.getItem('lang-choice'); } catch {}
+    const current = bar.dataset.current;
+    const wanted = navigator.languages.map((l) => l.slice(0, 2).toLowerCase()).find((l) => ['en', 'fa', 'ru'].includes(l));
+    const row = wanted && wanted !== current && !stored ? bar.querySelector<HTMLElement>(`[data-for="${wanted}"]`) : null;
+    if (row) {
+      row.hidden = false;
+      bar.hidden = false;
+      row.querySelector('button')?.addEventListener('click', () => {
+        bar.hidden = true;
+        try { localStorage.setItem('lang-choice', current!); } catch {}
+      });
+      row.querySelector('a')?.addEventListener('click', () => {
+        try { localStorage.setItem('lang-choice', wanted!); } catch {}
+      });
+    }
+  }
+</script>
+
+<style>
+  .lang-suggest { background: var(--navy-deep); color: #fff; font-size: var(--fs-sm); }
+  .lang-suggest p {
+    margin: 0 auto; max-width: var(--wrap); padding: 8px var(--gutter);
+    display: flex; align-items: center; justify-content: center; gap: 8px 16px;
+  }
+  .lang-suggest span { min-width: 0; }
+  .lang-suggest a { white-space: nowrap; }
+  .lang-suggest p[hidden], .lang-suggest[hidden] { display: none; }
+  .lang-suggest p:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
+  .lang-suggest a { color: var(--gold); font-weight: 500; text-underline-offset: 3px; }
+  .lang-suggest button {
+    background: none; border: 0; color: var(--on-dark-muted); font-size: 1.25rem; line-height: 1;
+    cursor: pointer; padding: 4px 8px; --focus: var(--gold);
+  }
+</style>

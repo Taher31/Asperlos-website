@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getOriginPages, slugOf } from '../../lib/content';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const { dict, h } = useTranslations(lang);
+const origins = await getOriginPages(lang);
+const facts = [
+  [dict.about.registeredName, dict.about.registeredNameValue],
+  [dict.about.founded, dict.about.foundedValue],
+  [dict.about.licences, dict.about.licencesValue],
+  [dict.contact.address, dict.contact.addressValue],
+];
+---
+<BaseLayout lang={lang} title={dict.about.title} description={dict.meta.aboutDescription}>
+  <PageHeader lang={lang} title={dict.about.title} intro={dict.hero.lead} />
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h2">{dict.about.factsTitle}</h2>
+      <dl class="facts">
+        {facts.map(([label, value]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd set:html={h(value)} />
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <h2 class="h2">{dict.about.importTitle}</h2>
+      <ul class="origins">
+        {origins.map((o) => (
+          <li>
+            <a href={localizePath(lang, `/origins/${slugOf(o)}/`)}>{o.data.title}</a>
+            <span>{o.data.summary}</span>
+          </li>
+        ))}
+      </ul>
+      <p><a class="text-link" href={localizePath(lang, '/products/')}>{dict.cta.allProducts}</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .facts { margin: 24px 0 0; display: grid; border-top: 1px solid var(--rule); max-width: 760px; }
+  .facts div { display: grid; grid-template-columns: 220px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  dt { color: var(--muted); }
+  dd { margin: 0; font-weight: 500; }
+  .origins { list-style: none; margin: 24px 0 32px; padding: 0; display: grid; gap: 16px; }
+  .origins li { display: grid; gap: 2px; }
+  .origins a { font-size: 1.125rem; font-weight: 600; color: var(--navy); text-underline-offset: 4px; }
+  .origins span { color: var(--muted); }
+  @media (max-width: 640px) {
+    .facts div { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

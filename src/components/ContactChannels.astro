@@ -1,0 +1,43 @@
+---
+import { channelLink, channelsFor } from '../lib/contact';
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** smaller variant for the footer */
+  compact?: boolean;
+}
+const { lang, compact = false } = Astro.props;
+const { dict, h } = useTranslations(lang);
+const items = channelsFor(lang).map((c) => ({ ...channelLink(c), label: dict.cta[c] }));
+---
+<ul class:list={['channels', { compact }]}>
+  {items.map((item) => (
+    <li>
+      {item.href ? (
+        <a href={item.href} rel={item.href.startsWith('http') ? 'noopener' : undefined} target={item.href.startsWith('http') ? '_blank' : undefined}>
+          <span class="label">{item.label}</span>
+          <span class="value" dir="ltr">{item.display}</span>
+        </a>
+      ) : (
+        <span class="row">
+          <span class="label">{item.label}</span>
+          <span class="value" set:html={h(dict.contact.valueTbd)} />
+        </span>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .channels { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line, var(--rule)); }
+  li { border-bottom: 1px solid var(--line, var(--rule)); }
+  a, .row { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; text-decoration: none; color: inherit; }
+  .value { color: var(--value, var(--muted)); unicode-bidi: isolate; }
+  a:hover .label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+  .compact { border-top: 0; }
+  .compact li { border-bottom: 0; }
+  .compact a, .compact .row { padding: 4px 0; }
+  .compact .label { color: var(--ink); }
+  :global(.dark) .channels { --line: rgba(255, 255, 255, 0.16); --value: var(--on-dark-muted); }
+</style>

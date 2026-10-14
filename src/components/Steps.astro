@@ -1,0 +1,39 @@
+---
+// How we work: a real sequence, so the steps are numbered.
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { dict, h } = useTranslations(lang);
+---
+<ol class="steps">
+  {dict.how.steps.map((step) => (
+    <li>
+      <h3>{step.t}</h3>
+      <p set:html={h(step.d)} />
+    </li>
+  ))}
+</ol>
+
+<style>
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; counter-reset: step; }
+  li { counter-increment: step; border-top: 2px solid var(--rule); padding-top: 20px; position: relative; }
+  li::before {
+    content: counter(step); position: absolute; top: -17px; inset-inline-start: 0;
+    width: 32px; height: 32px; border-radius: 50%; background: var(--paper); border: 2px solid var(--navy);
+    color: var(--navy); font-weight: 600; font-size: var(--fs-sm); display: grid; place-items: center;
+  }
+  :global(:root:lang(fa)) li::before { content: counter(step, persian); }
+  h3 { font-size: 1.125rem; font-weight: 600; margin: 20px 0 6px; }
+  p { margin: 0; color: var(--muted); }
+
+  @media (max-width: 960px) {
+    .steps { grid-template-columns: 1fr; gap: 0; }
+    li { border-top: 0; border-inline-start: 2px solid var(--rule); padding: 0 0 28px; padding-inline-start: 32px; }
+    li:last-child { padding-bottom: 0; }
+    li::before { top: 0; inset-inline-start: -17px; }
+    h3 { margin-top: 4px; }
+  }
+</style>

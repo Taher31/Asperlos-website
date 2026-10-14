@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.jpg';
+import { formatYear, languages, langMeta, localizePath, useTranslations, type Lang } from '../i18n';
+import ContactChannels from './ContactChannels.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { dict, t, h } = useTranslations(lang);
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="id">
+      <a class="brand" href={localizePath(lang, '/')} aria-label="Asperlos">
+        <Image src={logo} alt="" height={40} densities={[1, 2]} />
+        <span>Asperlos</span>
+      </a>
+      <p set:html={h(dict.footer.registeredName)} />
+      <p set:html={h(dict.contact.addressValue)} />
+    </div>
+    <nav aria-label={dict.nav.main}>
+      <a href={localizePath(lang, '/products/')}>{dict.nav.products}</a>
+      <a href={localizePath(lang, '/origins/')}>{dict.nav.origins}</a>
+      <a href={localizePath(lang, '/how-we-work/')}>{dict.nav.how}</a>
+      <a href={localizePath(lang, '/about/')}>{dict.nav.about}</a>
+      <a href={localizePath(lang, '/contact/')}>{dict.nav.contact}</a>
+      <a href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+    </nav>
+    <div class="channels">
+      <ContactChannels lang={lang} compact />
+    </div>
+    <div class="bottom">
+      <p>{t(dict.footer.copyright, { year: formatYear(lang) })}</p>
+      <p class="langs">
+        {languages.map((l) => <a href={localizePath(l, '/')} lang={l}>{langMeta[l].name}</a>)}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--mist); padding-block: 48px 32px; font-size: var(--fs-sm); color: var(--muted); }
+  .wrap { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 32px 48px; align-items: start; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); margin-bottom: 12px; }
+  .brand img { height: 40px; width: auto; mix-blend-mode: multiply; }
+  .brand span { font: 600 1.25rem/1 "IBM Plex Sans", sans-serif; }
+  p { margin: 4px 0; }
+  nav { display: grid; gap: 8px; }
+  nav a { color: var(--ink); text-decoration: none; }
+  nav a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 20px; }
+  .langs { display: flex; gap: 14px; }
+  .langs a { color: var(--muted); text-decoration: none; }
+  .langs a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
+  .langs a:lang(en), .langs a:lang(ru) { font-family: "IBM Plex Sans", sans-serif; }
+  @media (max-width: 860px) {
+    .wrap { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .site-footer { padding-bottom: 96px; } /* room for the quick-contact bar */
+  }
+</style>

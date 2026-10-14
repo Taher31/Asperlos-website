@@ -1,0 +1,31 @@
+---
+// One 404 page for all languages (served by .htaccess ErrorDocument); each language gets its own block.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { languages, langMeta, localizePath, useTranslations } from '../i18n';
+---
+<BaseLayout lang="en" title="Page not found" description="This page does not exist or has moved." noindex>
+  <section class="section">
+    <div class="wrap list">
+      {languages.map((l) => {
+        const { dict } = useTranslations(l);
+        return (
+          <div lang={l} dir={langMeta[l].dir} class="block">
+            <h1 class="title">{dict.notFound.title}</h1>
+            <p>{dict.notFound.text}</p>
+            <a class="text-link" href={localizePath(l, '/')}>{dict.notFound.home}</a>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .title { font-size: var(--fs-h3); font-weight: 600; margin: 0 0 8px; }
+  .block p { color: var(--muted); margin: 0 0 16px; }
+  .block:lang(fa) { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif; line-height: 1.85; }
+  @media (max-width: 860px) {
+    .list { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>

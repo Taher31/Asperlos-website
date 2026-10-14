@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RouteHero from '../../components/RouteHero.astro';
+import ProductTable from '../../components/ProductTable.astro';
+import Steps from '../../components/Steps.astro';
+import InquirySection from '../../components/InquirySection.astro';
+import { getProducts } from '../../lib/content';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const { dict } = useTranslations(lang);
+const products = (await getProducts(lang)).filter((p) => p.data.featured);
+---
+<BaseLayout lang={lang} title={dict.meta.homeTitle} description={dict.meta.homeDescription}>
+  <RouteHero lang={lang} />
+
+  <section class="section alt" id="products">
+    <div class="wrap">
+      <h2 class="h2">{dict.products.title}</h2>
+      <p class="section-intro">{dict.products.intro}</p>
+      <ProductTable lang={lang} products={products} />
+      <p><a class="text-link more" href={localizePath(lang, '/products/')}>{dict.cta.allProducts}</a></p>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="wrap">
+      <h2 class="h2">{dict.how.title}</h2>
+      <p class="section-intro">{dict.how.intro}</p>
+      <Steps lang={lang} />
+    </div>
+  </section>
+
+  <InquirySection lang={lang} />
+</BaseLayout>
+
+<style>
+  .more { display: inline-block; margin-top: 12px; }
+</style>

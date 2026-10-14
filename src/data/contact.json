@@ -1,0 +1,16 @@
+{
+  "_comment": "Single source for all contact details. null = not confirmed yet (shown as a placeholder). Phone and WhatsApp in international format, e.g. +98 21 1234 5678. Telegram, Bale and Eitaa as usernames without @. LinkedIn as the full company page URL.",
+  "phone": null,
+  "whatsapp": null,
+  "telegram": null,
+  "bale": null,
+  "eitaa": null,
+  "email": null,
+  "linkedin": null,
+  "mapUrl": null,
+  "order": {
+    "en": ["email", "whatsapp", "telegram", "phone", "linkedin"],
+    "ru": ["email", "whatsapp", "telegram", "phone", "linkedin"],
+    "fa": ["phone", "whatsapp", "bale", "eitaa", "telegram", "email", "linkedin"]
+  }
+}

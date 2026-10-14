@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.jpg';
+import { languages, langMeta, localizePath, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** current path without language prefix */
+  path: string;
+}
+const { lang, path } = Astro.props;
+const { dict } = useTranslations(lang);
+const nav = [
+  { href: '/products/', label: dict.nav.products },
+  { href: '/how-we-work/', label: dict.nav.how },
+  { href: '/about/', label: dict.nav.about },
+  { href: '/contact/', label: dict.nav.contact },
+];
+const isCurrent = (href: string) => path === href || path.startsWith(href);
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href={localizePath(lang, '/')} aria-label={`Asperlos, ${dict.nav.home}`}>
+      <Image src={logo} alt="" height={48} densities={[1, 2]} loading="eager" />
+      <span>Asperlos</span>
+    </a>
+
+    <nav class="nav" aria-label={dict.nav.main}>
+      {nav.map((item) => (
+        <a href={localizePath(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="lang" role="group" aria-label={dict.nav.language}>
+      {languages.map((l) => (
+        <a href={localizePath(l, path)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>
+          {langMeta[l].name}
+        </a>
+      ))}
+    </div>
+
+    <details class="menu">
+      <summary>{dict.nav.menu}</summary>
+      <nav aria-label={dict.nav.main}>
+        {nav.map((item) => (
+          <a href={localizePath(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+        ))}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  // Remember an explicit language choice so the language suggestion bar stays away.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-choice]').forEach((a) =>
+    a.addEventListener('click', () => {
+      try { localStorage.setItem('lang-choice', a.dataset.langChoice!); } catch {}
+    }),
+  );
+</script>
+
+<style>
+  .site-header { border-bottom: 1px solid var(--rule); background: var(--paper); position: relative; }
+  .wrap { display: flex; align-items: center; gap: 32px; min-height: 76px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); flex-shrink: 0; }
+  .brand img { height: 48px; width: auto; mix-blend-mode: multiply; }
+  .brand span { font: 600 1.375rem/1 "IBM Plex Sans", sans-serif; letter-spacing: -0.01em; }
+  .nav { display: flex; gap: 28px; margin-inline-end: auto; }
+  .nav a, .menu a { text-decoration: none; color: var(--ink); padding-block: 6px; border-bottom: 2px solid transparent; }
+  .nav a:hover, .nav a[aria-current="page"] { border-bottom-color: var(--gold); }
+  .lang { display: flex; gap: 14px; font-size: var(--fs-sm); }
+  .lang a { text-decoration: none; padding: 4px 0; color: var(--muted); }
+  .lang a:hover { color: var(--navy); }
+  .lang a[aria-current="true"] { color: var(--navy); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
+  .lang a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
+  .lang a:lang(en), .lang a:lang(ru) { font-family: "IBM Plex Sans", sans-serif; }
+
+  .menu { display: none; }
+  .menu summary {
+    list-style: none; cursor: pointer; font-size: var(--fs-sm); font-weight: 500; color: var(--navy);
+    padding: 8px 12px; border: 1.5px solid var(--rule); border-radius: 4px;
+  }
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu nav {
+    position: absolute; inset-inline: 0; top: 100%; z-index: 10;
+    display: grid; background: var(--paper); border-bottom: 1px solid var(--rule);
+    padding: 8px var(--gutter) 16px;
+  }
+  .menu nav a { padding-block: 12px; border-bottom: 1px solid var(--rule); }
+
+  @media (max-width: 960px) {
+    .nav { display: none; }
+    .wrap { gap: 16px; }
+    .lang { margin-inline-start: auto; }
+    .menu { display: block; }
+  }
+  @media (max-width: 640px) {
+    .brand span { display: none; }
+    .lang { gap: 10px; }
+  }
+</style>

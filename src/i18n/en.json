@@ -1,0 +1,159 @@
+{
+  "meta": {
+    "siteName": "Asperlos",
+    "homeTitle": "Asperlos: pulses from Russia and dried fruit from Uzbekistan, delivered to Iran",
+    "homeDescription": "Asperlos imports pulses and dried fruit directly from suppliers in Russia and Uzbekistan for wholesalers, packers and food producers in Iran.",
+    "productsDescription": "Pulses from Russia and dried fruit from Uzbekistan, supplied in trade packaging to buyers in Iran.",
+    "howDescription": "How Asperlos works with buyers: from your inquiry to delivery at your warehouse.",
+    "aboutDescription": "Asperlos is a trading company in Iran importing pulses from Russia and dried fruit from Uzbekistan.",
+    "contactDescription": "Contact Asperlos by email, WhatsApp, Telegram or phone.",
+    "inquiryDescription": "Request a quote for pulses and dried fruit from Asperlos."
+  },
+  "nav": {
+    "main": "Main",
+    "products": "Products",
+    "origins": "Origins",
+    "how": "How we work",
+    "about": "About",
+    "contact": "Contact",
+    "language": "Language",
+    "menu": "Menu",
+    "home": "Home"
+  },
+  "langSuggest": {
+    "text": "This page is also available in English.",
+    "link": "English version",
+    "close": "Close"
+  },
+  "cta": {
+    "quote": "Request a quote",
+    "quoteProduct": "Request a quote for this product",
+    "quoteRow": "Request a quote",
+    "send": "Send request",
+    "whatsapp": "Message us on WhatsApp",
+    "telegram": "Message us on Telegram",
+    "bale": "Message us on Bale",
+    "eitaa": "Message us on Eitaa",
+    "phone": "Call us",
+    "email": "Email us",
+    "linkedin": "LinkedIn",
+    "downloadSpec": "Download specification",
+    "allProducts": "View all products"
+  },
+  "hero": {
+    "l1": "Pulses from Russia.",
+    "l2": "Dried fruit from Uzbekistan.",
+    "l3": "Delivered to Iran.",
+    "lead": "Asperlos imports pulses and dried fruit directly from suppliers in Russia and Uzbekistan for wholesalers, packers and food producers in Iran."
+  },
+  "products": {
+    "title": "Products",
+    "intro": "Grouped by country of origin.",
+    "colProduct": "Product",
+    "colPackaging": "Packaging",
+    "colAvailability": "Availability",
+    "specNote": "Final specifications for each shipment are agreed in the contract.",
+    "origin": "Origin",
+    "packaging": "Packaging",
+    "moq": "Minimum order quantity (MOQ)",
+    "availability": "Availability",
+    "certificates": "Documents with each shipment",
+    "specs": "Specification",
+    "specParameter": "Parameter",
+    "specValue": "Value",
+    "packagingTbd": "[TBD: packaging]",
+    "specsTbd": "[TBD: specification from the supply contract]"
+  },
+  "categories": {
+    "pulses": { "name": "Pulses", "group": "Pulses from Russia" },
+    "dried-fruit": { "name": "Dried fruit", "group": "Dried fruit from Uzbekistan" }
+  },
+  "origins": {
+    "title": "Origins",
+    "intro": "Where our products come from.",
+    "russia": "Russia",
+    "uzbekistan": "Uzbekistan",
+    "productsFrom": "Products from {country}",
+    "regions": "Supply regions"
+  },
+  "status": {
+    "in-stock": "Available",
+    "seasonal": "Seasonal",
+    "on-request": "On request"
+  },
+  "certificates": {
+    "phytosanitary": "Phytosanitary certificate",
+    "origin": "Certificate of origin",
+    "quality": "Quality certificate"
+  },
+  "how": {
+    "title": "How we work",
+    "intro": "From your inquiry to delivery at your warehouse.",
+    "steps": [
+      { "t": "Inquiry", "d": "Send us the product, quantity and delivery date." },
+      { "t": "Contract", "d": "We agree price, specification and delivery terms in a contract." },
+      { "t": "Shipment", "d": "Each shipment travels with a phytosanitary certificate and certificate of origin." },
+      { "t": "Customs clearance", "d": "We handle customs clearance in Iran." },
+      { "t": "Delivery", "d": "Delivery to your warehouse in [TBD: city]." }
+    ],
+    "termsTitle": "Delivery terms",
+    "terms": "[TBD: delivery terms and transport routes]"
+  },
+  "inquiry": {
+    "title": "Request a quote",
+    "lead": "We reply within [TBD: 1 business day].",
+    "name": "Name",
+    "company": "Company",
+    "phone": "Phone or WhatsApp",
+    "product": "Product",
+    "choose": "Choose a product",
+    "other": "Other",
+    "qty": "Quantity (tonnes)",
+    "msg": "Message",
+    "optional": "optional",
+    "sending": "Sending…",
+    "error": "Sending failed. Please try again or message us on WhatsApp.",
+    "required": "This field is required.",
+    "sentTitle": "Request received",
+    "sentText": "Thank you. Your request has been received. We will contact you within [TBD: 1 business day].",
+    "backHome": "Back to the home page"
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "Choose the channel that suits you. For a quote, the inquiry form is the fastest way.",
+    "direct": "Or contact us directly",
+    "address": "Office",
+    "addressValue": "[TBD: office address]",
+    "hours": "Working hours",
+    "hoursValue": "[TBD: working days and hours, Tehran time]",
+    "map": "Open in Google Maps",
+    "valueTbd": "[TBD]"
+  },
+  "about": {
+    "title": "About Asperlos",
+    "factsTitle": "Company details",
+    "registeredName": "Registered name",
+    "registeredNameValue": "[TBD: registered company name]",
+    "founded": "Founded",
+    "foundedValue": "[TBD: year]",
+    "licences": "Licences",
+    "licencesValue": "[TBD: trade licences]",
+    "importTitle": "What we import"
+  },
+  "footer": {
+    "registeredName": "[TBD: registered company name]",
+    "copyright": "© {year} Asperlos"
+  },
+  "quickbar": {
+    "whatsapp": "WhatsApp"
+  },
+  "messenger": {
+    "general": "Hello, I would like a quote.",
+    "product": "Hello, I would like a quote for {product}."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "This page does not exist or has moved.",
+    "home": "Go to the home page"
+  }
+}

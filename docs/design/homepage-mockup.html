@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asperlos homepage mockup</title>
+<!-- Mockup only: production self-hosts these fonts (ADR-0001, zero external requests). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Brand tokens, sampled from the logo */
+    --navy: #08275A;        /* logo navy: primary buttons, headings */
+    --navy-deep: #051A3D;   /* dark sections */
+    --gold: #C3922D;        /* logo gold: route lines, accents on dark */
+    --gold-ink: #8A6416;    /* gold for text/focus on light backgrounds (5.4:1) */
+    --paper: #FFFFFF;
+    --mist: #F2F4F8;        /* alternate section background */
+    --rule: #D6DCE6;
+    --ink: #13213A;         /* body text */
+    --muted: #4D5B73;       /* secondary text (6.9:1) */
+    --on-dark-muted: #B9C3D3;
+
+    --font: "IBM Plex Sans", system-ui, sans-serif;
+    --measure: 64ch;
+    --wrap: 1200px;
+    --gutter: clamp(16px, 4vw, 40px);
+    --focus: var(--gold-ink);
+
+    /* Type scale (px): 14 / 16 / 20 / 24 / 36 / hero */
+    --fs-sm: 0.875rem;
+    --fs-body: 1rem;
+    --fs-lead: 1.25rem;
+    --fs-h3: 1.5rem;
+    --fs-h2: clamp(1.75rem, 3vw, 2.25rem);
+    --fs-hero: clamp(2.5rem, 6.2vw, 4.75rem);
+    --lh-body: 1.6;
+    --lh-hero: 1.08;
+    --track-hero: -0.02em;
+  }
+  :root:lang(fa) {
+    --font: "IBM Plex Sans Arabic", "IBM Plex Sans", system-ui, sans-serif;
+    --lh-body: 1.85;
+    --lh-hero: 1.4;
+    --track-hero: 0; /* letter-spacing breaks Persian joining */
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 var(--fs-body)/var(--lh-body) var(--font);
+    font-kerning: normal;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+  .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+  .tbd { color: var(--gold-ink); background: color-mix(in srgb, var(--gold) 12%, transparent); padding-inline: 0.2em; border-radius: 2px; }
+  .dark .tbd { color: var(--gold); background: color-mix(in srgb, var(--gold) 16%, transparent); }
+
+  /* Mockup notice */
+  .mock-note { background: var(--mist); color: var(--muted); font-size: var(--fs-sm); text-align: center; padding: 6px var(--gutter); border-bottom: 1px solid var(--rule); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px; padding: 0 22px;
+    font: 500 var(--fs-body)/1.2 var(--font);
+    text-decoration: none; border-radius: 4px; border: 1.5px solid transparent; cursor: pointer;
+  }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy-deep); }
+  .btn-secondary { border-color: var(--navy); color: var(--navy); background: transparent; }
+  .btn-secondary:hover { background: var(--mist); }
+  .btn-gold { background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover { background: #D4A440; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--rule); background: var(--paper); }
+  .site-header .wrap { display: flex; align-items: center; gap: 32px; min-height: 76px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); flex-shrink: 0; }
+  .brand img { height: 48px; width: auto; mix-blend-mode: multiply; }
+  .brand span { font: 600 1.375rem/1 "IBM Plex Sans", sans-serif; letter-spacing: -0.01em; }
+  .nav { display: flex; gap: 28px; margin-inline-end: auto; }
+  .nav a { text-decoration: none; color: var(--ink); padding-block: 6px; border-bottom: 2px solid transparent; }
+  .nav a:hover { border-bottom-color: var(--gold); }
+  .lang { display: flex; gap: 14px; font-size: var(--fs-sm); }
+  .lang button { font: inherit; background: none; border: 0; padding: 4px 0; color: var(--muted); cursor: pointer; }
+  .lang button[aria-current="true"] { color: var(--navy); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
+  .lang button:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
+
+  /* Hero */
+  .hero { padding-block: clamp(56px, 9vw, 112px) clamp(56px, 8vw, 96px); }
+  .route { display: grid; grid-template-columns: var(--route-w, 72px) 1fr; position: relative; margin: 0; }
+  .route svg { grid-column: 1; grid-row: 1; width: 100%; height: 100%; overflow: visible; }
+  :root[dir="rtl"] .route svg { transform: scaleX(-1); }
+  .legs { grid-column: 2; grid-row: 1; margin: 0; padding: 0; list-style: none; }
+  .legs li {
+    font-size: var(--fs-hero); line-height: var(--lh-hero); font-weight: 500;
+    letter-spacing: var(--track-hero); color: var(--navy);
+    text-wrap: balance;
+  }
+  .legs li + li { margin-top: 0.12em; }
+  .legs li:last-child { color: var(--ink); font-weight: 600; }
+  .route-line { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; }
+  .node { fill: var(--paper); stroke: var(--navy); stroke-width: 3; }
+  .node-end { fill: var(--gold); stroke: var(--navy); stroke-width: 3; }
+  @media (prefers-reduced-motion: no-preference) {
+    .route.draw .route-line { animation: draw 1.4s cubic-bezier(.6,.05,.3,1) forwards; }
+    .route.draw .route-line.b { animation-delay: .25s; }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .hero-foot { display: grid; grid-template-columns: var(--route-w, 72px) 1fr; margin-top: 40px; }
+  .hero-foot > div { grid-column: 2; }
+  /* Where the page margin allows, hang the route in the margin so the hero text aligns with every other section. */
+  @media (min-width: 1300px) {
+    .route, .hero-foot { margin-inline-start: calc(-1 * var(--route-w, 72px)); }
+  }
+  .lead { font-size: var(--fs-lead); color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* Sections */
+  section { padding-block: clamp(56px, 8vw, 96px); }
+  .alt { background: var(--mist); }
+  h2 { font-size: var(--fs-h2); line-height: 1.2; font-weight: 600; color: var(--navy); margin: 0 0 12px; letter-spacing: -0.01em; }
+  :root:lang(fa) h2 { letter-spacing: 0; line-height: 1.5; }
+  .section-intro { color: var(--muted); margin: 0 0 40px; max-width: var(--measure); }
+
+  /* Products table */
+  .products { width: 100%; border-collapse: collapse; }
+  .products th, .products td { text-align: start; padding: 16px 12px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .products thead th { font-size: var(--fs-sm); font-weight: 500; color: var(--muted); padding-block: 10px; }
+  .products .group th {
+    font-size: var(--fs-h3); font-weight: 600; color: var(--navy);
+    padding-top: 40px; border-bottom: 2px solid var(--navy);
+  }
+  .products tbody:first-of-type .group th { padding-top: 16px; }
+  .products td:first-child { font-weight: 500; color: var(--ink); }
+  .products td.pack { color: var(--muted); }
+  .products td.act { text-align: end; white-space: nowrap; }
+  .products td.act a { color: var(--navy); font-weight: 500; text-underline-offset: 4px; }
+  .status { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .status::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--navy); flex-shrink: 0; }
+  .status.in-stock::before { background: var(--navy); }
+  .status.seasonal::before { background: linear-gradient(90deg, var(--navy) 50%, transparent 50%); }
+  :root[dir="rtl"] .status.seasonal::before { background: linear-gradient(270deg, var(--navy) 50%, transparent 50%); }
+  .spec-note { font-size: var(--fs-sm); color: var(--muted); margin: 16px 0 0; }
+  .more { display: inline-block; margin-top: 28px; color: var(--navy); font-weight: 500; text-underline-offset: 4px; }
+
+  /* Steps (a real sequence, so numbered) */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; counter-reset: step; }
+  .steps li { counter-increment: step; border-top: 2px solid var(--rule); padding-top: 20px; position: relative; }
+  .steps li::before {
+    content: counter(step); position: absolute; top: -17px; inset-inline-start: 0;
+    width: 32px; height: 32px; border-radius: 50%; background: var(--paper); border: 2px solid var(--navy);
+    color: var(--navy); font-weight: 600; font-size: var(--fs-sm); display: grid; place-items: center;
+  }
+  :root:lang(fa) .steps li::before { content: counter(step, persian); }
+  .steps h3 { font-size: 1.125rem; font-weight: 600; color: var(--navy); margin: 20px 0 6px; }
+  .steps p { margin: 0; color: var(--muted); }
+
+  /* Inquiry */
+  .dark { background: var(--navy-deep); color: #fff; --focus: var(--gold); }
+  .dark h2 { color: #fff; }
+  .dark .section-intro { color: var(--on-dark-muted); }
+  .inquiry-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+  .field { display: grid; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: var(--fs-sm); font-weight: 500; }
+  .field label small { color: var(--on-dark-muted); font-weight: 400; }
+  .field input, .field select, .field textarea {
+    font: inherit; color: var(--ink); background: #fff; border: 1.5px solid transparent; border-radius: 4px;
+    min-height: 48px; padding: 10px 12px; width: 100%;
+  }
+  .field textarea { min-height: 96px; resize: vertical; }
+  .form .btn { grid-column: 1 / -1; justify-self: start; }
+  .channels h3 { font-size: 1.125rem; font-weight: 600; margin: 0 0 16px; }
+  .channels ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255,255,255,.16); }
+  .channels li { border-bottom: 1px solid rgba(255,255,255,.16); }
+  .channels a { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; text-decoration: none; }
+  .channels a span:last-child { color: var(--on-dark-muted); }
+  .channels a:hover span:first-child { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+
+  /* Footer */
+  .site-footer { background: var(--mist); padding-block: 48px; font-size: var(--fs-sm); color: var(--muted); }
+  .site-footer .wrap { display: flex; flex-wrap: wrap; gap: 24px 48px; align-items: start; justify-content: space-between; }
+  .site-footer .brand img { height: 40px; }
+  .site-footer p { margin: 4px 0; }
+
+  /* Mobile quick-contact bar */
+  .quickbar { display: none; }
+
+  @media (max-width: 960px) {
+    .nav { display: none; }
+    .site-header .wrap { justify-content: space-between; }
+    .steps { grid-template-columns: 1fr; gap: 0; }
+    .steps li { border-top: 0; border-inline-start: 2px solid var(--rule); padding: 0 0 28px; padding-inline-start: 32px; }
+    .steps li:last-child { padding-bottom: 0; }
+    .steps li::before { top: 0; inset-inline-start: -17px; }
+    .steps h3 { margin-top: 4px; }
+    .inquiry-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    :root { --route-w: 40px; }
+    .brand span { display: none; }
+    .lang { gap: 10px; }
+    .form { grid-template-columns: 1fr; }
+    .products thead { display: none; }
+    .products, .products tbody, .products tr, .products td, .products th { display: block; }
+    .products tr:not(.group) { padding: 14px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 4px; }
+    .products td { border: 0; padding: 0; }
+    .products td.act { text-align: start; margin-top: 6px; }
+    .products .group th { padding-inline: 0; }
+    .quickbar {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      position: sticky; bottom: 0; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+      background: var(--paper); border-top: 1px solid var(--rule);
+    }
+    .quickbar .btn { min-height: 44px; padding: 0 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mock-note" data-i18n="mock"></div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Asperlos">
+      <img src="assets/logo-source.jpg" alt="" width="47" height="48">
+      <span>Asperlos</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#products" data-i18n="nav.products"></a>
+      <a href="#how" data-i18n="nav.how"></a>
+      <a href="#about" data-i18n="nav.about"></a>
+      <a href="#contact" data-i18n="nav.contact"></a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" lang="en">English</button>
+      <button type="button" data-lang="fa" lang="fa">فارسی</button>
+      <button type="button" data-lang="ru" lang="ru">Русский</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1 class="route" id="route">
+        <svg aria-hidden="true" focusable="false"></svg>
+        <ul class="legs">
+          <li data-i18n="hero.l1"></li>
+          <li data-i18n="hero.l2"></li>
+          <li data-i18n="hero.l3"></li>
+        </ul>
+      </h1>
+      <div class="hero-foot">
+        <div>
+          <p class="lead" data-i18n="hero.lead"></p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#contact" data-i18n="cta.quote"></a>
+            <a class="btn btn-secondary" href="#contact" data-i18n="cta.whatsapp"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="products">
+    <div class="wrap">
+      <h2 data-i18n="products.title"></h2>
+      <p class="section-intro" data-i18n="products.intro"></p>
+      <table class="products">
+        <thead>
+          <tr>
+            <th scope="col" data-i18n="col.product"></th>
+            <th scope="col" data-i18n="col.packaging"></th>
+            <th scope="col" data-i18n="col.availability"></th>
+            <th scope="col"><span class="visually-hidden"></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group"><th colspan="4" scope="rowgroup" data-i18n="group.russia"></th></tr>
+          <tr><td data-i18n="p.red-lentils"></td><td class="pack" data-i18n="pack.bags"></td><td class="avail"><span class="status in-stock" data-i18n="st.in-stock"></span></td><td class="act"><a href="#contact" data-i18n="row.quote"></a></td></tr>
+          <tr><td data-i18n="p.green-lentils"></td><td class="pack" data-i18n="pack.bags"></td><td class="avail"><span class="status in-stock" data-i18n="st.in-stock"></span></td><td class="act"><a href="#contact" data-i18n="row.quote"></a></td></tr>
+          <tr><td data-i18n="p.chickpeas"></td><td class="pack" data-i18n="pack.bags"></td><td class="avail"><span class="status seasonal" data-i18n="st.seasonal"></span></td><td class="act"><a href="#contact" data-i18n="row.quote"></a></td></tr>
+          <tr><td data-i18n="p.dried-peas"></td><td class="pack" data-i18n="pack.bags"></td><td class="avail"><span class="status on-request" data-i18n="st.on-request"></span></td><td class="act"><a href="#contact" data-i18n="row.quote"></a></td></tr>
+        </tbody>
+        <tbody>
+          <tr class="group"><th colspan="4" scope="rowgroup" data-i18n="group.uzbekistan"></th></tr>
+          <tr><td data-i18n="p.seedless-raisins"></td><td class="pack" data-i18n="pack.tbd"></td><td class="avail"><span class="status seasonal" data-i18n="st.seasonal"></span></td><td class="act"><a href="#contact" data-i18n="row.quote"></a></td></tr>
+          <tr><td data-i18n="p.seeded-raisins"></td><td class="pack" data-i18n="pack.tbd"></td><td class="avail"><span class="status on-request" data-i18n="st.on-request"></span></td><td class="act"><a href="#contact" data-i18n="row.quote"></a></td></tr>
+        </tbody>
+      </table>
+      <p class="spec-note" data-i18n="spec.note"></p>
+      <a class="more" href="#products" data-i18n="products.all"></a>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2 data-i18n="how.title"></h2>
+      <p class="section-intro" data-i18n="how.intro"></p>
+      <ol class="steps">
+        <li><h3 data-i18n="s1.t"></h3><p data-i18n="s1.d"></p></li>
+        <li><h3 data-i18n="s2.t"></h3><p data-i18n="s2.d"></p></li>
+        <li><h3 data-i18n="s3.t"></h3><p data-i18n="s3.d"></p></li>
+        <li><h3 data-i18n="s4.t"></h3><p data-i18n="s4.d"></p></li>
+        <li><h3 data-i18n="s5.t"></h3><p data-i18n="s5.d"></p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="dark" id="contact">
+    <div class="wrap inquiry-grid">
+      <div>
+        <h2 data-i18n="inq.title"></h2>
+        <p class="section-intro" data-i18n="inq.lead"></p>
+        <form class="form" onsubmit="return false">
+          <div class="field"><label for="f-name" data-i18n="f.name"></label><input id="f-name" autocomplete="name" required></div>
+          <div class="field"><label for="f-phone" data-i18n="f.phone"></label><input id="f-phone" type="tel" autocomplete="tel" required></div>
+          <div class="field"><label for="f-product" data-i18n="f.product"></label>
+            <select id="f-product" required>
+              <option value="" data-i18n="f.choose"></option>
+              <option data-i18n="p.red-lentils"></option>
+              <option data-i18n="p.green-lentils"></option>
+              <option data-i18n="p.chickpeas"></option>
+              <option data-i18n="p.dried-peas"></option>
+              <option data-i18n="p.seedless-raisins"></option>
+              <option data-i18n="p.seeded-raisins"></option>
+            </select>
+          </div>
+          <div class="field"><label for="f-qty"><span data-i18n="f.qty"></span> <small data-i18n="f.optional"></small></label><input id="f-qty" inputmode="decimal"></div>
+          <div class="field full"><label for="f-msg"><span data-i18n="f.msg"></span> <small data-i18n="f.optional"></small></label><textarea id="f-msg"></textarea></div>
+          <button class="btn btn-gold" type="submit" data-i18n="f.send"></button>
+        </form>
+      </div>
+      <div class="channels">
+        <h3 data-i18n="ch.title"></h3>
+        <ul id="channel-list"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" id="about">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#top" aria-label="Asperlos"><img src="assets/logo-source.jpg" alt="" width="39" height="40"><span>Asperlos</span></a>
+    </div>
+    <div>
+      <p data-i18n="ft.name"></p>
+      <p data-i18n="ft.address"></p>
+    </div>
+    <div><p data-i18n="ft.copy"></p></div>
+  </div>
+</footer>
+
+<div class="quickbar">
+  <a class="btn btn-primary" href="#contact" data-i18n="cta.quote"></a>
+  <a class="btn btn-secondary" href="#contact" data-i18n="qb.whatsapp"></a>
+</div>
+
+<script>
+/* All strings follow docs/brand-guide.md (sections 9–10). [..] marks content still to be confirmed. */
+const T = {
+  en: {
+    mock: "Design mockup with sample content. Not for publishing.",
+    "nav.products": "Products", "nav.how": "How we work", "nav.about": "About", "nav.contact": "Contact",
+    "hero.l1": "Pulses from Russia.", "hero.l2": "Dried fruit from Uzbekistan.", "hero.l3": "Delivered to Iran.",
+    "hero.lead": "Asperlos imports pulses and dried fruit directly from suppliers in Russia and Uzbekistan for wholesalers, packers and food producers in Iran.",
+    "cta.quote": "Request a quote", "cta.whatsapp": "Message us on WhatsApp", "qb.whatsapp": "WhatsApp",
+    "products.title": "Products", "products.intro": "Grouped by country of origin.",
+    "col.product": "Product", "col.packaging": "Packaging", "col.availability": "Availability",
+    "group.russia": "Pulses from Russia", "group.uzbekistan": "Dried fruit from Uzbekistan",
+    "p.red-lentils": "Red lentils", "p.green-lentils": "Green lentils", "p.chickpeas": "Chickpeas", "p.dried-peas": "Dried peas",
+    "p.seedless-raisins": "Seedless raisins (Kishmish)", "p.seeded-raisins": "Seeded raisins",
+    "pack.bags": "25 kg PP bag, big bag (FIBC)", "pack.tbd": "[to be confirmed]",
+    "st.in-stock": "Available", "st.seasonal": "Seasonal", "st.on-request": "On request",
+    "row.quote": "Request a quote",
+    "spec.note": "Final specifications for each shipment are agreed in the contract.",
+    "products.all": "View all products",
+    "how.title": "How we work", "how.intro": "From your inquiry to delivery at your warehouse.",
+    "s1.t": "Inquiry", "s1.d": "Send us the product, quantity and delivery date.",
+    "s2.t": "Contract", "s2.d": "We agree price, specification and delivery terms in a contract.",
+    "s3.t": "Shipment", "s3.d": "Each shipment travels with a phytosanitary certificate and certificate of origin.",
+    "s4.t": "Customs clearance", "s4.d": "We handle customs clearance in Iran.",
+    "s5.t": "Delivery", "s5.d": "Delivery to your warehouse in [city].",
+    "inq.title": "Request a quote", "inq.lead": "We reply within [1 business day].",
+    "f.name": "Name", "f.phone": "Phone or WhatsApp", "f.product": "Product", "f.choose": "Choose a product",
+    "f.qty": "Quantity (tonnes)", "f.msg": "Message", "f.optional": "optional", "f.send": "Send request",
+    "ch.title": "Or contact us directly",
+    "ft.name": "[Registered company name]", "ft.address": "[Office address]", "ft.copy": "© 2026 Asperlos",
+    channels: [["Email us","[email]"],["Message us on WhatsApp","[number]"],["Message us on Telegram","[username]"],["Call us","[number]"],["LinkedIn","[company page]"]]
+  },
+  fa: {
+    mock: "نمونه طراحی با محتوای آزمایشی؛ برای انتشار نیست.",
+    "nav.products": "محصولات", "nav.how": "فرایند همکاری", "nav.about": "درباره ما", "nav.contact": "تماس با ما",
+    "hero.l1": "حبوبات از روسیه،", "hero.l2": "خشکبار از ازبکستان؛", "hero.l3": "مستقیم تا انبار شما.",
+    "hero.lead": "آسپرلوس حبوبات و خشکبار را مستقیم از تأمین‌کنندگان روسیه و ازبکستان وارد می‌کند و به عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی در ایران می‌رساند.",
+    "cta.quote": "استعلام قیمت", "cta.whatsapp": "پیام در واتساپ", "qb.whatsapp": "واتساپ",
+    "products.title": "محصولات", "products.intro": "بر اساس کشور مبدأ.",
+    "col.product": "محصول", "col.packaging": "بسته‌بندی", "col.availability": "وضعیت",
+    "group.russia": "حبوبات از روسیه", "group.uzbekistan": "خشکبار از ازبکستان",
+    "p.red-lentils": "عدس قرمز", "p.green-lentils": "عدس سبز", "p.chickpeas": "نخود", "p.dried-peas": "نخود فرنگی خشک",
+    "p.seedless-raisins": "کشمش", "p.seeded-raisins": "مویز",
+    "pack.bags": "کیسه پلی‌پروپیلن ۲۵ کیلوگرمی، جامبوبگ", "pack.tbd": "[تکمیل شود]",
+    "st.in-stock": "موجود", "st.seasonal": "فصلی", "st.on-request": "سفارشی",
+    "row.quote": "استعلام این محصول",
+    "spec.note": "مشخصات نهایی هر محموله در قرارداد تعیین می‌شود.",
+    "products.all": "مشاهده همه محصولات",
+    "how.title": "فرایند همکاری", "how.intro": "از استعلام شما تا تحویل در انبار.",
+    "s1.t": "استعلام", "s1.d": "محصول، مقدار و زمان تحویل را برای ما بفرستید.",
+    "s2.t": "قرارداد", "s2.d": "قیمت، مشخصات و شرایط تحویل در قرارداد تعیین می‌شود.",
+    "s3.t": "حمل", "s3.d": "هر محموله همراه با گواهی بهداشت گیاهی و گواهی مبدأ حمل می‌شود.",
+    "s4.t": "ترخیص گمرکی", "s4.d": "ترخیص گمرکی در ایران با ماست.",
+    "s5.t": "تحویل", "s5.d": "تحویل در انبار شما در [شهر].",
+    "inq.title": "استعلام قیمت", "inq.lead": "تا [۱ روز کاری] پاسخ می‌دهیم.",
+    "f.name": "نام", "f.phone": "موبایل یا واتساپ", "f.product": "محصول", "f.choose": "انتخاب محصول",
+    "f.qty": "مقدار (تن)", "f.msg": "توضیحات", "f.optional": "اختیاری", "f.send": "ارسال درخواست",
+    "ch.title": "یا مستقیم تماس بگیرید",
+    "ft.name": "[نام ثبتی شرکت]", "ft.address": "[آدرس دفتر]", "ft.copy": "© ۱۴۰۵ آسپرلوس",
+    channels: [["تماس تلفنی","[شماره]"],["پیام در واتساپ","[شماره]"],["پیام در بله","[شناسه]"],["پیام در ایتا","[شناسه]"],["پیام در تلگرام","[شناسه]"],["ارسال ایمیل","[ایمیل]"],["لینکدین","[صفحه شرکت]"]]
+  },
+  ru: {
+    mock: "Макет дизайна с тестовым содержимым. Не для публикации.",
+    "nav.products": "Продукция", "nav.how": "Как мы работаем", "nav.about": "О компании", "nav.contact": "Контакты",
+    "hero.l1": "Бобовые из России.", "hero.l2": "Сухофрукты из Узбекистана.", "hero.l3": "Поставки в Иран.",
+    "hero.lead": "«Асперлос» импортирует бобовые и сухофрукты напрямую от поставщиков из России и Узбекистана для оптовых покупателей, фасовочных и пищевых предприятий Ирана.",
+    "cta.quote": "Запросить предложение", "cta.whatsapp": "Написать в WhatsApp", "qb.whatsapp": "WhatsApp",
+    "products.title": "Продукция", "products.intro": "По странам происхождения.",
+    "col.product": "Товар", "col.packaging": "Упаковка", "col.availability": "Наличие",
+    "group.russia": "Бобовые из России", "group.uzbekistan": "Сухофрукты из Узбекистана",
+    "p.red-lentils": "Чечевица красная", "p.green-lentils": "Чечевица зеленая", "p.chickpeas": "Нут", "p.dried-peas": "Горох",
+    "p.seedless-raisins": "Изюм кишмиш", "p.seeded-raisins": "Изюм с косточкой",
+    "pack.bags": "Мешок ПП 25 кг, биг-бэг", "pack.tbd": "[уточняется]",
+    "st.in-stock": "В наличии", "st.seasonal": "Сезонная поставка", "st.on-request": "Под заказ",
+    "row.quote": "Запросить предложение",
+    "spec.note": "Окончательные характеристики каждой партии согласовываются в контракте.",
+    "products.all": "Все товары",
+    "how.title": "Как мы работаем", "how.intro": "От запроса до доставки на ваш склад.",
+    "s1.t": "Запрос", "s1.d": "Сообщите нам товар, объем и срок поставки.",
+    "s2.t": "Контракт", "s2.d": "Цена, характеристики и условия поставки фиксируются в контракте.",
+    "s3.t": "Отгрузка", "s3.d": "Каждая партия отгружается с фитосанитарным сертификатом и сертификатом происхождения.",
+    "s4.t": "Таможенное оформление", "s4.d": "Таможенное оформление в Иране мы берем на себя.",
+    "s5.t": "Доставка", "s5.d": "Доставка до вашего склада в [город].",
+    "inq.title": "Запросить предложение", "inq.lead": "Мы отвечаем в течение [1 рабочего дня].",
+    "f.name": "Имя", "f.phone": "Телефон или WhatsApp", "f.product": "Товар", "f.choose": "Выберите товар",
+    "f.qty": "Объем (т)", "f.msg": "Комментарий", "f.optional": "необязательно", "f.send": "Отправить запрос",
+    "ch.title": "Или свяжитесь с нами напрямую",
+    "ft.name": "[Полное наименование компании]", "ft.address": "[Адрес офиса]", "ft.copy": "© 2026 Asperlos",
+    channels: [["Написать на e-mail","[e-mail]"],["Написать в WhatsApp","[номер]"],["Написать в Telegram","[имя пользователя]"],["Позвонить","[номер]"],["LinkedIn","[страница компании]"]]
+  }
+};
+
+const tbd = s => s.replace(/\[(.+?)\]/g, '<span class="tbd">[$1]</span>');
+
+function setLang(lang) {
+  const t = T[lang], root = document.documentElement;
+  root.lang = lang;
+  root.dir = lang === "fa" ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const v = t[el.dataset.i18n];
+    if (v === undefined) return;
+    if (el.tagName === "OPTION") el.textContent = v; else el.innerHTML = tbd(v);
+  });
+  document.getElementById("channel-list").innerHTML = t.channels
+    .map(([label, value]) => `<li><a href="#contact"><span>${label}</span><span>${tbd(value)}</span></a></li>`).join("");
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-current", b.dataset.lang === lang));
+}
+
+/* The route: two origin lines converge on the destination line, echoing the logo's swooshes. */
+function drawRoute(animate) {
+  const route = document.getElementById("route");
+  const svg = route.querySelector("svg");
+  const legs = [...route.querySelectorAll(".legs li")];
+  const top = route.getBoundingClientRect().top;
+  const w = svg.getBoundingClientRect().width;
+  const ys = legs.map(li => {
+    const lh = parseFloat(getComputedStyle(li).lineHeight);
+    return li.getBoundingClientRect().top - top + lh / 2;
+  });
+  const nx = w - 28, [y1, y2, y3] = ys;
+  const a = `M${nx},${y1} C${w * 0.02},${y1} ${w * 0.02},${y3} ${nx},${y3}`;
+  const b = `M${nx},${y2} C${w * 0.45},${y2} ${w * 0.45},${y3} ${nx},${y3}`;
+  svg.innerHTML =
+    `<path class="route-line a" d="${a}"/><path class="route-line b" d="${b}"/>` +
+    `<circle class="node" cx="${nx}" cy="${y1}" r="6"/><circle class="node" cx="${nx}" cy="${y2}" r="6"/>` +
+    `<circle class="node-end" cx="${nx}" cy="${y3}" r="8"/>`;
+  if (animate === true) {
+    svg.querySelectorAll(".route-line").forEach(p => {
+      const len = p.getTotalLength();
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+    });
+    route.classList.add("draw");
+  }
+}
+
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+setLang(new URLSearchParams(location.search).get("lang") || "en");
+// Animate once after the hero font is in; afterwards keep the nodes aligned whenever the text reflows.
+Promise.all([document.fonts.load('500 48px "IBM Plex Sans"'), document.fonts.load('500 48px "IBM Plex Sans Arabic"')])
+  .then(() => document.fonts.ready)
+  .then(() => {
+    drawRoute(true);
+    new ResizeObserver(() => drawRoute()).observe(document.querySelector(".legs"));
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+---
+// Posts to public/api/inquiry.php. Works without JavaScript (the server redirects to the confirmation page);
+// with JavaScript it shows errors inline instead of leaving the page.
+import { getProducts, slugOf } from '../lib/content';
+import { localizePath, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Pre-selected product slug */
+  product?: string;
+  idPrefix?: string;
+}
+const { lang, product, idPrefix = 'inq' } = Astro.props;
+const { dict } = useTranslations(lang);
+const products = await getProducts(lang);
+const id = (name: string) => `${idPrefix}-${name}`;
+---
+<form
+  class="form"
+  method="post"
+  action="/api/inquiry.php"
+  data-inquiry
+  data-sent-url={localizePath(lang, '/inquiry/sent/')}
+  data-msg-sending={dict.inquiry.sending}
+  data-msg-error={dict.inquiry.error}
+>
+  <input type="hidden" name="lang" value={lang}>
+  <!-- Spam trap: people never see or fill this field. -->
+  <div class="trap" aria-hidden="true">
+    <label for={id('website')}>Website</label>
+    <input id={id('website')} name="website" tabindex="-1" autocomplete="off">
+  </div>
+
+  <div class="field">
+    <label for={id('name')}>{dict.inquiry.name}</label>
+    <input id={id('name')} name="name" autocomplete="name" required maxlength="100">
+  </div>
+  <div class="field">
+    <label for={id('company')}>{dict.inquiry.company} <small>{dict.inquiry.optional}</small></label>
+    <input id={id('company')} name="company" autocomplete="organization" maxlength="150">
+  </div>
+  <div class="field">
+    <label for={id('phone')}>{dict.inquiry.phone}</label>
+    <input id={id('phone')} name="phone" type="tel" autocomplete="tel" required maxlength="40" dir="ltr">
+  </div>
+  <div class="field">
+    <label for={id('product')}>{dict.inquiry.product}</label>
+    <select id={id('product')} name="product" required data-product-select>
+      <option value="">{dict.inquiry.choose}</option>
+      {products.map((p) => <option value={slugOf(p)} selected={slugOf(p) === product}>{p.data.title}</option>)}
+      <option value="other">{dict.inquiry.other}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for={id('qty')}>{dict.inquiry.qty} <small>{dict.inquiry.optional}</small></label>
+    <input id={id('qty')} name="quantity" inputmode="decimal" maxlength="20" dir="ltr">
+  </div>
+  <div class="field full">
+    <label for={id('msg')}>{dict.inquiry.msg} <small>{dict.inquiry.optional}</small></label>
+    <textarea id={id('msg')} name="message" maxlength="2000"></textarea>
+  </div>
+  <div class="submit">
+    <button class="btn btn-gold" type="submit">{dict.cta.send}</button>
+    <p class="status" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[data-inquiry]').forEach((form) => {
+    // Pre-select the product from ?product=<slug> (links from product pages).
+    const wanted = new URLSearchParams(location.search).get('product');
+    const select = form.querySelector<HTMLSelectElement>('[data-product-select]');
+    if (wanted && select && [...select.options].some((o) => o.value === wanted)) select.value = wanted;
+
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    // Without JavaScript the server redirects back with ?error=… when sending failed.
+    if (new URLSearchParams(location.search).has('error')) {
+      status.textContent = form.dataset.msgError!;
+      status.classList.add('error');
+    }
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      status.textContent = form.dataset.msgSending!;
+      status.classList.remove('error');
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(String(res.status));
+        location.href = form.dataset.sentUrl!;
+      } catch {
+        status.textContent = form.dataset.msgError!;
+        status.classList.add('error');
+        button.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+  .field { display: grid; gap: 6px; align-content: start; }
+  .field.full, .submit { grid-column: 1 / -1; }
+  label { font-size: var(--fs-sm); font-weight: 500; }
+  label small { color: var(--label-muted, var(--muted)); font-weight: 400; }
+  input, select, textarea {
+    font: inherit; color: var(--ink); background: #fff; border: 1.5px solid var(--field-border, var(--rule)); border-radius: 4px;
+    min-height: 48px; padding: 10px 12px; width: 100%;
+  }
+  :global([dir='rtl']) input[dir='ltr'] { text-align: right; }
+  textarea { min-height: 96px; resize: vertical; }
+  .submit { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .status { margin: 0; font-size: var(--fs-sm); }
+  .status.error { color: var(--error, #A3261B); font-weight: 500; }
+  .trap { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  :global(.dark) .form { --label-muted: var(--on-dark-muted); --field-border: transparent; --error: #FFB4A8; }
+  @media (max-width: 640px) {
+    .form { grid-template-columns: 1fr; }
+  }
+</style>

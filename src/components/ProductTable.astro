@@ -1,0 +1,72 @@
+---
+import StatusMark from './StatusMark.astro';
+import { groupByCategory, productPath, slugOf, type Product } from '../lib/content';
+import { localizePath, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  products: Product[];
+  /** Show the group headings (off on a single-category page). */
+  grouped?: boolean;
+}
+const { lang, products, grouped = true } = Astro.props;
+const { dict, h } = useTranslations(lang);
+const groups = groupByCategory(products);
+---
+<table class="products">
+  <thead>
+    <tr>
+      <th scope="col">{dict.products.colProduct}</th>
+      <th scope="col">{dict.products.colPackaging}</th>
+      <th scope="col">{dict.products.colAvailability}</th>
+      <th scope="col"><span class="visually-hidden">{dict.cta.quote}</span></th>
+    </tr>
+  </thead>
+  {groups.map((group) => (
+    <tbody>
+      {grouped && (
+        <tr class="group">
+          <th colspan="4" scope="rowgroup">{dict.categories[group.category].group}</th>
+        </tr>
+      )}
+      {group.items.map((p) => (
+        <tr>
+          <td class="name"><a href={localizePath(lang, productPath(p))}>{p.data.title}</a></td>
+          <td class="pack">
+            {p.data.packaging?.length ? p.data.packaging.join(', ') : <span set:html={h(dict.products.packagingTbd)} />}
+          </td>
+          <td class="avail"><StatusMark lang={lang} status={p.data.availability} /></td>
+          <td class="act">
+            <a href={`${localizePath(lang, '/inquiry/')}?product=${slugOf(p)}`}>
+              {dict.cta.quoteRow}<span class="visually-hidden">: {p.data.title}</span>
+            </a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  ))}
+</table>
+<p class="spec-note">{dict.products.specNote}</p>
+
+<style>
+  .products { width: 100%; border-collapse: collapse; }
+  th, td { text-align: start; padding: 16px 12px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  thead th { font-size: var(--fs-sm); font-weight: 500; color: var(--muted); padding-block: 10px; }
+  .group th { font-size: var(--fs-h3); font-weight: 600; color: var(--navy); padding-top: 40px; border-bottom: 2px solid var(--navy); }
+  tbody:first-of-type .group th { padding-top: 16px; }
+  .name a { font-weight: 500; color: var(--ink); text-decoration: none; }
+  .name a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .pack { color: var(--muted); }
+  .act { text-align: end; white-space: nowrap; }
+  .act a { color: var(--navy); font-weight: 500; text-underline-offset: 4px; }
+  .spec-note { font-size: var(--fs-sm); color: var(--muted); margin: 16px 0 0; }
+
+  @media (max-width: 640px) {
+    thead { display: none; }
+    .products, tbody, tr, td, th { display: block; }
+    tr:not(.group) { padding: 14px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 4px; }
+    td { border: 0; padding: 0; }
+    .act { text-align: start; margin-top: 6px; }
+    .group th { padding-inline: 0; }
+  }
+</style>

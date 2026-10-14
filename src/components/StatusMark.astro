@@ -1,0 +1,22 @@
+---
+// Availability: filled = available, half = seasonal, ring = on request (docs/brand-guide.md, section 11).
+import { useTranslations, type Lang } from '../i18n';
+import type { availability } from '../content.config';
+
+interface Props {
+  lang: Lang;
+  status?: (typeof availability)[number];
+}
+const { lang, status } = Astro.props;
+const { dict, h } = useTranslations(lang);
+const tbd = { en: '[TBD]', fa: '[تکمیل شود]', ru: '[уточняется]' }[lang];
+---
+{status ? <span class={`status ${status}`}>{dict.status[status]}</span> : <span set:html={h(tbd)} />}
+
+<style>
+  .status { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .status::before { content: ''; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--navy); flex-shrink: 0; }
+  .in-stock::before { background: var(--navy); }
+  .seasonal::before { background: linear-gradient(90deg, var(--navy) 50%, transparent 50%); }
+  :global([dir='rtl']) .seasonal::before { background: linear-gradient(270deg, var(--navy) 50%, transparent 50%); }
+</style>

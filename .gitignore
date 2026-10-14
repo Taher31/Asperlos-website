@@ -1,0 +1,22 @@
+# build output
+dist/
+releases/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+# environment and secrets
+.env
+.env.*
+server/config.php
+
+# editors / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db

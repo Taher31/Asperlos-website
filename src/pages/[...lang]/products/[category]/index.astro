@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../../components/PageHeader.astro';
+import ProductTable from '../../../../components/ProductTable.astro';
+import { getProducts } from '../../../../lib/content';
+import { categories } from '../../../../content.config';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../../../i18n';
+
+export function getStaticPaths() {
+  return langPaths().flatMap(({ params, props }) =>
+    categories.map((category) => ({ params: { ...params, category }, props: { ...props, category } })),
+  );
+}
+
+const { lang, category } = Astro.props as { lang: Lang; category: (typeof categories)[number] };
+const { dict } = useTranslations(lang);
+const products = (await getProducts(lang)).filter((p) => p.data.category === category);
+const cat = dict.categories[category];
+---
+<BaseLayout lang={lang} title={cat.name} description={`${cat.group}. ${dict.meta.productsDescription}`}>
+  <PageHeader
+    lang={lang}
+    title={cat.group}
+    trail={[{ href: localizePath(lang, '/products/'), label: dict.products.title }]}
+  />
+  <section class="section alt">
+    <div class="wrap">
+      <ProductTable lang={lang} products={products} grouped={false} />
+    </div>
+  </section>
+</BaseLayout>

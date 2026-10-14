@@ -1,0 +1,29 @@
+---
+// Mobile-only quick contact bar (CSS only, no third-party widget).
+import { channelLink } from '../lib/contact';
+import { localizePath, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { dict } = useTranslations(lang);
+const whatsapp = channelLink('whatsapp', dict.messenger.general);
+---
+<div class="quickbar">
+  <a class="btn btn-primary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+  <a class="btn btn-secondary" href={whatsapp.href ?? localizePath(lang, '/contact/')}>{dict.quickbar.whatsapp}</a>
+</div>
+
+<style>
+  .quickbar { display: none; }
+  @media (max-width: 640px) {
+    .quickbar {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      position: fixed; inset-inline: 0; bottom: 0; z-index: 20;
+      padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+      background: var(--paper); border-top: 1px solid var(--rule);
+    }
+    .btn { min-height: 44px; padding: 0 12px; }
+  }
+</style>
