@@ -38,6 +38,11 @@ const schema = [
     description: p.summary,
     category: dict.categories[p.category].name,
     countryOfOrigin: { '@type': 'Country', name: dict.origins[p.origin] },
+    url: new URL(Astro.url.pathname, Astro.site).href,
+    brand: { '@type': 'Brand', name: 'Asperlos' },
+    ...(p.specs?.length && {
+      additionalProperty: p.specs.map((s) => ({ '@type': 'PropertyValue', name: s.label, value: s.value })),
+    }),
   },
 ];
 ---

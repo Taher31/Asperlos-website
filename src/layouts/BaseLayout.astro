@@ -34,12 +34,20 @@ const abs = (p: string) => new URL(p, site).href;
 const canonical = abs(localizePath(lang, path));
 const pageTitle = title === dict.meta.homeTitle ? title : `${title} | ${dict.meta.siteName}`;
 
+// Facts from the company registration (docs/brand-guide.md, section 1); kept language-neutral so all pages agree.
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Asperlos',
+  alternateName: ['آسپرلوس', 'Асперлос'],
+  legalName: 'Asperlos Gostar Fardad Trading Co. (LLC)',
   url: abs('/'),
   logo: abs('/apple-touch-icon.png'),
+  description: dict.meta.homeDescription,
+  foundingDate: '2025',
+  address: { '@type': 'PostalAddress', addressLocality: 'Mashhad', addressCountry: 'IR' },
+  identifier: { '@type': 'PropertyValue', propertyID: 'Iran national ID', value: '14015013271' },
+  areaServed: { '@type': 'Country', name: 'Iran' },
 };
 ---
 <!doctype html>
