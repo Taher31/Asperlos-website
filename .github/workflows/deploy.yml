@@ -32,9 +32,12 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      # Blocks publishing while unconfirmed content ([TBD: …]) is still on any page (docs/brand-guide.md).
+      # Lists unconfirmed content ([TBD: …]) still on any page (docs/brand-guide.md).
+      # Temporarily non-blocking: the owner chose to publish before all placeholders are filled.
+      # Remove continue-on-error to block publishing again.
       - run: npm run check:placeholders
         if: ${{ !inputs.dry_run }}
+        continue-on-error: true
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
