@@ -47,6 +47,8 @@ npm run check:placeholders   # فهرست جاهای «[تکمیل شود]» ک�
 
 با هر push به شاخه `main`، سایت build می‌شود، جاهای خالی بررسی می‌شوند و خروجی با FTPS روی هاست آپلود می‌شود.
 
+فایل `version.json` هم در هر انتشار ساخته می‌شود: `https://<دامنه>/version.json` شماره انتشار (`deploy`، همان شماره اجرای GitHub Actions)، commit و تعداد جاهای خالی را نشان می‌دهد.
+
 این Secretها را در GitHub، در مسیر Settings ← Secrets and variables ← Actions، تعریف کنید:
 
 | Secret | مقدار |

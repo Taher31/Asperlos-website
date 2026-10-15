@@ -31,6 +31,7 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: node scripts/stamp-version.mjs
 
       # Lists unconfirmed content ([TBD: …]) still on any page (docs/brand-guide.md).
       # Temporarily non-blocking: the owner chose to publish before all placeholders are filled.

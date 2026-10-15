@@ -5,7 +5,7 @@
     "homeDescription": "Asperlos imports pulses and dried fruit directly from suppliers in Russia and Uzbekistan for wholesalers, packers and food producers in Iran.",
     "productsDescription": "Pulses from Russia and dried fruit from Uzbekistan, supplied in trade packaging to buyers in Iran.",
     "howDescription": "How Asperlos works with buyers: from your inquiry to delivery at your warehouse.",
-    "aboutDescription": "Asperlos is a trading company in Iran importing pulses from Russia and dried fruit from Uzbekistan.",
+    "aboutDescription": "Asperlos is a trading company in Mashhad, Iran, importing pulses from Russia and dried fruit from Uzbekistan.",
     "contactDescription": "Contact Asperlos by email, WhatsApp, Telegram or phone.",
     "inquiryDescription": "Request a quote for pulses and dried fruit from Asperlos."
   },
@@ -126,22 +126,24 @@
     "addressValue": "[TBD: office address]",
     "hours": "Working hours",
     "hoursValue": "[TBD: working days and hours, Tehran time]",
-    "map": "Open in Google Maps",
+    "map": "View on map",
     "valueTbd": "[TBD]"
   },
   "about": {
     "title": "About Asperlos",
     "factsTitle": "Company details",
     "registeredName": "Registered name",
-    "registeredNameValue": "[TBD: registered company name]",
+    "registeredNameValue": "Asperlos Gostar Fardad Trading Co. (LLC)",
     "founded": "Founded",
-    "foundedValue": "[TBD: year]",
+    "foundedValue": "2025",
+    "registration": "Registration",
+    "registrationValue": "No. 96011, Mashhad Companies Registry; national ID 14015013271",
     "licences": "Licences",
     "licencesValue": "[TBD: trade licences]",
     "importTitle": "What we import"
   },
   "footer": {
-    "registeredName": "[TBD: registered company name]",
+    "registeredName": "Asperlos Gostar Fardad Trading Co. (LLC)",
     "copyright": "© {year} Asperlos"
   },
   "quickbar": {

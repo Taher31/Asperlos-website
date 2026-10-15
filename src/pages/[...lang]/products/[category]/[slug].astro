@@ -6,7 +6,7 @@ import PageHeader from '../../../../components/PageHeader.astro';
 import StatusMark from '../../../../components/StatusMark.astro';
 import { getProducts, slugOf, type Product } from '../../../../lib/content';
 import { channelLink, messengersFor } from '../../../../lib/contact';
-import { langPaths, localizePath, useTranslations, type Lang } from '../../../../i18n';
+import { langPaths, listSep, localizePath, useTranslations, type Lang } from '../../../../i18n';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -64,7 +64,7 @@ const schema = [
           </div>
           <div>
             <dt>{dict.products.packaging}</dt>
-            <dd>{p.packaging?.length ? p.packaging.join(', ') : <span set:html={h(dict.products.packagingTbd)} />}</dd>
+            <dd>{p.packaging?.length ? p.packaging.join(listSep[lang]) : <span set:html={h(dict.products.packagingTbd)} />}</dd>
           </div>
           {p.moq && (
             <div>
@@ -79,7 +79,7 @@ const schema = [
           {p.certificates.length > 0 && (
             <div>
               <dt>{dict.products.certificates}</dt>
-              <dd>{p.certificates.map((c) => dict.certificates[c]).join(', ')}</dd>
+              <dd>{p.certificates.map((c) => dict.certificates[c]).join(listSep[lang])}</dd>
             </div>
           )}
         </dl>

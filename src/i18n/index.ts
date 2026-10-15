@@ -12,6 +12,9 @@ export const langMeta: Record<Lang, { name: string; dir: 'ltr' | 'rtl'; hreflang
   ru: { name: 'Русский', dir: 'ltr', hreflang: 'ru', ogLocale: 'ru_RU' },
 };
 
+/** Separator for inline lists (Persian uses the Arabic comma). */
+export const listSep: Record<Lang, string> = { en: ', ', fa: '، ', ru: ', ' };
+
 type Dict = typeof en;
 const dicts: Record<Lang, Dict> = { en, fa, ru };
 

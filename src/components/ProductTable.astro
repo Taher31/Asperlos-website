@@ -1,7 +1,7 @@
 ---
 import StatusMark from './StatusMark.astro';
 import { groupByCategory, productPath, slugOf, type Product } from '../lib/content';
-import { localizePath, useTranslations, type Lang } from '../i18n';
+import { listSep, localizePath, useTranslations, type Lang } from '../i18n';
 
 interface Props {
   lang: Lang;
@@ -33,7 +33,7 @@ const groups = groupByCategory(products);
         <tr>
           <td class="name"><a href={localizePath(lang, productPath(p))}>{p.data.title}</a></td>
           <td class="pack">
-            {p.data.packaging?.length ? p.data.packaging.join(', ') : <span set:html={h(dict.products.packagingTbd)} />}
+            {p.data.packaging?.length ? p.data.packaging.join(listSep[lang]) : <span set:html={h(dict.products.packagingTbd)} />}
           </td>
           <td class="avail"><StatusMark lang={lang} status={p.data.availability} /></td>
           <td class="act">
