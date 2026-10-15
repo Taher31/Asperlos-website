@@ -8,6 +8,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Test the FTP connection only; upload nothing'
+        type: boolean
+        default: false
 
 concurrency:
   group: deploy
@@ -29,6 +34,7 @@ jobs:
 
       # Blocks publishing while unconfirmed content ([TBD: …]) is still on any page (docs/brand-guide.md).
       - run: npm run check:placeholders
+        if: ${{ !inputs.dry_run }}
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -36,5 +42,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
+          dry-run: ${{ inputs.dry_run || false }}
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR || 'public_html/' }}
