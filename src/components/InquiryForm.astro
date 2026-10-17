@@ -113,7 +113,8 @@ const id = (name: string) => `${idPrefix}-${name}`;
   .submit { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   .status { margin: 0; font-size: var(--fs-sm); }
   .status.error { color: var(--error, #A3261B); font-weight: 500; }
-  .trap { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  /* Clipped in place rather than pushed off-screen, which would widen the page in RTL. */
+  .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   :global(.dark) .form { --label-muted: var(--on-dark-muted); --field-border: transparent; --error: #FFB4A8; }
   @media (max-width: 640px) {
     .form { grid-template-columns: 1fr; }

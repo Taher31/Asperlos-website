@@ -1,6 +1,10 @@
 ---
+// Centred logo, language switch on the start side, quote button and full-screen menu on the end side.
 import { Image } from 'astro:assets';
-import logo from '../assets/logo.jpg';
+import logo from '../assets/logo-mark.png';
+import logoWhite from '../assets/logo-mark-white.png';
+import Seed from './Seed.astro';
+import { channelLink } from '../lib/contact';
 import { languages, langMeta, localizePath, useTranslations, type Lang } from '../i18n';
 
 interface Props {
@@ -9,28 +13,21 @@ interface Props {
   path: string;
 }
 const { lang, path } = Astro.props;
-const { dict } = useTranslations(lang);
+const { dict, h } = useTranslations(lang);
 const nav = [
   { href: '/products/', label: dict.nav.products },
+  { href: '/origins/', label: dict.nav.origins },
   { href: '/how-we-work/', label: dict.nav.how },
   { href: '/about/', label: dict.nav.about },
+  { href: '/faq/', label: dict.nav.faq },
   { href: '/contact/', label: dict.nav.contact },
 ];
 const isCurrent = (href: string) => path === href || path.startsWith(href);
+const num = (i: number) => (lang === 'fa' ? (i + 1).toLocaleString('fa-IR', { minimumIntegerDigits: 2 }) : String(i + 1).padStart(2, '0'));
+const phone = channelLink('phone');
 ---
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href={localizePath(lang, '/')} aria-label={`Asperlos, ${dict.nav.home}`}>
-      <Image src={logo} alt="" height={48} densities={[1, 2]} loading="eager" />
-      <span>Asperlos</span>
-    </a>
-
-    <nav class="nav" aria-label={dict.nav.main}>
-      {nav.map((item) => (
-        <a href={localizePath(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
-      ))}
-    </nav>
-
+<header class="site-header" data-header>
+  <div class="bar wrap">
     <div class="lang" role="group" aria-label={dict.nav.language}>
       {languages.map((l) => (
         <a href={localizePath(l, path)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>
@@ -39,16 +36,70 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
       ))}
     </div>
 
-    <details class="menu">
-      <summary>{dict.nav.menu}</summary>
-      <nav aria-label={dict.nav.main}>
-        {nav.map((item) => (
-          <a href={localizePath(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
-        ))}
-      </nav>
-    </details>
+    <a class="brand" href={localizePath(lang, '/')} aria-label={`Asperlos, ${dict.nav.home}`}>
+      <Image src={logo} alt="" height={52} densities={[1, 2]} loading="eager" />
+      <span>Asperlos</span>
+    </a>
+
+    <div class="end">
+      <a class="btn btn-primary quote" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+      <button class="menu-btn" type="button" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false" data-menu-open>
+        <span class="menu-label">{dict.nav.menu}</span>
+        <span class="burger" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
   </div>
 </header>
+
+<dialog id="site-menu" class="menu-panel" aria-label={dict.nav.main}>
+  <div class="panel-bar wrap">
+    <span class="panel-brand">
+      <Image src={logoWhite} alt="" height={44} densities={[1, 2]} />
+      <span>Asperlos</span>
+    </span>
+    <button class="menu-btn close" type="button" data-menu-close>
+      <span class="menu-label">{dict.nav.close}</span>
+      <span class="burger open" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </div>
+  <div class="panel-body wrap">
+    <nav aria-label={dict.nav.main}>
+      <ol>
+        {nav.map((item, i) => (
+          <li style={`--i:${i}`}>
+            <a href={localizePath(lang, item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              <span class="n">{num(i)}</span>
+              <span class="t">{item.label}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+    <aside class="panel-side">
+      <a class="btn btn-gold" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+      <dl>
+        {phone.href && (
+          <div>
+            <dt>{dict.cta.phone}</dt>
+            <dd><a href={phone.href} dir="ltr">{phone.display}</a></dd>
+          </div>
+        )}
+        <div>
+          <dt>{dict.contact.address}</dt>
+          <dd set:html={h(dict.contact.addressValue)} />
+        </div>
+      </dl>
+      <div class="panel-lang">
+        {languages.map((l) => (
+          <a href={localizePath(l, path)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>{langMeta[l].name}</a>
+        ))}
+      </div>
+    </aside>
+  </div>
+  <Seed product="chickpeas" variant={1} size={150} class="p1" style="--rot:-14deg" />
+  <Seed product="red-lentils" variant={2} size={90} class="p2" style="--rot:20deg" />
+  <Seed product="seeded-raisins" variant={0} size={120} class="p3" style="--rot:34deg" />
+</dialog>
 
 <script>
   // Remember an explicit language choice so the language suggestion bar stays away.
@@ -57,45 +108,131 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
       try { localStorage.setItem('lang-choice', a.dataset.langChoice!); } catch {}
     }),
   );
+
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Full-screen menu: a modal <dialog> gives focus trapping and Escape for free.
+  const dialog = document.getElementById('site-menu') as HTMLDialogElement | null;
+  const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  opener?.addEventListener('click', () => {
+    dialog?.showModal();
+    opener.setAttribute('aria-expanded', 'true');
+    document.documentElement.classList.add('menu-open');
+  });
+  const close = () => dialog?.close();
+  document.querySelector('[data-menu-close]')?.addEventListener('click', close);
+  dialog?.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  dialog?.addEventListener('close', () => {
+    opener?.setAttribute('aria-expanded', 'false');
+    document.documentElement.classList.remove('menu-open');
+    opener?.focus();
+  });
 </script>
 
 <style>
-  .site-header { border-bottom: 1px solid var(--rule); background: var(--paper); position: relative; }
-  .wrap { display: flex; align-items: center; gap: 32px; min-height: 76px; }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); flex-shrink: 0; }
-  .brand img { height: 48px; width: auto; mix-blend-mode: multiply; }
-  .brand span { font: 600 1.375rem/1 "IBM Plex Sans", sans-serif; letter-spacing: -0.01em; }
-  .nav { display: flex; gap: 28px; margin-inline-end: auto; }
-  .nav a, .menu a { text-decoration: none; color: var(--ink); padding-block: 6px; border-bottom: 2px solid transparent; }
-  .nav a:hover, .nav a[aria-current="page"] { border-bottom-color: var(--gold); }
-  .lang { display: flex; gap: 14px; font-size: var(--fs-sm); }
-  .lang a { text-decoration: none; padding: 4px 0; color: var(--muted); }
+  .site-header {
+    position: sticky; top: 0; z-index: 30;
+    transition: background-color 0.35s, box-shadow 0.35s;
+  }
+  .site-header.scrolled {
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(10px);
+    box-shadow: 0 1px 0 var(--rule);
+  }
+  .bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: var(--header-h); gap: 16px; }
+
+  .lang { display: flex; gap: 18px; font-size: var(--fs-sm); }
+  .lang a, .panel-lang a { text-decoration: none; padding: 4px 0; color: var(--muted); transition: color 0.2s; }
   .lang a:hover { color: var(--navy); }
-  .lang a[aria-current="true"] { color: var(--navy); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
-  .lang a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
-  .lang a:lang(en), .lang a:lang(ru) { font-family: "IBM Plex Sans", sans-serif; }
+  .lang a[aria-current="true"] { color: var(--navy); font-weight: 600; box-shadow: inset 0 -1px 0 var(--gold); }
+  :is(.lang, .panel-lang) a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
+  :is(.lang, .panel-lang) a:lang(en), :is(.lang, .panel-lang) a:lang(ru) { font-family: "IBM Plex Sans", sans-serif; }
 
-  .menu { display: none; }
-  .menu summary {
-    list-style: none; cursor: pointer; font-size: var(--fs-sm); font-weight: 500; color: var(--navy);
-    padding: 8px 12px; border: 1.5px solid var(--rule); border-radius: 4px;
-  }
-  .menu summary::-webkit-details-marker { display: none; }
-  .menu nav {
-    position: absolute; inset-inline: 0; top: 100%; z-index: 10;
-    display: grid; background: var(--paper); border-bottom: 1px solid var(--rule);
-    padding: 8px var(--gutter) 16px;
-  }
-  .menu nav a { padding-block: 12px; border-bottom: 1px solid var(--rule); }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--navy); }
+  .brand img { height: 52px; width: auto; transition: height 0.35s var(--ease); }
+  .scrolled .brand img { height: 42px; }
+  .brand span, .panel-brand span { font: 600 1.6rem/1 "Cormorant Garamond", serif; letter-spacing: 0.01em; }
 
-  @media (max-width: 960px) {
-    .nav { display: none; }
-    .wrap { gap: 16px; }
-    .lang { margin-inline-start: auto; }
-    .menu { display: block; }
+  .end { display: flex; align-items: center; justify-content: flex-end; gap: 22px; }
+  .quote { min-height: 42px; padding: 0 18px; font-size: var(--fs-sm); }
+
+  .menu-btn {
+    display: inline-flex; align-items: center; gap: 12px; padding: 8px 0;
+    background: none; border: 0; cursor: pointer; color: var(--navy);
+    font: 500 var(--fs-sm)/1 var(--font); letter-spacing: var(--track-eyebrow);
+  }
+  .burger { display: grid; gap: 7px; width: 30px; }
+  .burger i { display: block; height: 1.5px; background: currentColor; transition: transform 0.35s var(--ease), width 0.35s var(--ease); }
+  .burger i:last-child { width: 70%; justify-self: end; }
+  .menu-btn:hover .burger i:last-child { width: 100%; }
+  .burger.open i:first-child { transform: translateY(4.25px) rotate(45deg); }
+  .burger.open i:last-child { width: 100%; transform: translateY(-4.25px) rotate(-45deg); }
+
+  /* Menu panel */
+  .menu-panel {
+    position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; overflow: auto;
+    background: var(--navy-deep); color: #fff; --focus: var(--gold);
+  }
+  .menu-panel::backdrop { background: transparent; }
+  :global(html.menu-open) { overflow: hidden; }
+  .panel-bar { display: flex; justify-content: space-between; align-items: center; min-height: var(--header-h); }
+  .panel-brand { display: flex; align-items: center; gap: 12px; }
+  .panel-brand img { height: 44px; width: auto; }
+  .menu-btn.close { color: #fff; }
+  .panel-body {
+    display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: end;
+    padding-block: clamp(24px, 6vh, 72px) 48px; position: relative; z-index: 1;
+  }
+  .panel-body ol { list-style: none; margin: 0; padding: 0; }
+  .panel-body li a {
+    display: flex; align-items: baseline; gap: 20px; padding: 6px 0; text-decoration: none; color: #fff;
+  }
+  .n { font: 500 var(--fs-sm)/1 var(--font); color: var(--gold); min-width: 2.2em; }
+  .t {
+    font: 500 clamp(2rem, 5vw, 3.6rem)/1.15 var(--display); letter-spacing: var(--track-tight);
+    background: linear-gradient(var(--gold), var(--gold)) no-repeat 0 100% / 0 1px;
+    transition: background-size 0.5s var(--ease), color 0.3s;
+  }
+  :global([dir='rtl']) .t { background-position: 100% 100%; }
+  .panel-body li a:hover .t, .panel-body li a[aria-current="page"] .t { background-size: 100% 1px; }
+  .panel-body li a:hover .t { color: var(--gold); }
+  .panel-side { display: grid; gap: 28px; justify-items: start; padding-bottom: 12px; }
+  .panel-side dl { margin: 0; display: grid; gap: 18px; }
+  .panel-side dt { font-size: var(--fs-sm); color: var(--on-dark-muted); margin-bottom: 2px; }
+  .panel-side dd { margin: 0; }
+  .panel-side dd a { color: #fff; text-decoration: none; }
+  .panel-lang { display: flex; gap: 18px; font-size: var(--fs-sm); }
+  .panel-lang a { color: var(--on-dark-muted); }
+  .panel-lang a[aria-current="true"] { color: #fff; box-shadow: inset 0 -1px 0 var(--gold); }
+
+  .menu-panel :global(.seed) { opacity: 0.9; }
+  .menu-panel :global(.p1) { width: 150px; inset-inline-end: 6%; top: 18%; }
+  .menu-panel :global(.p2) { width: 90px; inset-inline-end: 30%; top: 8%; }
+  .menu-panel :global(.p3) { width: 120px; inset-inline-start: 46%; bottom: 6%; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-panel[open] { animation: panel-in 0.55s var(--ease); }
+    .menu-panel[open] li { animation: item-in 0.7s var(--ease) both; animation-delay: calc(0.12s + var(--i) * 0.05s); }
+  }
+  @keyframes panel-in { from { opacity: 0; clip-path: inset(0 0 100% 0); } to { opacity: 1; clip-path: inset(0); } }
+  @keyframes item-in { from { opacity: 0; transform: translateY(24px); } }
+
+  @media (max-width: 900px) {
+    .quote { display: none; }
+    .panel-body { grid-template-columns: 1fr; align-items: start; }
+    .menu-panel :global(.p1) { top: auto; bottom: 4%; width: 110px; }
+    .menu-panel :global(.p2), .menu-panel :global(.p3) { display: none; }
   }
   @media (max-width: 640px) {
+    .bar { grid-template-columns: auto 1fr auto; }
+    .brand { justify-self: center; }
     .brand span { display: none; }
-    .lang { gap: 10px; }
+    .brand img { height: 42px; }
+    .lang { gap: 10px; font-size: 0.8125rem; }
+    .menu-label { display: none; }
   }
 </style>

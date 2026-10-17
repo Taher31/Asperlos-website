@@ -38,6 +38,6 @@ const items = channelsFor(lang).map((c) => ({ ...channelLink(c), label: dict.cta
   .compact { border-top: 0; }
   .compact li { border-bottom: 0; }
   .compact a, .compact .row { padding: 4px 0; }
-  .compact .label { color: var(--ink); }
-  :global(.dark) .channels { --line: rgba(255, 255, 255, 0.16); --value: var(--on-dark-muted); }
+  .compact .label { color: var(--label, var(--ink)); }
+  :global(.dark) .channels { --line: rgba(255, 255, 255, 0.16); --value: var(--on-dark-muted); --label: #fff; }
 </style>

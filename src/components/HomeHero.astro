@@ -1,0 +1,127 @@
+---
+// Home hero: the tagline beside a "stage" where product names roll by and that product's seeds float around them.
+import Seed from './Seed.astro';
+import { cluster } from '../lib/seeds';
+import { getProducts, slugOf } from '../lib/content';
+import { localizePath, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { dict } = useTranslations(lang);
+const products = await getProducts(lang);
+// Short names for the roll: drop parenthetical additions such as "(Kishmish)".
+const names = products.map((p) => p.data.title.replace(/\s*\(.*?\)\s*/g, '').trim());
+---
+<section class="hero">
+  <div class="wrap grid">
+    <div class="copy">
+      <h1 class="hero-title" data-reveal>
+        <span>{dict.hero.l1}</span>
+        <span>{dict.hero.l2}</span>
+        <span class="accent">{dict.hero.l3}</span>
+      </h1>
+      <p class="lead" data-reveal style="--d:0.15s">{dict.hero.lead}</p>
+      <div class="actions" data-reveal style="--d:0.3s">
+        <a class="btn btn-primary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+        <a class="line-link" href={localizePath(lang, '/products/')}>{dict.cta.allProducts}</a>
+      </div>
+    </div>
+
+    <div class="stage" data-ticker aria-hidden="true">
+      {products.map((p, g) => (
+        <div class:list={['group', { active: g === 0 }]}>
+          {cluster.map((c, i) => (
+            <Seed
+              product={slugOf(p)}
+              variant={i + g}
+              size={Math.round(c.w * 5.8)}
+              eager={g === 0}
+              style={`left:${c.x}%;top:${c.y}%;width:${c.w}%;--rot:${c.r}deg;--t:${6 + (i % 3)}s;--fd:${-i * 1.3}s;--i:${i}`}
+            />
+          ))}
+        </div>
+      ))}
+      <div class="ticker">
+        <span class="eyebrow">{dict.home.tickerLabel}</span>
+        <div class="roll">
+          <ul>
+            {[...names, names[0]].map((n) => <li class="display">{n}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const stage = document.querySelector<HTMLElement>('[data-ticker]');
+  const list = stage?.querySelector<HTMLElement>('.roll ul');
+  const groups = stage ? [...stage.querySelectorAll<HTMLElement>('.group')] : [];
+  if (stage && list && groups.length > 1 && document.documentElement.classList.contains('motion')) {
+    let k = 0;
+    const n = groups.length;
+    const step = () => {
+      if (document.hidden) return;
+      k += 1;
+      list.style.transition = '';
+      list.style.setProperty('--k', String(k));
+      groups.forEach((g, i) => g.classList.toggle('active', i === k % n));
+      // The list ends with a copy of the first name: once it is shown, jump back to the real first one.
+      if (k === n) {
+        list.addEventListener('transitionend', () => {
+          list.style.transition = 'none';
+          k = 0;
+          list.style.setProperty('--k', '0');
+        }, { once: true });
+      }
+    };
+    setInterval(step, 2800);
+  }
+</script>
+
+<style>
+  .hero { min-height: calc(100svh - var(--header-h)); display: grid; align-items: center; padding-block: clamp(24px, 4vw, 48px) clamp(48px, 7vw, 96px); overflow: hidden; }
+  .grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+
+  .hero-title { margin: 0 0 28px; font-size: var(--fs-hero); line-height: var(--lh-hero); }
+  .hero-title span { display: block; }
+  .hero-title .accent { color: var(--gold-ink); font-style: italic; }
+  :global(:root:lang(fa)) .hero-title .accent { font-style: normal; }
+  .lead { font-size: var(--fs-lead); color: var(--muted); max-width: 46ch; margin: 0 0 36px; }
+
+  .stage { position: relative; aspect-ratio: 1 / 1; width: 100%; max-width: 580px; justify-self: center; }
+  /* A thin seal-like ring behind the rolling names */
+  .stage::before, .stage::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+  .stage::before { inset: 17%; border: 1px solid var(--rule); }
+  .stage::after { inset: 21%; border: 1px dashed color-mix(in srgb, var(--gold) 55%, transparent); }
+  @media (prefers-reduced-motion: no-preference) {
+    .stage::after { animation: spin 90s linear infinite; }
+  }
+  @keyframes spin { to { rotate: 360deg; } }
+  .group :global(.seed) {
+    opacity: 0; transform: translateY(18px) scale(0.92);
+    transition: opacity 0.9s var(--ease), transform 1.1s var(--ease);
+    transition-delay: calc(var(--i) * 0.06s);
+  }
+  .group.active :global(.seed) { opacity: 1; transform: none; }
+
+  .ticker { position: absolute; inset: 38% 6% auto; display: grid; justify-items: center; text-align: center; gap: 6px; }
+  .ticker .eyebrow { margin: 0; }
+  .ticker .eyebrow::before { display: none; }
+  .roll { --row: 1.2em; height: var(--row); overflow: hidden; font-size: clamp(2.1rem, 4.2vw, 3.6rem); width: 100%; }
+  .roll ul {
+    list-style: none; margin: 0; padding: 0;
+    transform: translateY(calc(var(--k, 0) * -1 * var(--row)));
+    transition: transform 0.9s var(--ease);
+  }
+  .roll li { height: var(--row); line-height: var(--row); color: var(--navy); white-space: nowrap; font-style: italic; }
+  :global(:root:lang(fa)) .roll li { font-style: normal; }
+
+  @media (max-width: 900px) {
+    .hero { min-height: 0; }
+    .grid { grid-template-columns: 1fr; }
+    .stage { max-width: 440px; }
+  }
+</style>

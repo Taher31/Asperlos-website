@@ -20,3 +20,6 @@ server/config.php
 .idea/
 .DS_Store
 Thumbs.db
+
+# python
+__pycache__/

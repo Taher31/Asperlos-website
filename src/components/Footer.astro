@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import logo from '../assets/logo.jpg';
+import logoWhite from '../assets/logo-mark-white.png';
 import { formatYear, languages, langMeta, localizePath, useTranslations, type Lang } from '../i18n';
 import ContactChannels from './ContactChannels.astro';
 
@@ -10,28 +10,35 @@ interface Props {
 const { lang } = Astro.props;
 const { dict, t, h } = useTranslations(lang);
 ---
-<footer class="site-footer">
+<footer class="site-footer dark">
   <div class="wrap">
-    <div class="id">
-      <a class="brand" href={localizePath(lang, '/')} aria-label="Asperlos">
-        <Image src={logo} alt="" height={40} densities={[1, 2]} />
-        <span>Asperlos</span>
-      </a>
-      <p set:html={h(dict.footer.registeredName)} />
-      <p set:html={h(dict.contact.addressValue)} />
+    <a class="cta" href={localizePath(lang, '/inquiry/')}>
+      <span class="display">{dict.cta.quote}</span>
+      <span class="arrow" aria-hidden="true"></span>
+    </a>
+
+    <div class="cols">
+      <div class="id">
+        <a class="brand" href={localizePath(lang, '/')} aria-label="Asperlos">
+          <Image src={logoWhite} alt="" height={56} densities={[1, 2]} />
+          <span>Asperlos</span>
+        </a>
+        <p set:html={h(dict.footer.registeredName)} />
+        <p set:html={h(dict.contact.addressValue)} />
+      </div>
+      <nav aria-label={dict.nav.main}>
+        <a href={localizePath(lang, '/products/')}>{dict.nav.products}</a>
+        <a href={localizePath(lang, '/origins/')}>{dict.nav.origins}</a>
+        <a href={localizePath(lang, '/how-we-work/')}>{dict.nav.how}</a>
+        <a href={localizePath(lang, '/about/')}>{dict.nav.about}</a>
+        <a href={localizePath(lang, '/faq/')}>{dict.nav.faq}</a>
+        <a href={localizePath(lang, '/contact/')}>{dict.nav.contact}</a>
+      </nav>
+      <div class="channels">
+        <ContactChannels lang={lang} compact />
+      </div>
     </div>
-    <nav aria-label={dict.nav.main}>
-      <a href={localizePath(lang, '/products/')}>{dict.nav.products}</a>
-      <a href={localizePath(lang, '/origins/')}>{dict.nav.origins}</a>
-      <a href={localizePath(lang, '/how-we-work/')}>{dict.nav.how}</a>
-      <a href={localizePath(lang, '/about/')}>{dict.nav.about}</a>
-      <a href={localizePath(lang, '/faq/')}>{dict.nav.faq}</a>
-      <a href={localizePath(lang, '/contact/')}>{dict.nav.contact}</a>
-      <a href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
-    </nav>
-    <div class="channels">
-      <ContactChannels lang={lang} compact />
-    </div>
+
     <div class="bottom">
       <p>{t(dict.footer.copyright, { year: formatYear(lang) })}</p>
       <p class="langs">
@@ -42,24 +49,46 @@ const { dict, t, h } = useTranslations(lang);
 </footer>
 
 <style>
-  .site-footer { background: var(--mist); padding-block: 48px 32px; font-size: var(--fs-sm); color: var(--muted); }
-  .wrap { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 32px 48px; align-items: start; }
-  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); margin-bottom: 12px; }
-  .brand img { height: 40px; width: auto; mix-blend-mode: multiply; }
-  .brand span { font: 600 1.25rem/1 "IBM Plex Sans", sans-serif; }
+  .site-footer { padding-block: clamp(56px, 8vw, 104px) 32px; font-size: var(--fs-sm); color: var(--on-dark-muted); --value: var(--on-dark-muted); }
+  .cta {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding-bottom: clamp(32px, 5vw, 56px); margin-bottom: clamp(32px, 5vw, 56px);
+    border-bottom: 1px solid var(--rule); color: #fff; text-decoration: none;
+  }
+  .cta .display { font-size: clamp(2.4rem, 6vw, 4.8rem); line-height: 1.05; }
+  .arrow {
+    flex: none; width: clamp(56px, 8vw, 96px); height: clamp(56px, 8vw, 96px); border-radius: 50%;
+    border: 1px solid var(--gold); position: relative; transition: background-color 0.35s, transform 0.5s var(--ease);
+  }
+  .arrow::before, .arrow::after { content: ""; position: absolute; background: var(--gold); transition: background-color 0.35s; }
+  .arrow::before { width: 34%; height: 1.5px; top: 50%; left: 33%; }
+  .arrow::after { width: 12%; height: 12%; border: solid var(--gold); border-width: 1.5px 1.5px 0 0; background: none; top: 44%; left: 52%; transform: rotate(45deg); }
+  :global([dir='rtl']) .arrow { transform: scaleX(-1); }
+  .cta:hover .arrow { background: var(--gold); }
+  .cta:hover .arrow::before { background: var(--navy-deep); }
+  .cta:hover .arrow::after { border-color: var(--navy-deep); }
+
+  /* Pages that already end with the inquiry form do not repeat the call to action. */
+  :global(body:has(#inquiry)) .cta { display: none; }
+  :global(body:has(#inquiry)) .site-footer { border-top: 1px solid var(--rule); }
+  .cols { display: grid; grid-template-columns: 1.3fr 1fr 1.3fr; gap: 32px 56px; align-items: start; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; margin-bottom: 16px; }
+  .brand img { height: 56px; width: auto; }
+  .brand span { font: 600 1.6rem/1 "Cormorant Garamond", serif; }
   p { margin: 4px 0; }
-  nav { display: grid; gap: 8px; }
-  nav a { color: var(--ink); text-decoration: none; }
-  nav a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 20px; }
+  nav { display: grid; gap: 10px; }
+  nav a { color: #fff; text-decoration: none; width: fit-content; }
+  nav a:hover { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+  .bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 20px; margin-top: clamp(40px, 6vw, 64px); }
   .langs { display: flex; gap: 14px; }
-  .langs a { color: var(--muted); text-decoration: none; }
+  .langs a { color: var(--on-dark-muted); text-decoration: none; }
+  .langs a:hover { color: #fff; }
   .langs a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
   .langs a:lang(en), .langs a:lang(ru) { font-family: "IBM Plex Sans", sans-serif; }
   @media (max-width: 860px) {
-    .wrap { grid-template-columns: 1fr; }
+    .cols { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .site-footer { padding-bottom: 96px; } /* room for the quick-contact bar */
+    .site-footer { padding-bottom: 96px; } /* room for the mobile quick bar */
   }
 </style>

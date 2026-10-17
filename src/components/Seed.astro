@@ -1,0 +1,33 @@
+---
+// One decorative seed illustration (docs/design/art/seeds.py). Positioned by the caller through `style`.
+import { Image } from 'astro:assets';
+import { seedImage } from '../lib/seeds';
+
+interface Props {
+  product: string;
+  variant?: number;
+  /** Largest rendered width in px; the image is generated at twice this for sharp screens */
+  size?: number;
+  class?: string;
+  style?: string;
+  float?: boolean;
+  /** Parallax factor for BaseLayout's scroll script (0 = none) */
+  parallax?: number;
+  eager?: boolean;
+}
+const { product, variant = 0, size = 160, class: cls, style, float = true, parallax = 0, eager = false } = Astro.props;
+const src = seedImage(product, variant);
+---
+{src && (
+  <span class:list={['seed', cls]} style={style} data-parallax={parallax || undefined} aria-hidden="true">
+    <Image
+      src={src}
+      alt=""
+      width={size * 2}
+      quality={80}
+      class:list={[{ float }]}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </span>
+)}

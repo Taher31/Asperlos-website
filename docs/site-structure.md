@@ -152,15 +152,15 @@ asperlos-website/
 ├── scripts/
 │   └── check-placeholders.mjs   جلوی انتشار «[تکمیل شود]» را می‌گیرد
 ├── src/
-│   ├── assets/logo.jpg      لوگو (Astro آن را به WebP بهینه تبدیل می‌کند)
+│   ├── assets/              logo-mark.png و logo-mark-white.png (لوگوی رنگی و سفید)، seeds/ (تصویر دانه‌ها؛ docs/design/art)
 │   ├── content/
 │   │   ├── products/{en,fa,ru}/
 │   │   └── origins/{en,fa,ru}/
 │   ├── content.config.ts    مدل داده محصولات و مبادی
 │   ├── data/contact.json    همه اطلاعات تماس
 │   ├── i18n/                en.json, fa.json, ru.json + index.ts (توابع ترجمه و مسیر)
-│   ├── lib/                 content.ts (محصولات، بررسی کامل بودن ترجمه)، contact.ts (لینک کانال‌ها)
-│   ├── components/          Header, LangSuggestBar, Footer, QuickBar, RouteHero, ProductTable,
+│   ├── lib/                 content.ts (محصولات، بررسی کامل بودن ترجمه)، contact.ts (لینک کانال‌ها)، seeds.ts (تصویر دانه‌ها)
+│   ├── components/          Header (با منوی تمام‌صفحه), LangSuggestBar, Footer, QuickBar, HomeHero, RouteMap, Seed, ProductTable,
 │   │                        StatusMark, Steps, PageHeader, InquiryForm, InquirySection, ContactChannels
 │   ├── layouts/             BaseLayout (dir، فونت‌ها، متا، hreflang، Schema)
 │   ├── pages/

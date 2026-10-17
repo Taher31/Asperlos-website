@@ -4,6 +4,8 @@ import { render } from 'astro:content';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PageHeader from '../../../../components/PageHeader.astro';
 import StatusMark from '../../../../components/StatusMark.astro';
+import Seed from '../../../../components/Seed.astro';
+import { hasSeeds } from '../../../../lib/seeds';
 import { getProducts, slugOf, type Product } from '../../../../lib/content';
 import { channelLink, messengersFor } from '../../../../lib/contact';
 import { langPaths, listSep, localizePath, useTranslations, type Lang } from '../../../../i18n';
@@ -55,6 +57,7 @@ const schema = [
       { href: localizePath(lang, '/products/'), label: dict.products.title },
       { href: localizePath(lang, `/products/${p.category}/`), label: dict.categories[p.category].name },
     ]}
+    seeds={[slug, slug, slug]}
   />
 
   <section class="section alt">
@@ -108,6 +111,21 @@ const schema = [
       </div>
 
       <aside class="side">
+        {!p.image && hasSeeds(slug) && (
+          <figure class="specimen">
+            <div class="specimen-art" aria-hidden="true">
+              {[
+                { x: 10, y: 8, w: 40, r: -12 },
+                { x: 52, y: 18, w: 34, r: 22 },
+                { x: 24, y: 50, w: 36, r: 6 },
+                { x: 62, y: 60, w: 26, r: -28 },
+              ].map((s, i) => (
+                <Seed product={slug} variant={i} size={Math.round(s.w * 3)} style={`left:${s.x}%;top:${s.y}%;width:${s.w}%;--rot:${s.r}deg;--t:${6 + i}s;--fd:${-i}s`} />
+              ))}
+            </div>
+            <figcaption>{dict.products.illustration}</figcaption>
+          </figure>
+        )}
         <a class="btn btn-primary" href={inquiryHref}>{dict.cta.quoteProduct}</a>
         {messengers.map((m) => (
           <a class="btn btn-secondary" href={m.href ?? localizePath(lang, '/contact/')}>{m.label}</a>
@@ -133,7 +151,10 @@ const schema = [
   .specs td { font-weight: 500; }
   .spec-note { font-size: var(--fs-sm); color: var(--muted); margin: 16px 0 0; }
   .body { margin-top: 40px; }
-  .side { display: grid; gap: 12px; position: sticky; top: 24px; }
+  .side { display: grid; gap: 12px; position: sticky; top: calc(var(--header-h) + 16px); }
+  .specimen { margin: 0 0 8px; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 16px; }
+  .specimen-art { position: relative; aspect-ratio: 1 / 1; }
+  .specimen figcaption { font-size: 0.8125rem; color: var(--muted); text-align: end; }
   @media (max-width: 960px) {
     .layout { grid-template-columns: 1fr; }
     .side { position: static; grid-row: 1; }

@@ -1,34 +1,108 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import RouteHero from '../../components/RouteHero.astro';
-import ProductTable from '../../components/ProductTable.astro';
+import HomeHero from '../../components/HomeHero.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import Seed from '../../components/Seed.astro';
 import Steps from '../../components/Steps.astro';
 import InquirySection from '../../components/InquirySection.astro';
-import { getProducts } from '../../lib/content';
+import { getProducts, groupByCategory, productPath, slugOf } from '../../lib/content';
 import { langPaths, localizePath, useTranslations, type Lang } from '../../i18n';
 
 export const getStaticPaths = langPaths;
 
 const { lang } = Astro.props as { lang: Lang };
 const { dict } = useTranslations(lang);
-const products = (await getProducts(lang)).filter((p) => p.data.featured);
+const groups = groupByCategory(await getProducts(lang));
+// Where each category panel's seeds sit (% of the panel's art box).
+const panelSeeds = [
+  { x: 2, y: 14, w: 17, r: -10 },
+  { x: 24, y: 46, w: 14, r: 16 },
+  { x: 40, y: 4, w: 19, r: 4 },
+  { x: 62, y: 40, w: 15, r: -24 },
+  { x: 80, y: 6, w: 13, r: 30 },
+];
 ---
 <BaseLayout lang={lang} title={dict.meta.homeTitle} description={dict.meta.homeDescription}>
-  <RouteHero lang={lang} />
+  <HomeHero lang={lang} />
 
-  <section class="section alt" id="products">
-    <div class="wrap">
-      <h2 class="h2">{dict.products.title}</h2>
-      <p class="section-intro">{dict.products.intro}</p>
-      <ProductTable lang={lang} products={products} />
-      <p><a class="text-link more" href={localizePath(lang, '/products/')}>{dict.cta.allProducts}</a></p>
+  <!-- Documented quality -->
+  <section class="section quality">
+    <Seed product="green-lentils" variant={2} size={110} class="deco d1" style="--rot:12deg" parallax={0.25} />
+    <Seed product="chickpeas" variant={3} size={90} class="deco d2" style="--rot:-20deg" parallax={0.4} />
+    <div class="wrap two">
+      <div class="text" data-reveal>
+        <p class="eyebrow">{dict.home.qualityEyebrow}</p>
+        <h2 class="h2">{dict.home.qualityTitle}</h2>
+        <p class="body">{dict.home.qualityText}</p>
+        <a class="line-link" href={localizePath(lang, '/how-we-work/')}>{dict.nav.how}</a>
+      </div>
+      <div class="docs" aria-hidden="true">
+        {(['phytosanitary', 'origin'] as const).map((c, i) => (
+          <div class={`doc doc-${i}`} data-reveal style={`--d:${0.15 + i * 0.15}s`}>
+            <span class="doc-title display">{dict.certificates[c]}</span>
+            <span class="lines"><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="seal"></span>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
-  <section class="section" id="how">
+  <!-- Company and route -->
+  <section class="section alt company">
+    <div class="wrap two reverse">
+      <div class="text" data-reveal>
+        <p class="eyebrow">{dict.home.companyEyebrow}</p>
+        <h2 class="h2">{dict.home.companyTitle}</h2>
+        <p class="body">{dict.home.companyText}</p>
+        <a class="line-link" href={localizePath(lang, '/about/')}>{dict.nav.about}</a>
+      </div>
+      <RouteMap lang={lang} />
+    </div>
+  </section>
+
+  <!-- Products by origin -->
+  <section class="section products">
+    <Seed product="seedless-raisins" variant={1} size={100} class="deco d3" style="--rot:28deg" parallax={0.3} />
     <div class="wrap">
-      <h2 class="h2">{dict.how.title}</h2>
-      <p class="section-intro">{dict.how.intro}</p>
+      <div class="head" data-reveal>
+        <p class="eyebrow">{dict.home.productsEyebrow}</p>
+        <h2 class="h2">{dict.home.productsTitle}</h2>
+      </div>
+      <div class="panels">
+        {groups.map((group, gi) => (
+          <article class="panel" data-reveal style={`--d:${gi * 0.15}s`}>
+            <div class="art">
+              {panelSeeds.map((s, i) => (
+                <Seed
+                  product={slugOf(group.items[i % group.items.length])}
+                  variant={i}
+                  size={Math.round(s.w * 5.2)}
+                  style={`left:${s.x}%;top:${s.y}%;width:${s.w}%;--rot:${s.r}deg;--t:${6 + (i % 3)}s;--fd:${-i}s`}
+                />
+              ))}
+            </div>
+            <p class="eyebrow">{dict.origins[group.items[0].data.origin]}</p>
+            <h3 class="display"><a href={localizePath(lang, `/products/${group.category}/`)}>{dict.categories[group.category].group}</a></h3>
+            <ul>
+              {group.items.map((p) => (
+                <li><a href={localizePath(lang, productPath(p))}>{p.data.title}</a></li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <p class="more"><a class="line-link" href={localizePath(lang, '/products/')}>{dict.cta.allProducts}</a></p>
+    </div>
+  </section>
+
+  <!-- How we work -->
+  <section class="section alt how">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <p class="eyebrow">{dict.home.howEyebrow}</p>
+        <h2 class="h2">{dict.home.howTitle}</h2>
+      </div>
       <Steps lang={lang} />
     </div>
   </section>
@@ -37,5 +111,61 @@ const products = (await getProducts(lang)).filter((p) => p.data.featured);
 </BaseLayout>
 
 <style>
-  .more { display: inline-block; margin-top: 12px; }
+  .section { overflow: hidden; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 112px); align-items: center; }
+  .two.reverse > :first-child { order: 2; }
+  .text { max-width: 520px; }
+  .body { color: var(--muted); font-size: var(--fs-lead); margin: 0 0 32px; }
+  .head { max-width: 720px; margin-bottom: clamp(36px, 5vw, 64px); }
+
+  .section :global(.deco) { z-index: 0; }
+  .section :global(.d1) { width: 92px; inset-inline-end: 3%; top: 4%; }
+  .section :global(.d2) { width: 70px; inset-inline-start: 44%; bottom: 6%; }
+  .section :global(.d3) { width: 80px; inset-inline-end: 6%; top: 6%; }
+
+  /* Certificate cards: a drawing of documents, not real ones (no issuer, no logos). */
+  .docs { position: relative; min-height: 400px; }
+  .doc {
+    position: absolute; width: min(300px, 68%); aspect-ratio: 3 / 4; padding: 28px 26px;
+    background: var(--card); border: 1px solid var(--rule); border-radius: 4px;
+    display: grid; align-content: start; gap: 18px;
+  }
+  .doc::after { content: ""; position: absolute; inset: 8px; border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); border-radius: 2px; pointer-events: none; }
+  .doc-0 { inset-inline-start: 4%; top: 0; rotate: -5deg; }
+  .doc-1 { inset-inline-end: 2%; top: 64px; rotate: 4deg; }
+  .doc-title { font-size: 1.5rem; line-height: 1.15; color: var(--navy); }
+  .lines { display: grid; gap: 10px; }
+  .lines i { display: block; height: 6px; border-radius: 3px; background: var(--sand); }
+  .lines i:nth-child(2n) { width: 82%; }
+  .lines i:last-child { width: 56%; }
+  .seal {
+    position: absolute; inset-inline-end: 24px; bottom: 26px; width: 64px; height: 64px; border-radius: 50%;
+    border: 1.5px solid var(--gold); display: grid; place-items: center;
+  }
+  .seal::before { content: ""; width: 44px; height: 44px; border-radius: 50%; border: 1px dashed var(--gold); }
+  .seal::after { content: ""; position: absolute; width: 16px; height: 8px; border: solid var(--gold-ink); border-width: 0 0 2px 2px; rotate: -45deg; translate: 0 -2px; }
+
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 40px); }
+  .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: clamp(24px, 3vw, 40px); }
+  .art { position: relative; aspect-ratio: 16 / 7; margin-bottom: 28px; }
+  .panel h3 { font-size: clamp(1.8rem, 2.6vw, 2.4rem); line-height: 1.1; margin: 0 0 18px; font-weight: 500; }
+  .panel h3 a { color: var(--navy); text-decoration: none; }
+  .panel h3 a:hover { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 1px; text-underline-offset: 6px; }
+  .panel ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .panel li a {
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 0;
+    border-bottom: 1px solid var(--rule); color: var(--ink); text-decoration: none; transition: color 0.2s, padding 0.3s var(--ease);
+  }
+  .panel li a::after { content: "→"; color: var(--gold-ink); opacity: 0; transition: opacity 0.3s; }
+  :global([dir='rtl']) .panel li a::after { content: "←"; }
+  .panel li a:hover { color: var(--navy); padding-inline-start: 8px; }
+  .panel li a:hover::after { opacity: 1; }
+  .more { margin: 40px 0 0; }
+
+  @media (max-width: 900px) {
+    .two, .panels { grid-template-columns: 1fr; }
+    .two.reverse > :first-child { order: 0; }
+    .docs { min-height: 360px; }
+    .section :global(.deco) { display: none; }
+  }
 </style>

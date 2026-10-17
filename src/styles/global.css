@@ -1,54 +1,65 @@
-/* Design tokens: docs/brand-guide.md, section 11. */
+/* Design tokens: docs/brand-guide.md, section 11 (v0.3: warm ivory, serif display, seed illustrations). */
 :root {
   --navy: #08275A;
   --navy-deep: #051A3D;
   --gold: #C3922D;      /* lines and accents; never text on light backgrounds */
   --gold-ink: #8A6416;  /* gold for text and focus on light backgrounds */
-  --paper: #FFFFFF;
-  --mist: #F2F4F8;
-  --rule: #D6DCE6;
+  --paper: #F6F3EC;     /* warm ivory page background */
+  --sand: #ECE6DA;      /* alternate sections */
+  --card: #FBF9F5;
+  --mist: var(--sand);
+  --rule: #DCD3C3;
   --ink: #13213A;
-  --muted: #4D5B73;
+  --muted: #5B5F68;
   --on-dark-muted: #B9C3D3;
 
   --font: "IBM Plex Sans", system-ui, sans-serif;
+  --display: "Cormorant Garamond", "Times New Roman", serif;
   --measure: 64ch;
-  --wrap: 1200px;
-  --gutter: clamp(16px, 4vw, 40px);
-  --route-w: 72px;
+  --wrap: 1240px;
+  --gutter: clamp(16px, 4vw, 48px);
   --focus: var(--gold-ink);
+  --header-h: 84px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   --fs-sm: 0.875rem;
   --fs-body: 1rem;
-  --fs-lead: 1.25rem;
-  --fs-h3: 1.5rem;
-  --fs-h2: clamp(1.75rem, 3vw, 2.25rem);
-  --fs-h1: clamp(2rem, 4.5vw, 3rem);
-  --fs-hero: clamp(2.5rem, 6.2vw, 4.75rem);
-  --lh-body: 1.6;
-  --lh-tight: 1.15;
-  --lh-hero: 1.08;
-  --track-tight: -0.02em;
+  --fs-lead: 1.1875rem;
+  --fs-h3: 1.625rem;
+  --fs-h2: clamp(2.2rem, 3.8vw, 3.25rem);
+  --fs-h1: clamp(2.6rem, 5.2vw, 4.25rem);
+  --fs-hero: clamp(2.8rem, 5.6vw, 4.9rem);
+  --lh-body: 1.65;
+  --lh-tight: 1.08;
+  --lh-hero: 1.02;
+  --track-tight: -0.01em;
+  --track-eyebrow: 0.12em;
 }
 :root:lang(fa) {
   --font: "IBM Plex Sans Arabic", "IBM Plex Sans", system-ui, sans-serif;
+  --display: "Markazi Text", "IBM Plex Sans Arabic", serif;
+  --fs-h2: clamp(2.2rem, 3.6vw, 3.1rem);
+  --fs-h1: clamp(2.5rem, 4.8vw, 4rem);
+  --fs-hero: clamp(2.7rem, 5.6vw, 5rem);
   --lh-body: 1.85;
-  --lh-tight: 1.5;
-  --lh-hero: 1.4;
-  --track-tight: 0; /* letter-spacing breaks Persian joining */
+  --lh-tight: 1.35;
+  --lh-hero: 1.3;
+  --track-tight: 0;   /* letter-spacing breaks Persian joining */
+  --track-eyebrow: 0;
 }
 @media (max-width: 640px) {
-  :root { --route-w: 40px; }
+  :root { --header-h: 68px; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 16px; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font: 400 var(--fs-body)/var(--lh-body) var(--font);
   font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
 img { max-width: 100%; height: auto; display: block; }
@@ -59,18 +70,27 @@ img { max-width: 100%; height: auto; display: block; }
   clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* Unconfirmed content (docs/brand-guide.md). scripts/check-placeholders.mjs blocks publishing while any remain. */
+/* Unconfirmed content (docs/brand-guide.md). scripts/check-placeholders.mjs reports any that remain. */
 .tbd { color: var(--gold-ink); background: color-mix(in srgb, var(--gold) 12%, transparent); padding-inline: 0.2em; border-radius: 2px; }
 .dark .tbd { color: var(--gold); background: color-mix(in srgb, var(--gold) 16%, transparent); }
 
-/* Sections */
-.section { padding-block: clamp(56px, 8vw, 96px); }
-.section.alt { background: var(--mist); }
-.dark { background: var(--navy-deep); color: #fff; --focus: var(--gold); }
+/* Type */
 h1, h2, h3 { color: var(--navy); }
+h1, h2, .h2, .display { font-family: var(--display); font-weight: 500; letter-spacing: var(--track-tight); }
+:root:lang(fa) h1, :root:lang(fa) h2, :root:lang(fa) .h2, :root:lang(fa) .display { font-weight: 600; }
+.h2 { font-size: var(--fs-h2); line-height: var(--lh-tight); margin: 0 0 20px; text-wrap: balance; }
+.eyebrow {
+  display: flex; align-items: center; gap: 14px; margin: 0 0 18px;
+  font: 500 0.8125rem/1.4 var(--font); letter-spacing: var(--track-eyebrow); color: var(--gold-ink);
+}
+.eyebrow::before { content: ""; width: 36px; height: 1px; background: var(--gold); flex: none; }
+.dark .eyebrow { color: var(--gold); }
+
+/* Sections */
+.section { padding-block: clamp(64px, 9vw, 128px); position: relative; }
+.section.alt { background: var(--sand); }
+.dark { background: var(--navy-deep); color: #fff; --focus: var(--gold); --rule: rgba(255, 255, 255, 0.16); }
 .dark h1, .dark h2, .dark h3 { color: #fff; }
-.h2 { font-size: var(--fs-h2); line-height: 1.2; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
-:root:lang(fa) .h2 { letter-spacing: 0; line-height: 1.5; }
 .section-intro { color: var(--muted); margin: 0 0 40px; max-width: var(--measure); }
 .dark .section-intro { color: var(--on-dark-muted); }
 .prose { max-width: var(--measure); }
@@ -79,17 +99,50 @@ h1, h2, h3 { color: var(--navy); }
 /* Buttons */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; text-align: center;
-  min-height: 48px; padding: 0 22px;
+  min-height: 50px; padding: 0 26px;
   font: 500 var(--fs-body)/1.2 var(--font);
-  text-decoration: none; border-radius: 4px; border: 1.5px solid transparent; cursor: pointer;
+  text-decoration: none; border-radius: 4px; border: 1px solid transparent; cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
 }
 .btn-primary { background: var(--navy); color: #fff; }
 .btn-primary:hover { background: var(--navy-deep); }
 .btn-secondary { border-color: var(--navy); color: var(--navy); background: transparent; }
-.btn-secondary:hover { background: var(--mist); }
+.btn-secondary:hover { background: var(--navy); color: #fff; }
 .btn-gold { background: var(--gold); color: var(--navy-deep); }
 .btn-gold:hover { background: #D4A440; }
 .btn[aria-disabled="true"] { opacity: 0.6; cursor: not-allowed; }
-.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+
+/* Text link with a gold line that grows on hover */
+.line-link {
+  display: inline-flex; align-items: center; gap: 14px;
+  color: var(--navy); font-weight: 500; text-decoration: none;
+}
+.line-link::before {
+  content: ""; width: 44px; height: 1px; background: var(--gold); flex: none;
+  transition: width 0.45s var(--ease);
+}
+.line-link:hover::before, .line-link:focus-visible::before { width: 76px; }
+.dark .line-link { color: #fff; }
 
 .text-link { color: var(--navy); font-weight: 500; text-underline-offset: 4px; }
+
+/* Scroll reveal: only hidden when JS has marked the page as animated (BaseLayout), so content never depends on JS. */
+.motion [data-reveal] {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.motion [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* Decorative seeds */
+.seed { position: absolute; pointer-events: none; user-select: none; }
+.seed img { width: 100%; height: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .float { animation: float var(--t, 7s) ease-in-out infinite alternate; animation-delay: var(--fd, 0s); }
+}
+@keyframes float {
+  from { translate: 0 -6px; rotate: var(--r0, 0deg); }
+  to { translate: 0 6px; rotate: var(--r1, 6deg); }
+}
+.seed { rotate: var(--rot, 0deg); }

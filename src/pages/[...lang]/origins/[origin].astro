@@ -27,6 +27,7 @@ const products = (await getProducts(lang)).filter((p) => p.data.origin === slugO
     title={page.data.title}
     intro={page.data.summary}
     trail={[{ href: localizePath(lang, '/origins/'), label: dict.origins.title }]}
+    seeds={products.map(slugOf)}
   />
   <section class="section">
     <div class="wrap">

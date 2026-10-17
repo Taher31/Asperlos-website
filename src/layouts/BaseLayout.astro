@@ -9,6 +9,15 @@ import '@fontsource/ibm-plex-sans/cyrillic-600.css';
 import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
 import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
 import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+// Display serif for headings (brand guide v0.3): Cormorant Garamond for Latin and Cyrillic, Markazi Text for Persian.
+import '@fontsource/cormorant-garamond/latin-500.css';
+import '@fontsource/cormorant-garamond/latin-600.css';
+import '@fontsource/cormorant-garamond/latin-500-italic.css';
+import '@fontsource/cormorant-garamond/cyrillic-500.css';
+import '@fontsource/cormorant-garamond/cyrillic-600.css';
+import '@fontsource/cormorant-garamond/cyrillic-500-italic.css';
+import '@fontsource/markazi-text/arabic-500.css';
+import '@fontsource/markazi-text/arabic-600.css';
 import '../styles/global.css';
 
 import Header from '../components/Header.astro';
@@ -85,6 +94,10 @@ const organization = {
   <link rel="sitemap" href="/sitemap-index.xml">
 
   {[organization, ...schema].map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  <!-- Scroll animations only when JS runs and the visitor has not asked for reduced motion. -->
+  <script is:inline>
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+  </script>
 </head>
 <body>
   <LangSuggestBar lang={lang} path={path} />
@@ -94,5 +107,39 @@ const organization = {
   </main>
   <Footer lang={lang} />
   <QuickBar lang={lang} />
+
+  <script>
+    // Reveal [data-reveal] blocks as they enter the viewport; drift [data-parallax] decorations with the scroll.
+    const root = document.documentElement;
+    if (root.classList.contains('motion')) {
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        }),
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+      );
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+
+      const layers = [...document.querySelectorAll<HTMLElement>('[data-parallax]')];
+      if (layers.length) {
+        let ticking = false;
+        const update = () => {
+          const vh = window.innerHeight;
+          for (const el of layers) {
+            // Measure the (untransformed) container, so the offset never feeds back into itself.
+            const r = (el.parentElement ?? el).getBoundingClientRect();
+            if (r.bottom < -200 || r.top > vh + 200) continue;
+            const offset = (r.top + r.height / 2 - vh / 2) * -Number(el.dataset.parallax);
+            el.style.translate = `0 ${offset.toFixed(1)}px`;
+          }
+          ticking = false;
+        };
+        window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+        update();
+      }
+    } else {
+      document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-in'));
+    }
+  </script>
 </body>
 </html>

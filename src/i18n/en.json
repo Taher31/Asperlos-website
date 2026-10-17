@@ -16,6 +16,7 @@
     "origins": "Origins",
     "how": "How we work",
     "faq": "FAQ",
+    "close": "Close",
     "about": "About",
     "contact": "Contact",
     "language": "Language",
@@ -64,7 +65,8 @@
     "specParameter": "Parameter",
     "specValue": "Value",
     "packagingTbd": "[TBD: packaging]",
-    "specsTbd": "[TBD: specification from the supply contract]"
+    "specsTbd": "[TBD: specification from the supply contract]",
+    "illustration": "Illustration"
   },
   "categories": {
     "pulses": { "name": "Pulses", "group": "Pulses from Russia" },
@@ -154,6 +156,22 @@
   "messenger": {
     "general": "Hello, I would like a quote.",
     "product": "Hello, I would like a quote for {product}."
+  },
+  "home": {
+    "tickerLabel": "From Russia and Uzbekistan to Iran",
+    "qualityEyebrow": "Documented quality",
+    "qualityTitle": "Every shipment travels with its documents",
+    "qualityText": "Each shipment travels with a phytosanitary certificate and a certificate of origin. Final specifications for each shipment, such as grade, moisture and packaging, are agreed in the contract.",
+    "companyEyebrow": "Company",
+    "companyTitle": "A trading company in Mashhad",
+    "companyText": "Asperlos imports pulses from Russia and dried fruit from Uzbekistan for wholesalers, packers and food producers in Iran. We handle customs clearance in Iran. The company was registered in 2025 as Asperlos Gostar Fardad Trading Co. (LLC).",
+    "mapSaratov": "Saratov region",
+    "mapIran": "Iran",
+    "mapMashhad": "Mashhad",
+    "productsEyebrow": "Products",
+    "productsTitle": "Six products from two origins",
+    "howEyebrow": "How we work",
+    "howTitle": "From your inquiry to delivery at your warehouse"
   },
   "faq": {
     "title": "Frequently asked questions",
