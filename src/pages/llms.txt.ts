@@ -16,6 +16,7 @@ export const GET: APIRoute = async ({ site }) => {
     `Founded: ${en.about.foundedValue}`,
     `Registration: ${en.about.registrationValue}`,
     `Address: ${en.contact.addressValue}`,
+    'Phone: +98 51 3878 8331',
     'Languages: English, Persian (/fa/), Russian (/ru/)',
   ];
   const productLines = products.map((p) => {
