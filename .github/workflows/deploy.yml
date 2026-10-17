@@ -49,3 +49,8 @@ jobs:
           dry-run: ${{ inputs.dry_run || false }}
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR || 'public_html/' }}
+
+      # Ask IndexNow search engines (Bing, Yandex…) to recrawl. A failure here does not undo the deploy.
+      - run: node scripts/indexnow.mjs
+        if: ${{ !inputs.dry_run }}
+        continue-on-error: true

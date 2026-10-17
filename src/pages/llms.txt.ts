@@ -45,6 +45,10 @@ export const GET: APIRoute = async ({ site }) => {
     `- [About](${abs('/about/')}): ${en.meta.aboutDescription}`,
     `- [Contact](${abs('/contact/')}): ${en.meta.contactDescription}`,
     `- [Request a quote](${abs('/inquiry/')}): ${en.meta.inquiryDescription}`,
+    `- [FAQ](${abs('/faq/')}): ${en.meta.faqDescription}`,
+    '',
+    '## Frequently asked questions',
+    ...en.faq.items.map((item) => `- ${item.q} ${item.a}`),
   ].filter((line) => !TBD.test(line));
 
   return new Response(lines.join('\n') + '\n', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
