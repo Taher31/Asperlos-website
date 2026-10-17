@@ -45,7 +45,13 @@ const organization = {
   logo: abs('/apple-touch-icon.png'),
   description: dict.meta.homeDescription,
   foundingDate: '2025',
-  address: { '@type': 'PostalAddress', addressLocality: 'Mashhad', addressCountry: 'IR' },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'No. 100, Meysam Shomali 20, Tabarsi Shomali 9, Tabarsi Blvd.',
+    addressLocality: 'Mashhad',
+    postalCode: '9177874616',
+    addressCountry: 'IR',
+  },
   identifier: { '@type': 'PropertyValue', propertyID: 'Iran national ID', value: '14015013271' },
   areaServed: { '@type': 'Country', name: 'Iran' },
 };

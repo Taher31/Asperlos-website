@@ -15,7 +15,7 @@ export const GET: APIRoute = async ({ site }) => {
     `Registered name: ${en.about.registeredNameValue}`,
     `Founded: ${en.about.foundedValue}`,
     `Registration: ${en.about.registrationValue}`,
-    'Based in: Mashhad, Iran',
+    `Address: ${en.contact.addressValue}`,
     'Languages: English, Persian (/fa/), Russian (/ru/)',
   ];
   const productLines = products.map((p) => {
