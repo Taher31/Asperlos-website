@@ -42,7 +42,7 @@ def cut(path: Path) -> Image.Image:
     shift = d.mean(axis=-1)
     chroma = np.abs(d - shift[..., None]).max(axis=-1)
     near_bg = np.abs(d).max(axis=-1) <= FLOOD_TOLERANCE
-    shadowish = (chroma < 12) & (shift < 0) & (shift > -110)   # light-to-mid shadows; deep darks belong to the seed
+    shadowish = (chroma < 25) & (shift < 0) & (shift > -110)   # light-to-mid shadows; deep darks belong to the seed
     mask = Image.fromarray(((near_bg | shadowish) * 255).astype(np.uint8), "L").copy()  # copy: arrays map read-only
     step = max(1, min(w, h) // 24)
     starts = [(x, 0) for x in range(0, w, step)] + [(x, h - 1) for x in range(0, w, step)]
