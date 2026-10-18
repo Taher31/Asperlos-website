@@ -1,11 +1,11 @@
 {
   "meta": {
     "siteName": "Asperlos",
-    "homeTitle": "Asperlos: pulses from Russia and dried fruit from Uzbekistan, delivered to Iran",
-    "homeDescription": "Asperlos imports pulses and dried fruit directly from suppliers in Russia and Uzbekistan for wholesalers, packers and food producers in Iran.",
-    "productsDescription": "Pulses from Russia and dried fruit from Uzbekistan, supplied in trade packaging to buyers in Iran.",
+    "homeTitle": "Asperlos: pulses from Russia and dried fruit from Central Asia, delivered to Iran",
+    "homeDescription": "Asperlos imports pulses, grains and dried fruit directly from suppliers in Russia and Central Asia for wholesalers, packers and food producers in Iran.",
+    "productsDescription": "Pulses from Russia and dried fruit from Central Asia, supplied in trade packaging to buyers in Iran.",
     "howDescription": "How Asperlos works with buyers: from your inquiry to delivery at your warehouse.",
-    "aboutDescription": "Asperlos is a trading company in Mashhad, Iran, importing pulses from Russia and dried fruit from Uzbekistan.",
+    "aboutDescription": "Asperlos is a trading company in Mashhad, Iran, importing pulses from Russia and dried fruit from Central Asia.",
     "contactDescription": "Contact Asperlos by email, WhatsApp, Telegram or phone.",
     "inquiryDescription": "Request a quote for pulses and dried fruit from Asperlos.",
     "faqDescription": "Answers to common questions from wholesale buyers about Asperlos: products, origins, documents, customs clearance and quotes."
@@ -45,9 +45,9 @@
   },
   "hero": {
     "l1": "Pulses from Russia.",
-    "l2": "Dried fruit from Uzbekistan.",
+    "l2": "Dried fruit from Central Asia.",
     "l3": "Delivered to Iran.",
-    "lead": "Asperlos imports pulses and dried fruit directly from suppliers in Russia and Uzbekistan for wholesalers, packers and food producers in Iran."
+    "lead": "Asperlos imports pulses, grains and dried fruit directly from suppliers in Russia and Central Asia for wholesalers, packers and food producers in Iran."
   },
   "products": {
     "title": "Products",
@@ -70,7 +70,7 @@
   },
   "categories": {
     "pulses": { "name": "Pulses", "group": "Pulses from Russia" },
-    "dried-fruit": { "name": "Dried fruit", "group": "Dried fruit from Uzbekistan" }
+    "dried-fruit": { "name": "Dried fruit", "group": "Dried fruit from Central Asia" }
   },
   "origins": {
     "title": "Origins",
@@ -158,13 +158,13 @@
     "product": "Hello, I would like a quote for {product}."
   },
   "home": {
-    "tickerLabel": "From Russia and Uzbekistan to Iran",
+    "tickerLabel": "From Russia and Central Asia to Iran",
     "qualityEyebrow": "Documented quality",
     "qualityTitle": "Every shipment travels with its documents",
     "qualityText": "Each shipment travels with a phytosanitary certificate and a certificate of origin. Final specifications for each shipment, such as grade, moisture and packaging, are agreed in the contract.",
     "companyEyebrow": "Company",
     "companyTitle": "A trading company in Mashhad",
-    "companyText": "Asperlos imports pulses from Russia and dried fruit from Uzbekistan for wholesalers, packers and food producers in Iran. We handle customs clearance in Iran. The company was registered in 2025 as Asperlos Gostar Fardad Trading Co. (LLC).",
+    "companyText": "Asperlos imports pulses from Russia and dried fruit from Central Asia for wholesalers, packers and food producers in Iran. We handle customs clearance in Iran. The company was registered in 2025 as Asperlos Gostar Fardad Trading Co. (LLC).",
     "mapSaratov": "Saratov region",
     "mapIran": "Iran",
     "mapMashhad": "Mashhad",
