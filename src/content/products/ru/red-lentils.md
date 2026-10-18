@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 1
 featured: true
-summary: "Красная чечевица из России для оптовых покупателей, фасовочных и пищевых предприятий."
+summary: "Красная чечевица для оптовых покупателей, фасовочных и пищевых предприятий."
 # Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
 # availability: in-stock   # in-stock | seasonal | on-request
 # packaging: []

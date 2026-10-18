@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 3
 featured: true
-summary: "Нут из России для оптовых покупателей, фасовочных и пищевых предприятий."
+summary: "Нут для оптовых покупателей, фасовочных и пищевых предприятий."
 # Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
 # availability: in-stock   # in-stock | seasonal | on-request
 # packaging: []

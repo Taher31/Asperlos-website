@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 4
 featured: true
-summary: "Dried peas from Russia for wholesalers, packers and food producers."
+summary: "Dried peas for wholesalers, packers and food producers."
 # Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
 # availability: in-stock   # in-stock | seasonal | on-request
 # packaging: []

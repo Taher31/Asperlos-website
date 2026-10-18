@@ -4,7 +4,7 @@ category: dried-fruit
 origin: uzbekistan
 order: 2
 featured: true
-summary: "مویز ازبکستان برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
+summary: "مویز برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
 # Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
 # availability: in-stock   # in-stock | seasonal | on-request
 # packaging: []

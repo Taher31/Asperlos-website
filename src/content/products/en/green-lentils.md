@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 2
 featured: true
-summary: "Green lentils from Russia for wholesalers, packers and food producers."
+summary: "Green lentils for wholesalers, packers and food producers."
 # From supply contract AGRO030926 (IMP-2026-000001). Availability and MOQ still to confirm.
 # availability: in-stock   # in-stock | seasonal | on-request
 # moq: ""

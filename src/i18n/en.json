@@ -1,11 +1,11 @@
 {
   "meta": {
     "siteName": "Asperlos",
-    "homeTitle": "Asperlos: pulses from Russia and dried fruit from Central Asia, delivered to Iran",
-    "homeDescription": "Asperlos imports pulses, grains and dried fruit directly from suppliers in Russia and Central Asia for wholesalers, packers and food producers in Iran.",
-    "productsDescription": "Pulses from Russia and dried fruit from Central Asia, supplied in trade packaging to buyers in Iran.",
+    "homeTitle": "Asperlos: supplier and importer of pulses and dried fruit, Mashhad",
+    "homeDescription": "Asperlos is a supplier and importer of pulses and dried fruit based in Mashhad, serving wholesalers, packers and food producers in Iran.",
+    "productsDescription": "Pulses and dried fruit in trade packaging for wholesale buyers in Iran.",
     "howDescription": "How Asperlos works with buyers: from your inquiry to delivery at your warehouse.",
-    "aboutDescription": "Asperlos is a trading company in Mashhad, Iran, importing pulses from Russia and dried fruit from Central Asia.",
+    "aboutDescription": "Asperlos Gostar Fardad Trading Co. (LLC) is a supplier and importer of pulses and dried fruit based in Mashhad.",
     "contactDescription": "Contact Asperlos by email, WhatsApp, Telegram or phone.",
     "inquiryDescription": "Request a quote for pulses and dried fruit from Asperlos.",
     "faqDescription": "Answers to common questions from wholesale buyers about Asperlos: products, origins, documents, customs clearance and quotes."
@@ -44,10 +44,10 @@
     "allProducts": "View all products"
   },
   "hero": {
-    "l1": "Pulses from Russia.",
-    "l2": "Dried fruit from Central Asia.",
-    "l3": "Delivered to Iran.",
-    "lead": "Asperlos imports pulses, grains and dried fruit directly from suppliers in Russia and Central Asia for wholesalers, packers and food producers in Iran."
+    "l1": "Supplier and importer",
+    "l2": "of pulses and dried fruit,",
+    "l3": "for wholesale buyers in Iran.",
+    "lead": "Asperlos supplies pulses and dried fruit in trade packaging to wholesalers, packers and food producers. Each shipment travels with the documents it requires, and its specification is set out in the contract."
   },
   "products": {
     "title": "Products",
@@ -69,8 +69,14 @@
     "illustration": "Illustration"
   },
   "categories": {
-    "pulses": { "name": "Pulses", "group": "Pulses from Russia" },
-    "dried-fruit": { "name": "Dried fruit", "group": "Dried fruit from Central Asia" }
+    "pulses": {
+      "name": "Pulses",
+      "group": "Pulses"
+    },
+    "dried-fruit": {
+      "name": "Dried fruit",
+      "group": "Dried fruit"
+    }
   },
   "origins": {
     "title": "Origins",
@@ -94,11 +100,26 @@
     "title": "How we work",
     "intro": "From your inquiry to delivery at your warehouse.",
     "steps": [
-      { "t": "Inquiry", "d": "Send us the product, quantity and delivery date." },
-      { "t": "Contract", "d": "We agree price, specification and delivery terms in a contract." },
-      { "t": "Shipment", "d": "Each shipment travels with a phytosanitary certificate and certificate of origin." },
-      { "t": "Customs clearance", "d": "We handle customs clearance in Iran." },
-      { "t": "Delivery", "d": "Delivery to your warehouse in [TBD: city]." }
+      {
+        "t": "Inquiry",
+        "d": "Send us the product, quantity and delivery date."
+      },
+      {
+        "t": "Contract",
+        "d": "We agree price, specification and delivery terms in a contract."
+      },
+      {
+        "t": "Shipment",
+        "d": "Each shipment travels with a phytosanitary certificate and certificate of origin."
+      },
+      {
+        "t": "Customs clearance",
+        "d": "We handle customs clearance in Iran."
+      },
+      {
+        "t": "Delivery",
+        "d": "Delivery to your warehouse in [TBD: city]."
+      }
     ],
     "termsTitle": "Delivery terms",
     "terms": "[TBD: delivery terms and transport routes]"
@@ -158,18 +179,18 @@
     "product": "Hello, I would like a quote for {product}."
   },
   "home": {
-    "tickerLabel": "From Russia and Central Asia to Iran",
+    "tickerLabel": "Supply and import",
     "qualityEyebrow": "Documented quality",
-    "qualityTitle": "Every shipment travels with its documents",
-    "qualityText": "Each shipment travels with a phytosanitary certificate and a certificate of origin. Final specifications for each shipment, such as grade, moisture and packaging, are agreed in the contract.",
+    "qualityTitle": "Shipments with documents",
+    "qualityText": "Every shipment is accompanied by a phytosanitary certificate and a certificate of origin. The specification of each shipment is agreed in writing in the contract before dispatch.",
     "companyEyebrow": "Company",
     "companyTitle": "A trading company in Mashhad",
-    "companyText": "Asperlos imports pulses from Russia and dried fruit from Central Asia for wholesalers, packers and food producers in Iran. We handle customs clearance in Iran. The company was registered in 2025 as Asperlos Gostar Fardad Trading Co. (LLC).",
+    "companyText": "Asperlos Gostar Fardad Trading Co. (LLC) is registered in Mashhad (2025). We handle sourcing, import documentation and customs clearance in Iran, and agree prices and delivery terms directly with each buyer.",
     "mapSaratov": "Saratov region",
     "mapIran": "Iran",
     "mapMashhad": "Mashhad",
     "productsEyebrow": "Products",
-    "productsTitle": "Six products from two origins",
+    "productsTitle": "Products",
     "howEyebrow": "How we work",
     "howTitle": "From your inquiry to delivery at your warehouse"
   },
@@ -177,14 +198,38 @@
     "title": "Frequently asked questions",
     "intro": "Short answers for wholesale buyers.",
     "items": [
-      { "q": "What does Asperlos import?", "a": "Pulses from Russia (red lentils, green lentils, chickpeas and dried peas) and dried fruit from Uzbekistan (seedless raisins (Kishmish) and seeded raisins)." },
-      { "q": "Who do you supply?", "a": "Wholesalers, packers and food producers in Iran." },
-      { "q": "Where is the company based?", "a": "Asperlos is based in Mashhad, Iran. The company was registered in 2025 as Asperlos Gostar Fardad Trading Co. (LLC), registration No. 96011." },
-      { "q": "Why are there no prices on the website?", "a": "Prices depend on the product, quantity and delivery terms. Request a quote through the inquiry form or a messenger and we will send current terms." },
-      { "q": "What documents come with each shipment?", "a": "Each shipment travels with a phytosanitary certificate and a certificate of origin." },
-      { "q": "Do you handle customs clearance?", "a": "Yes. We handle customs clearance in Iran." },
-      { "q": "How are specifications agreed?", "a": "Final specifications for each shipment are agreed in the contract. For example, our green lentils (crop 2026, Saratov region) have a calibre of 6 mm and above, moisture max. 14%, foreign matter max. 2% and broken kernels max. 5%, and are supplied in 25 kg PP bags." },
-      { "q": "How do I request a quote?", "a": "Send us the product, quantity and delivery date through the inquiry form." }
+      {
+        "q": "What does Asperlos import?",
+        "a": "We supply pulses (red lentils, green lentils, chickpeas and dried peas) and dried fruit (seedless and seeded raisins)."
+      },
+      {
+        "q": "Who do you supply?",
+        "a": "Wholesalers, packers and food producers in Iran."
+      },
+      {
+        "q": "Where is the company based?",
+        "a": "Asperlos is based in Mashhad, Iran. The company was registered in 2025 as Asperlos Gostar Fardad Trading Co. (LLC), registration No. 96011."
+      },
+      {
+        "q": "Why are there no prices on the website?",
+        "a": "Prices depend on the product, quantity and delivery terms. Request a quote through the inquiry form or a messenger and we will send current terms."
+      },
+      {
+        "q": "What documents come with each shipment?",
+        "a": "Each shipment travels with a phytosanitary certificate and a certificate of origin."
+      },
+      {
+        "q": "Do you handle customs clearance?",
+        "a": "Yes. We handle customs clearance in Iran."
+      },
+      {
+        "q": "How are specifications agreed?",
+        "a": "Final specifications for each shipment are agreed in the contract. For example, our green lentils (crop 2026, Saratov region) have a calibre of 6 mm and above, moisture max. 14%, foreign matter max. 2% and broken kernels max. 5%, and are supplied in 25 kg PP bags."
+      },
+      {
+        "q": "How do I request a quote?",
+        "a": "Send us the product, quantity and delivery date through the inquiry form."
+      }
     ]
   },
   "notFound": {

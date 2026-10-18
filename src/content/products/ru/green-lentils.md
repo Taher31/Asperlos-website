@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 2
 featured: true
-summary: "Зеленая чечевица из России для оптовых покупателей, фасовочных и пищевых предприятий."
+summary: "Зеленая чечевица для оптовых покупателей, фасовочных и пищевых предприятий."
 # From supply contract AGRO030926 (IMP-2026-000001). Availability and MOQ still to confirm.
 # availability: in-stock   # in-stock | seasonal | on-request
 # moq: ""

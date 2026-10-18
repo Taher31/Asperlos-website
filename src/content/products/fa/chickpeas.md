@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 3
 featured: true
-summary: "نخود روسیه برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
+summary: "نخود برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
 # Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
 # availability: in-stock   # in-stock | seasonal | on-request
 # packaging: []

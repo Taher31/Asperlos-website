@@ -4,7 +4,7 @@ category: pulses
 origin: russia
 order: 2
 featured: true
-summary: "عدس سبز روسیه برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
+summary: "عدس سبز برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
 # From supply contract AGRO030926 (IMP-2026-000001). Availability and MOQ still to confirm.
 # availability: in-stock   # in-stock | seasonal | on-request
 # moq: ""
