@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HomeHero from '../../components/HomeHero.astro';
-import RouteMap from '../../components/RouteMap.astro';
+import IranMap from '../../components/IranMap.astro';
+import MarketFacts from '../../components/MarketFacts.astro';
 import Seed from '../../components/Seed.astro';
 import Steps from '../../components/Steps.astro';
 import InquirySection from '../../components/InquirySection.astro';
@@ -24,6 +25,15 @@ const panelSeeds = [
 ---
 <BaseLayout lang={lang} title={dict.meta.homeTitle} description={dict.meta.homeDescription}>
   <HomeHero lang={lang} />
+
+  <!-- Registration: who we are, verifiable -->
+  <div class="trust" data-reveal>
+    <div class="wrap trust-row">
+      <span class="trust-name">{dict.about.registeredNameValue}</span>
+      <span>{dict.about.registrationValue}</span>
+      <a class="line-link" href="https://www.rrk.ir/" rel="noopener" target="_blank">{dict.home.verify}</a>
+    </div>
+  </div>
 
   <!-- Documented quality -->
   <section class="section quality">
@@ -57,7 +67,7 @@ const panelSeeds = [
         <p class="body">{dict.home.companyText}</p>
         <a class="line-link" href={localizePath(lang, '/about/')}>{dict.nav.about}</a>
       </div>
-      <RouteMap lang={lang} />
+      <IranMap lang={lang} />
     </div>
   </section>
 
@@ -82,7 +92,6 @@ const panelSeeds = [
                 />
               ))}
             </div>
-            <p class="eyebrow">{dict.origins[group.items[0].data.origin]}</p>
             <h3 class="display"><a href={localizePath(lang, `/products/${group.category}/`)}>{dict.categories[group.category].group}</a></h3>
             <ul>
               {group.items.map((p) => (
@@ -95,6 +104,8 @@ const panelSeeds = [
       <p class="more"><a class="line-link" href={localizePath(lang, '/products/')}>{dict.cta.allProducts}</a></p>
     </div>
   </section>
+
+  <MarketFacts lang={lang} />
 
   <!-- How we work -->
   <section class="section alt how">
@@ -112,6 +123,10 @@ const panelSeeds = [
 
 <style>
   .section { overflow: hidden; }
+  .trust { border-block: 1px solid var(--rule); background: var(--card); font-size: var(--fs-sm); color: var(--muted); }
+  .trust-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 32px; padding-block: 18px; }
+  .trust-name { color: var(--navy); font-weight: 600; }
+  .trust .line-link { margin-inline-start: auto; font-size: var(--fs-sm); }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 112px); align-items: center; }
   .two.reverse > :first-child { order: 2; }
   .text { max-width: 520px; }

@@ -41,12 +41,26 @@ const { dict, t, h } = useTranslations(lang);
 
     <div class="bottom">
       <p>{t(dict.footer.copyright, { year: formatYear(lang) })}</p>
+      <p class="clock" hidden data-clock={lang}>{dict.footer.localTime}: <time></time></p>
       <p class="langs">
         {languages.map((l) => <a href={localizePath(l, '/')} lang={l}>{langMeta[l].name}</a>)}
       </p>
     </div>
   </div>
 </footer>
+
+<script>
+  // Office local time, so buyers abroad know whether it is working hours in Mashhad.
+  document.querySelectorAll<HTMLElement>('[data-clock]').forEach((el) => {
+    const out = el.querySelector('time')!;
+    const locale = { fa: 'fa-IR', ru: 'ru-RU', en: 'en-GB' }[el.dataset.clock!] ?? 'en-GB';
+    const fmt = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tehran' });
+    const tick = () => { out.textContent = fmt.format(new Date()); };
+    tick();
+    el.hidden = false;
+    setInterval(tick, 30000);
+  });
+</script>
 
 <style>
   .site-footer { padding-block: clamp(56px, 8vw, 104px) 32px; font-size: var(--fs-sm); color: var(--on-dark-muted); --value: var(--on-dark-muted); }
@@ -81,6 +95,7 @@ const { dict, t, h } = useTranslations(lang);
   nav a:hover { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
   .bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 20px; margin-top: clamp(40px, 6vw, 64px); }
   .langs { display: flex; gap: 14px; }
+  .clock time { color: #fff; font-variant-numeric: tabular-nums; }
   .langs a { color: var(--on-dark-muted); text-decoration: none; }
   .langs a:hover { color: #fff; }
   .langs a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }

@@ -169,7 +169,8 @@
   },
   "footer": {
     "registeredName": "Asperlos Gostar Fardad Trading Co. (LLC)",
-    "copyright": "© {year} Asperlos"
+    "copyright": "© {year} Asperlos",
+    "localTime": "Mashhad time"
   },
   "quickbar": {
     "whatsapp": "WhatsApp"
@@ -192,7 +193,15 @@
     "productsEyebrow": "Products",
     "productsTitle": "Products",
     "howEyebrow": "How we work",
-    "howTitle": "From your inquiry to delivery at your warehouse"
+    "howTitle": "From your inquiry to delivery at your warehouse",
+    "mapCaspian": "Caspian Sea",
+    "mapGulf": "Persian Gulf",
+    "mapOman": "Gulf of Oman",
+    "mapOffice": "Head office",
+    "mapTehran": "Tehran",
+    "mapCentralAsia": "Central Asia",
+    "mapCaption": "Supply directions are schematic. Borders: Natural Earth.",
+    "verify": "Check in the Official Gazette of Iran"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -236,5 +245,28 @@
     "title": "Page not found",
     "text": "This page does not exist or has moved.",
     "home": "Go to the home page"
+  },
+  "market": {
+    "eyebrow": "Market",
+    "title": "The supply market in figures",
+    "intro": "Published figures on the markets we buy from, each with its source.",
+    "note": "Third-party figures, not Asperlos data.",
+    "items": [
+      {
+        "value": "297,000 t",
+        "text": "Russia's lentil exports in 2023, 2.4 times the 2022 volume. Turkey, India and Iran were the main buyers.",
+        "source": "Agroexport (Russian Ministry of Agriculture), via TASS, 4 March 2024"
+      },
+      {
+        "value": "≈3.2 million t",
+        "text": "Russia's pulse exports in the 2023/24 season (July to June), a record.",
+        "source": "Interfax, 28 December 2024"
+      },
+      {
+        "value": "47,700 t",
+        "text": "Uzbekistan's raisin exports in January to June 2026, to 57 countries; 1,700 t went to Iran.",
+        "source": "National Statistics Committee of Uzbekistan, via FreshPlaza, 14 August 2026"
+      }
+    ]
   }
 }

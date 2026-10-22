@@ -1,0 +1,135 @@
+---
+// Regional map of Iran with the office in Mashhad and the two supply directions (north and north-east).
+// Drawn at build time from Natural Earth data (world-atlas, public domain), so the page makes no map requests.
+// The routes are schematic arcs, not actual transport corridors.
+import { geoBounds, geoMercator, geoPath } from 'd3-geo';
+import { feature } from 'topojson-client';
+import type { Feature, FeatureCollection } from 'geojson';
+import world50 from 'world-atlas/countries-50m.json';
+import world110 from 'world-atlas/countries-110m.json';
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Office pin only, no supply routes (contact page) */
+  officeOnly?: boolean;
+}
+const { lang, officeOnly = false } = Astro.props;
+const { dict } = useTranslations(lang);
+
+const W = 600;
+const H = 640;
+const IRAN = '364';
+const area = { west: 40, east: 70, south: 23, north: 53 };
+
+const toFeatures = (topo: any) => (feature(topo, topo.objects.countries) as unknown as FeatureCollection).features;
+const box: Feature = {
+  type: 'Feature',
+  properties: {},
+  geometry: { type: 'Polygon', coordinates: [[[area.west, area.south], [area.west, area.north], [area.east, area.north], [area.east, area.south], [area.west, area.south]]] },
+};
+const projection = geoMercator().fitExtent([[0, 0], [W, H]], box).clipExtent([[0, 0], [W, H]]);
+const path = geoPath(projection).digits(1);
+
+// Countries whose bounds touch the area (Russia's bounds wrap the antimeridian, so x0 > x1).
+const inArea = (f: Feature) => {
+  const [[x0, y0], [x1, y1]] = geoBounds(f);
+  const lonHit = x0 <= x1 ? x1 >= area.west - 2 && x0 <= area.east + 2 : true;
+  return lonHit && y1 >= area.south - 2 && y0 <= area.north + 2;
+};
+const neighbours = toFeatures(world110).filter((f) => String(f.id) !== IRAN && inArea(f)).map((f) => path(f)).filter(Boolean);
+const iran = path(toFeatures(world50).find((f) => String(f.id) === IRAN)!);
+
+const pt = (lon: number, lat: number) => projection([lon, lat])!.map((v) => Math.round(v * 10) / 10) as [number, number];
+const mashhad = pt(59.6, 36.3);
+const tehran = pt(51.39, 35.69);
+const russia = pt(46.0, 51.5);       // Saratov region, where the green lentils come from
+const centralAsia = pt(66.9, 39.65); // Samarkand area
+const arc = ([x1, y1]: number[], [x2, y2]: number[], bend: number) => {
+  const mx = (x1 + x2) / 2 + bend;
+  const my = (y1 + y2) / 2;
+  return `M${x1},${y1} Q${mx},${my} ${x2},${y2}`;
+};
+const routeNorth = arc(russia, mashhad, 120);
+const routeEast = arc(centralAsia, mashhad, 40);
+const seas = [
+  { at: pt(50.6, 42.2), label: dict.home.mapCaspian },
+  { at: pt(51.2, 27.0), label: dict.home.mapGulf },
+  { at: pt(60.2, 24.0), label: dict.home.mapOman },
+];
+---
+<figure class:list={['iran-map', { compact: officeOnly }]} data-reveal>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${dict.home.mapIran} · ${dict.home.mapMashhad}`}>
+    <defs>
+      <pattern id="iran-dots" width="9" height="9" patternUnits="userSpaceOnUse">
+        <circle cx="4.5" cy="4.5" r="0.9" />
+      </pattern>
+    </defs>
+    <rect class="water" width={W} height={H} />
+    {neighbours.map((d) => <path class="land" d={d} />)}
+    <path class="iran" d={iran} />
+    <path class="iran-dots" d={iran} fill="url(#iran-dots)" />
+
+    {seas.map((s) => <text class="sea" x={s.at[0]} y={s.at[1]} text-anchor="middle">{s.label}</text>)}
+
+    {!officeOnly && (
+      <g class="routes">
+        <path class="ghost" d={routeNorth} />
+        <path class="ghost" d={routeEast} />
+        <path class="route" d={routeNorth} pathLength="1" />
+        <path class="route b" d={routeEast} pathLength="1" />
+        <circle class="ship" r="4"><animateMotion dur="7s" repeatCount="indefinite" path={routeNorth} /></circle>
+        <circle class="ship" r="4"><animateMotion dur="5.5s" begin="1.2s" repeatCount="indefinite" path={routeEast} /></circle>
+        <circle class="node" cx={russia[0]} cy={russia[1]} r="6" />
+        <circle class="node" cx={centralAsia[0]} cy={centralAsia[1]} r="6" />
+        <text class="place" x={russia[0]} y={russia[1] - 14} text-anchor="middle">{dict.origins.russia}</text>
+        <text class="place" x={centralAsia[0]} y={centralAsia[1] - 14} text-anchor="middle">{dict.home.mapCentralAsia}</text>
+      </g>
+    )}
+
+    <circle class="city" cx={tehran[0]} cy={tehran[1]} r="3.5" />
+    <text class="city-label" x={tehran[0]} y={tehran[1] + 18} text-anchor="middle">{dict.home.mapTehran}</text>
+    <text class="country" x={pt(54.2, 32.2)[0]} y={pt(54.2, 32.2)[1]} text-anchor="middle">{dict.home.mapIran}</text>
+
+    <circle class="pulse" cx={mashhad[0]} cy={mashhad[1]} r="9" />
+    <circle class="office" cx={mashhad[0]} cy={mashhad[1]} r="9" />
+    <text class="place office-label" x={mashhad[0]} y={mashhad[1] + 30} text-anchor="middle">{dict.home.mapMashhad}</text>
+    <text class="office-sub" x={mashhad[0]} y={mashhad[1] + 48} text-anchor="middle">{dict.home.mapOffice}</text>
+  </svg>
+  <figcaption>{dict.home.mapCaption}</figcaption>
+</figure>
+
+<style>
+  .iran-map { margin: 0; position: relative; }
+  svg { display: block; width: 100%; height: auto; border-radius: 4px; }
+  .water { fill: var(--paper); }
+  .land { fill: #E3DBCB; stroke: var(--paper); stroke-width: 0.8; }
+  .iran { fill: var(--card); stroke: var(--gold); stroke-width: 1.6; stroke-linejoin: round; }
+  .iran-dots { pointer-events: none; }
+  #iran-dots circle, pattern circle { fill: color-mix(in srgb, var(--gold) 38%, transparent); }
+  text { font-family: var(--font); }
+  .sea { fill: #8C99AE; font-size: 13px; font-style: italic; letter-spacing: 0.02em; }
+  :global(:root:lang(fa)) .sea { font-style: normal; letter-spacing: 0; }
+  .country { fill: color-mix(in srgb, var(--navy) 22%, transparent); font: 600 34px/1 var(--display); letter-spacing: 0.04em; }
+  :global(:root:lang(fa)) .country { letter-spacing: 0; }
+  .city { fill: var(--muted); }
+  .city-label { fill: var(--muted); font-size: 13px; }
+  .place { fill: var(--navy); font: 600 17px/1 var(--display); }
+  .office-sub { fill: var(--gold-ink); font-size: 12px; }
+  .ghost { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 6; }
+  .route { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-linecap: round; }
+  .node { fill: var(--paper); stroke: var(--navy); stroke-width: 2.5; }
+  .office { fill: var(--gold); stroke: var(--navy); stroke-width: 2.5; }
+  .pulse { fill: none; stroke: var(--gold); stroke-width: 1.5; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .ship { fill: var(--navy); display: none; }
+  figcaption { margin-top: 10px; font-size: 0.75rem; color: var(--muted); }
+
+  :global(.motion) .route { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s cubic-bezier(0.6, 0.05, 0.3, 1) 0.3s; }
+  :global(.motion) .route.b { transition-delay: 0.6s; }
+  :global(.motion) .iran-map:global(.is-in) .route { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .iran-map:global(.is-in) .ship { display: block; }
+    .iran-map:global(.is-in) .pulse { animation: pulse 2.4s ease-out 1.6s infinite; }
+  }
+  @keyframes pulse { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(3.4); } }
+</style>
