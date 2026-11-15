@@ -8,6 +8,7 @@
   "email": null,
   "linkedin": null,
   "mapUrl": null,
+  "sampleMapUrl": "https://www.google.com/maps/search/?api=1&query=Mellat+Park%2C+Mashhad%2C+Iran",
   "order": {
     "en": ["email", "whatsapp", "telegram", "phone", "linkedin"],
     "ru": ["email", "whatsapp", "telegram", "phone", "linkedin"],

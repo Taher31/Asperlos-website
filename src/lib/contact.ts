@@ -42,3 +42,4 @@ export const channelsFor = (lang: Lang) => contact.order[lang] as Channel[];
 export const messengersFor = (lang: Lang): Channel[] => (lang === 'fa' ? ['whatsapp', 'bale'] : ['whatsapp', 'telegram']);
 
 export const mapUrl = contact.mapUrl as string | null;
+export const sampleMapUrl = contact.sampleMapUrl;
