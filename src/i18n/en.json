@@ -204,6 +204,10 @@
     "mapCaption": "Supply directions are schematic. Borders: Natural Earth.",
     "verify": "Check in the Official Gazette of Iran"
   },
+  "shipment": {
+    "eyebrow": "Loading report",
+    "title": "Lentil shipment from Russia to Iran"
+  },
   "faq": {
     "title": "Frequently asked questions",
     "intro": "Short answers for wholesale buyers.",
