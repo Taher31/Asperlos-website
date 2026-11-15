@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import greenLentils from '../assets/green-lentils/macro.webp';
 import StatusMark from './StatusMark.astro';
 import { groupByCategory, productPath, slugOf, type Product } from '../lib/content';
 import { listSep, localizePath, useTranslations, type Lang } from '../i18n';
@@ -31,7 +33,16 @@ const groups = groupByCategory(products);
       )}
       {group.items.map((p) => (
         <tr>
-          <td class="name"><a href={localizePath(lang, productPath(p))}>{p.data.title}</a></td>
+          <td class="name">
+            <a class:list={{ 'with-image': slugOf(p) === 'green-lentils' }} href={localizePath(lang, productPath(p))}>
+              {slugOf(p) === 'green-lentils' ? (
+                <>
+                  <Image src={greenLentils} alt="" width={56} height={56} widths={[56, 112]} sizes="56px" fit="cover" format="webp" loading="lazy" />
+                  <span>{p.data.title}<small>{dict.products.illustration}</small></span>
+                </>
+              ) : p.data.title}
+            </a>
+          </td>
           <td class="pack">
             {p.data.packaging?.length ? p.data.packaging.join(listSep[lang]) : <span set:html={h(dict.products.packagingTbd)} />}
           </td>
@@ -56,6 +67,9 @@ const groups = groupByCategory(products);
   tbody:first-of-type .group th { padding-top: 16px; }
   .name a { font-weight: 500; color: var(--ink); text-decoration: none; }
   .name a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .name .with-image { display: inline-flex; align-items: center; gap: 12px; }
+  .with-image img { flex: none; width: 56px; height: 56px; object-fit: cover; border-radius: 4px; }
+  .with-image small { display: block; color: var(--muted); font-size: 0.75rem; font-weight: 400; }
   .pack { color: var(--muted); }
   .act { text-align: end; white-space: nowrap; }
   .act a { color: var(--navy); font-weight: 500; text-underline-offset: 4px; }

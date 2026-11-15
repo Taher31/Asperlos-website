@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PageHeader from '../../../../components/PageHeader.astro';
+import GreenLentilPhotos from '../../../../components/GreenLentilPhotos.astro';
 import StatusMark from '../../../../components/StatusMark.astro';
 import Seed from '../../../../components/Seed.astro';
 import { hasSeeds } from '../../../../lib/seeds';
@@ -111,7 +112,7 @@ const schema = [
       </div>
 
       <aside class="side">
-        {!p.image && hasSeeds(slug) && (
+        {slug !== 'green-lentils' && !p.image && hasSeeds(slug) && (
           <figure class="specimen">
             <div class="specimen-art" aria-hidden="true">
               {[
@@ -130,9 +131,11 @@ const schema = [
         {messengers.map((m) => (
           <a class="btn btn-secondary" href={m.href ?? localizePath(lang, '/contact/')}>{m.label}</a>
         ))}
+        {slug === 'green-lentils' && <GreenLentilPhotos lang={lang} placement="cover" />}
       </aside>
     </div>
   </section>
+  {slug === 'green-lentils' && <GreenLentilPhotos lang={lang} placement="gallery" />}
 </BaseLayout>
 
 <style>

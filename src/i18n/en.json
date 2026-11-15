@@ -206,7 +206,10 @@
   },
   "shipment": {
     "eyebrow": "Loading report",
-    "title": "Lentil shipment from Russia to Iran"
+    "title": "Lentil shipment from Russia to Iran",
+    "lentilPreviewAlt": "Large green lentils in a light-coloured dish",
+    "lentilPreviewCaption": "Green lentils · Illustrative image",
+    "lentilPreviewLink": "View the green lentil gallery"
   },
   "faq": {
     "title": "Frequently asked questions",

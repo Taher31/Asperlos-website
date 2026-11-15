@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import greenLentils from '../assets/green-lentils/bowl.webp';
 import shipmentMedia from '../data/lentil-shipment-media.json';
 import { localizePath, useTranslations, type Lang } from '../i18n';
 
@@ -22,8 +24,23 @@ const media: ShipmentMedia[] = shipmentMedia;
       <div>
         <p class="eyebrow">{dict.shipment.eyebrow}</p>
         <h2 class="h2" id="lentil-shipment-title">{dict.shipment.title}</h2>
+        <a class="btn btn-secondary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
       </div>
-      <a class="btn btn-secondary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+      <figure class="product-preview">
+        <a href={localizePath(lang, '/products/pulses/green-lentils/#green-lentil-photos')} aria-label={dict.shipment.lentilPreviewLink}>
+          <Image
+            src={greenLentils}
+            alt={dict.shipment.lentilPreviewAlt}
+            widths={[400, 640, 960]}
+            sizes="(max-width: 720px) 92vw, (max-width: 1240px) 43vw, 520px"
+            format="webp"
+            quality={82}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <figcaption>{dict.shipment.lentilPreviewCaption}</figcaption>
+      </figure>
     </div>
     {media.length > 0 && (
       <ul class="media">
@@ -53,9 +70,13 @@ const media: ShipmentMedia[] = shipmentMedia;
 
 <style>
   .shipment { padding-block: clamp(36px, 5vw, 72px); border-block: 1px solid var(--rule); }
-  .shipment-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px 36px; }
+  .shipment-header { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: clamp(24px, 5vw, 72px); }
   .eyebrow { margin-bottom: 12px; }
-  .h2 { margin: 0; }
+  .h2 { margin: 0 0 24px; }
+  .product-preview { min-width: 0; margin: 0; }
+  .product-preview a { display: block; border-radius: 4px; }
+  .product-preview img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: 1px solid var(--rule); border-radius: 4px; }
+  .product-preview figcaption { margin-top: 8px; color: var(--muted); font-size: var(--fs-sm); }
   .media {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
@@ -67,4 +88,7 @@ const media: ShipmentMedia[] = shipmentMedia;
   .media li { min-width: 0; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
   .media img, .media video { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; }
   .media video { background: var(--navy-deep); }
+  @media (max-width: 720px) {
+    .shipment-header { grid-template-columns: 1fr; }
+  }
 </style>
