@@ -2,8 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// The domain is temporary (ADR-0001, R6). Change it here only; never hard-code absolute URLs elsewhere.
-const SITE = 'https://esperlos.sbs';
+// Canonical origin for pages, metadata and sitemap URLs.
+const SITE = 'https://asperlos.ir';
 
 export default defineConfig({
   site: SITE,

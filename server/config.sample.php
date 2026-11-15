@@ -11,7 +11,7 @@ return [
 
     // Inquiries are emailed here. Send from an address on the site's domain so SPF/DKIM pass (ADR-0001, R3).
     'notify_email' => 'sales@example.com',
-    'from_email'   => 'no-reply@esperlos.sbs',
+    'from_email'   => 'no-reply@asperlos.ir',
 
     // Random string used to hash visitor IPs for rate limiting (no raw IPs are stored).
     'ip_salt' => 'CHANGE_ME_TO_A_LONG_RANDOM_STRING',

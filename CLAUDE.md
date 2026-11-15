@@ -11,7 +11,7 @@ Corporate B2B website for Asperlos, an Iranian trading company importing pulses 
 ## Key rules
 
 - Languages: English (default, `/`), Persian (`/fa/`, RTL), Russian (`/ru/`). Claude writes all translations; keep all three in sync.
-- Current domain is **temporary**: `esperlos.sbs` (its spelling differs from the brand; the brand is **Asperlos**, so never write "Esperlos" in content). Define it only via `site` in `astro.config.mjs`; never hard-code absolute URLs, so the domain can be swapped with 301 redirects later.
+- The canonical domain is `asperlos.ir`. Generate absolute site URLs from `site` in `astro.config.mjs`. Use the brand name **Asperlos** in content.
 - **No prices anywhere** on the site. Conversion goals are the inquiry form and messenger buttons.
 - Zero requests to external domains: self-host fonts, icons, scripts (Google services are blocked or slow in Iran).
 - Never publish placeholder specs/figures or anything marked `[تکمیل شود]`.

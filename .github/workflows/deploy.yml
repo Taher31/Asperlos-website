@@ -50,6 +50,10 @@ jobs:
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR || 'public_html/' }}
 
+      - name: Verify the published version on the canonical domain
+        if: ${{ !inputs.dry_run }}
+        run: node scripts/verify-deploy.mjs
+
       # Ask IndexNow search engines (Bing, Yandex…) to recrawl. A failure here does not undo the deploy.
       - run: node scripts/indexnow.mjs
         if: ${{ !inputs.dry_run }}
