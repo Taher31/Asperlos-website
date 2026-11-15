@@ -8,14 +8,15 @@ interface Props {
   lang: Lang;
 }
 
-type ShipmentMedia = { src: string; description: Record<Lang, string> } & (
-  | { type: 'photo'; width: number; height: number }
+type ShipmentMedia = { src: string; width: number; height: number; description: Record<Lang, string> } & (
+  | { type: 'photo' }
   | { type: 'video'; poster?: string }
 );
 
 const { lang } = Astro.props;
 const { dict } = useTranslations(lang);
-const media: ShipmentMedia[] = shipmentMedia;
+const media = shipmentMedia as ShipmentMedia[];
+const galleryHref = localizePath(lang, '/products/pulses/green-lentils/#green-lentil-photos');
 ---
 
 <section class="section alt shipment" id="lentil-shipment" aria-labelledby="lentil-shipment-title">
@@ -24,47 +25,62 @@ const media: ShipmentMedia[] = shipmentMedia;
       <div>
         <p class="eyebrow">{dict.shipment.eyebrow}</p>
         <h2 class="h2" id="lentil-shipment-title">{dict.shipment.title}</h2>
-        <a class="btn btn-secondary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+        <div class="actions">
+          <a class="btn btn-secondary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+          {media.length > 0 && <a class="text-link" href={galleryHref}>{dict.shipment.lentilPreviewLink}</a>}
+        </div>
       </div>
-      <figure class="product-preview">
-        <a href={localizePath(lang, '/products/pulses/green-lentils/#green-lentil-photos')} aria-label={dict.shipment.lentilPreviewLink}>
-          <Image
-            src={greenLentils}
-            alt={dict.shipment.lentilPreviewAlt}
-            widths={[400, 640, 960]}
-            sizes="(max-width: 720px) 92vw, (max-width: 1240px) 43vw, 520px"
-            format="webp"
-            quality={82}
-            loading="lazy"
-            decoding="async"
-          />
-        </a>
-        <figcaption>{dict.shipment.lentilPreviewCaption}</figcaption>
-      </figure>
+      {media.length ? (
+        <ul class="media" role="list">
+          {media.map((item) => (
+            <li class:list={{ 'video-item': item.type === 'video' }}>
+              {item.type === 'photo' ? (
+                <img
+                  src={item.src}
+                  alt={item.description[lang]}
+                  width={item.width}
+                  height={item.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <figure>
+                  <video
+                    controls
+                    playsinline
+                    preload="none"
+                    poster={item.poster}
+                    width={item.width}
+                    height={item.height}
+                    aria-label={item.description[lang]}
+                  >
+                    <source src={item.src} type="video/mp4" />
+                    <a href={item.src}>{item.description[lang]}</a>
+                  </video>
+                  <figcaption>{item.description[lang]}</figcaption>
+                </figure>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <figure class="product-preview">
+          <a href={galleryHref} aria-label={dict.shipment.lentilPreviewLink}>
+            <Image
+              src={greenLentils}
+              alt={dict.shipment.lentilPreviewAlt}
+              widths={[400, 640, 960]}
+              sizes="(max-width: 720px) 92vw, (max-width: 1240px) 43vw, 520px"
+              format="webp"
+              quality={82}
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+          <figcaption>{dict.shipment.lentilPreviewCaption}</figcaption>
+        </figure>
+      )}
     </div>
-    {media.length > 0 && (
-      <ul class="media">
-        {media.map((item) => (
-          <li>
-            {item.type === 'photo' ? (
-              <img
-                src={item.src}
-                alt={item.description[lang]}
-                width={item.width}
-                height={item.height}
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <video controls playsinline preload="none" poster={item.poster} aria-label={item.description[lang]}>
-                <source src={item.src} type="video/mp4" />
-                <a href={item.src}>{item.description[lang]}</a>
-              </video>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
   </div>
 </section>
 
@@ -79,13 +95,16 @@ const media: ShipmentMedia[] = shipmentMedia;
   .product-preview figcaption { margin-top: 8px; color: var(--muted); font-size: var(--fs-sm); }
   .media {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: 20px;
-    margin: 32px 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
   .media li { min-width: 0; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  .media figure { margin: 0; }
+  .media figcaption { padding: 10px 12px; color: var(--muted); font-size: var(--fs-sm); }
+  .media .video-item { width: min(100%, 288px); justify-self: center; }
   .media img, .media video { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; }
   .media video { background: var(--navy-deep); }
   @media (max-width: 720px) {

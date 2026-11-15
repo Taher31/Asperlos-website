@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "type": "video",
+    "src": "/shipments/lentils-russia-loading-20261115.mp4",
+    "poster": "/shipments/lentils-russia-loading-20261115.webp",
+    "width": 480,
+    "height": 856,
+    "description": {
+      "en": "Video of the lentil shipment",
+      "fa": "ویدیوی محموله عدس",
+      "ru": "Видео партии чечевицы"
+    }
+  }
+]
