@@ -7,8 +7,7 @@
   "eitaa": null,
   "email": null,
   "linkedin": null,
-  "mapUrl": null,
-  "sampleMapUrl": "https://www.google.com/maps/search/?api=1&query=Mellat+Park%2C+Mashhad%2C+Iran",
+  "officeLocation": { "latitude": 36.30708966289818, "longitude": 59.65251217341543 },
   "order": {
     "en": ["email", "whatsapp", "telegram", "phone", "linkedin"],
     "ru": ["email", "whatsapp", "telegram", "phone", "linkedin"],

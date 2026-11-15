@@ -8,6 +8,7 @@ import type { Feature, FeatureCollection } from 'geojson';
 import world50 from 'world-atlas/countries-50m.json';
 import world110 from 'world-atlas/countries-110m.json';
 import { useTranslations, type Lang } from '../i18n';
+import { officeLocation } from '../lib/contact';
 
 interface Props {
   lang: Lang;
@@ -41,7 +42,7 @@ const neighbours = toFeatures(world110).filter((f) => String(f.id) !== IRAN && i
 const iran = path(toFeatures(world50).find((f) => String(f.id) === IRAN)!);
 
 const pt = (lon: number, lat: number) => projection([lon, lat])!.map((v) => Math.round(v * 10) / 10) as [number, number];
-const mashhad = pt(59.6, 36.3);
+const mashhad = pt(officeLocation.longitude, officeLocation.latitude);
 const tehran = pt(51.39, 35.69);
 const russia = pt(46.0, 51.5);       // Saratov region, where the green lentils come from
 const centralAsia = pt(66.9, 39.65); // Samarkand area

@@ -41,5 +41,10 @@ export const channelsFor = (lang: Lang) => contact.order[lang] as Channel[];
 /** Messenger buttons offered next to a product, in order of relevance for the language. */
 export const messengersFor = (lang: Lang): Channel[] => (lang === 'fa' ? ['whatsapp', 'bale'] : ['whatsapp', 'telegram']);
 
-export const mapUrl = contact.mapUrl as string | null;
-export const sampleMapUrl = contact.sampleMapUrl;
+export const officeLocation = contact.officeLocation;
+const officeCoordinates = `${officeLocation.latitude},${officeLocation.longitude}`;
+export const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeCoordinates)}`;
+
+// Google Maps share embed for the office coordinates, at street level.
+export const mapEmbedUrl = (lang: Lang) =>
+  `https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s${officeCoordinates}!6i17!3m1!1s${lang}!5m1!1s${lang}`;

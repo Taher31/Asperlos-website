@@ -152,7 +152,7 @@
     "hours": "Working hours",
     "hoursValue": "[TBD: working days and hours, Tehran time]",
     "map": "View on Google Maps",
-    "sampleMap": "Sample location: Mellat Park, Mashhad (Google Maps)",
+    "mapTitle": "Office location",
     "valueTbd": "[TBD]"
   },
   "about": {
