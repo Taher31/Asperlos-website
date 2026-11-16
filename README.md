@@ -37,11 +37,9 @@ npm run check:placeholders   # فهرست جاهای «[تکمیل شود]» ک�
 
 ## راه‌اندازی روی هاست (یک بار)
 
-1. **PHP:** در cPanel نسخه PHP را روی ۸.۱ یا بالاتر بگذارید (افزونه‌های `pdo_mysql`، `mbstring` و `curl` فعال باشند).
-2. **دیتابیس:** در بخش MySQL Databases یک دیتابیس و کاربر بسازید. بعد در phpMyAdmin محتوای `server/schema.sql` را اجرا کنید.
-3. **تنظیمات:** `server/config.sample.php` را پر کنید و با نام `asperlos-config.php` در **پوشه خانه هاست**، یعنی یک سطح بالاتر از `public_html`، قرار دهید. این فایل نباید در git یا داخل `public_html` باشد.
-4. **ایمیل:** نشانی `from_email` روی همان دامنه سایت باشد. در بخش Email Deliverability، رکوردهای SPF و DKIM را فعال کنید.
-5. **SSL:** در بخش SSL/TLS Status، گواهی AutoSSL را برای دامنه فعال کنید.
+1. **PHP و ایمیل:** فرم با PHP ۸.۱ یا بالاتر و افزونهٔ `mbstring`، درخواست‌ها را از طریق سرویس ایمیل هاست به `info@asperlos.ir` می‌فرستد. صندوق را در Email Accounts و وضعیت ارسال را در Track Delivery بررسی کنید.
+2. **ذخیره یا اعلان اضافه (اختیاری):** برای ذخیره در MySQL، افزونهٔ `pdo_mysql` و `server/schema.sql` را به کار ببرید. برای اعلان پیام‌رسان، افزونهٔ `curl` لازم است. تنظیمات را مطابق `server/config.sample.php` با نام `asperlos-config.php` یک سطح بالاتر از پوشهٔ وب قرار دهید.
+3. **SSL:** در بخش SSL/TLS Status، گواهی AutoSSL را برای دامنه فعال کنید.
 
 ## انتشار خودکار (GitHub Actions)
 

@@ -1,6 +1,6 @@
 <?php
-// Copy to the home directory on the host, OUTSIDE public_html, as:  ~/asperlos-config.php
-// (public_html/api/inquiry.php loads it from two levels up). Never commit the real file.
+// Optional: copy above the web document root as asperlos-config.php to store
+// inquiries in MySQL or send messenger notifications. Never commit the real file.
 
 return [
     'db' => [
@@ -9,9 +9,8 @@ return [
         'password' => 'CHANGE_ME',
     ],
 
-    // Inquiries are emailed here. Send from an address on the site's domain so SPF/DKIM pass (ADR-0001, R3).
-    'notify_email' => 'sales@example.com',
-    'from_email'   => 'no-reply@asperlos.ir',
+    // The form delivers to info@asperlos.ir. Override the sender only if needed.
+    'from_email'   => 'info@asperlos.ir',
 
     // Random string used to hash visitor IPs for rate limiting (no raw IPs are stored).
     'ip_salt' => 'CHANGE_ME_TO_A_LONG_RANDOM_STRING',

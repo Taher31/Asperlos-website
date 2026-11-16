@@ -10,13 +10,15 @@ interface Props {
   as?: 'h1' | 'h2';
 }
 const { lang, as: Heading = 'h2' } = Astro.props;
-const { dict, h } = useTranslations(lang);
+const { dict } = useTranslations(lang);
 ---
 <section class="section dark" id="inquiry">
   <div class="wrap grid">
     <div>
       <Heading class="h2">{dict.inquiry.title}</Heading>
-      <p class="section-intro" set:html={h(dict.inquiry.lead)} />
+      <noscript>
+        <p id="inquiry-error" class="native-error" role="alert">{dict.inquiry.error}</p>
+      </noscript>
       <InquiryForm lang={lang} />
     </div>
     <div>
@@ -29,6 +31,8 @@ const { dict, h } = useTranslations(lang);
 <style>
   .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
   .channels-title { font-size: 1.125rem; font-weight: 600; margin: 0 0 16px; }
+  .native-error { display: none; margin: 0 0 16px; color: #FFB4A8; }
+  .native-error:target { display: block; }
   @media (max-width: 960px) {
     .grid { grid-template-columns: 1fr; }
   }

@@ -125,21 +125,20 @@
   },
   "inquiry": {
     "title": "Request a quote",
-    "lead": "We reply within [TBD: 1 business day].",
     "name": "Name",
-    "company": "Company",
-    "phone": "Phone or WhatsApp",
+    "contact": "Email address or WhatsApp number",
     "product": "Product",
     "choose": "Choose a product",
     "other": "Other",
-    "qty": "Quantity (tonnes)",
     "msg": "Message",
     "optional": "optional",
     "sending": "Sending…",
-    "error": "Sending failed. Please try again or message us on WhatsApp.",
-    "required": "This field is required.",
+    "error": "We could not send your request. Please try again or contact us directly.",
+    "contactError": "Enter a valid email address or WhatsApp number.",
+    "validationError": "Enter your name and choose a product.",
+    "rateError": "Too many requests. Please wait a few minutes and try again.",
     "sentTitle": "Request received",
-    "sentText": "Thank you. Your request has been received. We will contact you within [TBD: 1 business day].",
+    "sentText": "Thank you. We will reply using the contact details you provided.",
     "backHome": "Back to the home page"
   },
   "contact": {
@@ -231,7 +230,7 @@
       },
       {
         "q": "How do I request a quote?",
-        "a": "Send us the product, quantity and delivery date through the inquiry form."
+        "a": "Choose a product in the inquiry form and leave your email address or WhatsApp number. You can add order details in the message."
       }
     ]
   },

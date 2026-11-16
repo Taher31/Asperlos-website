@@ -23,6 +23,9 @@ const id = (name: string) => `${idPrefix}-${name}`;
   data-sent-url={localizePath(lang, '/inquiry/sent/')}
   data-msg-sending={dict.inquiry.sending}
   data-msg-error={dict.inquiry.error}
+  data-msg-contact-error={dict.inquiry.contactError}
+  data-msg-validation-error={dict.inquiry.validationError}
+  data-msg-rate-error={dict.inquiry.rateError}
 >
   <input type="hidden" name="lang" value={lang}>
   <!-- Spam trap: people never see or fill this field. -->
@@ -36,14 +39,10 @@ const id = (name: string) => `${idPrefix}-${name}`;
     <input id={id('name')} name="name" autocomplete="name" required maxlength="100">
   </div>
   <div class="field">
-    <label for={id('company')}>{dict.inquiry.company} <small>{dict.inquiry.optional}</small></label>
-    <input id={id('company')} name="company" autocomplete="organization" maxlength="150">
+    <label for={id('contact')}>{dict.inquiry.contact}</label>
+    <input id={id('contact')} name="contact" type="text" autocapitalize="off" spellcheck="false" required maxlength="254" dir="ltr">
   </div>
-  <div class="field">
-    <label for={id('phone')}>{dict.inquiry.phone}</label>
-    <input id={id('phone')} name="phone" type="tel" autocomplete="tel" required maxlength="40" dir="ltr">
-  </div>
-  <div class="field">
+  <div class="field full">
     <label for={id('product')}>{dict.inquiry.product}</label>
     <select id={id('product')} name="product" required data-product-select>
       <option value="">{dict.inquiry.choose}</option>
@@ -51,49 +50,72 @@ const id = (name: string) => `${idPrefix}-${name}`;
       <option value="other">{dict.inquiry.other}</option>
     </select>
   </div>
-  <div class="field">
-    <label for={id('qty')}>{dict.inquiry.qty} <small>{dict.inquiry.optional}</small></label>
-    <input id={id('qty')} name="quantity" inputmode="decimal" maxlength="20" dir="ltr">
-  </div>
   <div class="field full">
     <label for={id('msg')}>{dict.inquiry.msg} <small>{dict.inquiry.optional}</small></label>
     <textarea id={id('msg')} name="message" maxlength="2000"></textarea>
   </div>
   <div class="submit">
     <button class="btn btn-gold" type="submit">{dict.cta.send}</button>
-    <p class="status" role="status" aria-live="polite"></p>
+    <p id={id('status')} class="status" role="status" aria-live="polite"></p>
   </div>
 </form>
 
 <script>
   document.querySelectorAll<HTMLFormElement>('form[data-inquiry]').forEach((form) => {
     // Pre-select the product from ?product=<slug> (links from product pages).
-    const wanted = new URLSearchParams(location.search).get('product');
+    const params = new URLSearchParams(location.search);
+    const wanted = params.get('product');
     const select = form.querySelector<HTMLSelectElement>('[data-product-select]');
     if (wanted && select && [...select.options].some((o) => o.value === wanted)) select.value = wanted;
 
     const status = form.querySelector<HTMLElement>('.status')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-    // Without JavaScript the server redirects back with ?error=… when sending failed.
-    if (new URLSearchParams(location.search).has('error')) {
-      status.textContent = form.dataset.msgError!;
+    const contact = form.querySelector<HTMLInputElement>('input[name="contact"]')!;
+    const messages = new Map([
+      ['contact', form.dataset.msgContactError],
+      ['validation', form.dataset.msgValidationError],
+      ['rate', form.dataset.msgRateError],
+    ]);
+
+    const showError = (error: string) => {
+      status.textContent = messages.get(error) ?? form.dataset.msgError!;
       status.classList.add('error');
-    }
+      if (error === 'contact') {
+        contact.setAttribute('aria-invalid', 'true');
+        contact.setAttribute('aria-describedby', status.id);
+        contact.focus();
+      }
+    };
+
+    contact.addEventListener('input', () => {
+      if (!contact.hasAttribute('aria-invalid')) return;
+      contact.removeAttribute('aria-invalid');
+      contact.removeAttribute('aria-describedby');
+      status.textContent = '';
+      status.classList.remove('error');
+    });
+    const redirectError = params.get('error');
+    if (redirectError !== null) showError(redirectError);
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       button.disabled = true;
       status.textContent = form.dataset.msgSending!;
       status.classList.remove('error');
+      let error = '';
       try {
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
         const data = await res.json().catch(() => ({}));
-        if (!res.ok || !data.ok) throw new Error(String(res.status));
-        location.href = form.dataset.sentUrl!;
+        if (res.ok && data.ok === true) {
+          location.href = form.dataset.sentUrl!;
+          return;
+        }
+        if (typeof data.error === 'string') error = data.error;
       } catch {
-        status.textContent = form.dataset.msgError!;
-        status.classList.add('error');
-        button.disabled = false;
+        // Network errors use the general submission message.
       }
+      button.disabled = false;
+      showError(error);
     });
   });
 </script>
@@ -109,6 +131,7 @@ const id = (name: string) => `${idPrefix}-${name}`;
     min-height: 48px; padding: 10px 12px; width: 100%;
   }
   :global([dir='rtl']) input[dir='ltr'] { text-align: right; }
+  input[aria-invalid="true"] { border-color: var(--error, #A3261B); }
   textarea { min-height: 96px; resize: vertical; }
   .submit { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   .status { margin: 0; font-size: var(--fs-sm); }
