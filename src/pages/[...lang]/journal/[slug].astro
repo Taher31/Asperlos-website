@@ -1,16 +1,26 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getJournalEntries, journalPath } from '../../../lib/journal';
-import fa from '../../../i18n/fa.json';
+import { getJournalEntries, journalLang, journalPath, journalSlug } from '../../../lib/journal';
+import { languages, localizePath, useTranslations } from '../../../i18n';
 
 export async function getStaticPaths() {
-  return (await getJournalEntries()).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const entries = await getJournalEntries();
+  return entries.map((entry) => {
+    const lang = journalLang(entry.id);
+    const slug = journalSlug(entry.id);
+    const translated = languages.every((language) =>
+      entries.some((candidate) => journalSlug(candidate.id) === slug && journalLang(candidate.id) === language),
+    );
+    return { params: { lang: lang === 'en' ? undefined : lang, slug }, props: { entry, translated } };
+  });
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<'journal'> };
+const { entry, translated } = Astro.props as { entry: CollectionEntry<'journal'>; translated: boolean };
+const lang = journalLang(entry.id);
+const { dict } = useTranslations(lang);
 const { Content } = await render(entry);
-const { title, summary, date, category, sources, linkedinUrl, linkedinEmbedUrl } = entry.data;
+const { title, summary, date, category, sources, linkedinUrl, linkedinEmbedUrl, image, video, mediaAlt } = entry.data;
 const dateIso = date.toISOString().slice(0, 10);
 const schema = {
   '@context': 'https://schema.org',
@@ -19,24 +29,26 @@ const schema = {
   headline: title,
   description: summary,
   datePublished: dateIso,
-  inLanguage: 'fa',
-  author: { '@type': 'Organization', name: fa.meta.siteName },
+  inLanguage: lang,
+  author: { '@type': 'Organization', name: dict.meta.siteName },
 };
 ---
-<BaseLayout lang="fa" title={title} description={summary} schema={[schema]} ogType="article" languageFallback="/journal/">
+<BaseLayout lang={lang} title={title} description={summary} schema={[schema]} ogType="article" languageFallback={translated ? undefined : '/journal/'}>
   <article class="wrap article">
     <header class="article-head">
-      <a class="text-link" href="/fa/journal/">{fa.journal.title}</a>
-      <p class="category">{fa.journal.categories[category]}</p>
+      <a class="text-link" href={localizePath(lang, '/journal/')}>{dict.journal.title}</a>
+      <p class="category">{dict.journal.categories[category]}</p>
       <h1>{title}</h1>
       <p class="intro">{summary}</p>
     </header>
     <div class:list={['article-grid', { 'with-social': linkedinUrl || linkedinEmbedUrl }]}>
       <div>
+        {image && <img class="article-media" src={'/journal-media/' + image} alt={mediaAlt ?? ''} loading="lazy" decoding="async" />}
+        {video && <video class="article-media" src={'/journal-media/' + video} controls playsinline preload="metadata" aria-label={title}></video>}
         <div class="prose copy"><Content /></div>
         {sources.length > 0 && (
           <section class="sources" aria-labelledby="journal-sources">
-            <h2 id="journal-sources" class="display">{fa.journal.sources}</h2>
+            <h2 id="journal-sources" class="display">{dict.journal.sources}</h2>
             <ul>
               {sources.map((source) => <li><a class="text-link" href={source.url} dir="auto">{source.label}</a></li>)}
             </ul>
@@ -45,9 +57,9 @@ const schema = {
       </div>
       {(linkedinUrl || linkedinEmbedUrl) && (
         <aside class="post" aria-labelledby="related-linkedin">
-          <h2 id="related-linkedin" class="display">{fa.journal.linkedinPost}</h2>
-          {linkedinEmbedUrl && <iframe src={linkedinEmbedUrl} title={fa.journal.linkedinPost} loading="lazy"></iframe>}
-          {linkedinUrl && <a class="text-link" href={linkedinUrl} rel="noopener" target="_blank">{fa.journal.openLinkedinPost}</a>}
+          <h2 id="related-linkedin" class="display">{dict.journal.linkedinPost}</h2>
+          {linkedinEmbedUrl && <iframe src={linkedinEmbedUrl} title={dict.journal.linkedinPost} loading="lazy"></iframe>}
+          {linkedinUrl && <a class="text-link" href={linkedinUrl} rel="noopener" target="_blank">{dict.journal.openLinkedinPost}</a>}
         </aside>
       )}
     </div>
@@ -60,6 +72,7 @@ const schema = {
   .category { color: var(--gold-ink); font-size: var(--fs-sm); font-weight: 600; margin: 18px 0 8px; }
   h1 { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 12px; }
   .intro { font-size: var(--fs-lead); color: var(--muted); margin: 0; }
+  .article-media { display: block; width: min(100%, 800px); height: auto; max-height: 580px; object-fit: contain; margin: 0 0 24px; border-radius: 4px; background: var(--sand); }
   .with-social { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); }
   .copy { line-height: 1.95; overflow-x: auto; }
   .copy :global(h2) { font-size: var(--fs-h3); line-height: var(--lh-tight); margin: 24px 0 8px; }

@@ -2,6 +2,7 @@
 dist/
 releases/
 .astro/
+.journal-editor/
 
 # dependencies
 node_modules/

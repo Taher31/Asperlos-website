@@ -43,7 +43,7 @@ const originPages = defineCollection({
 export const journalCategories = ['data', 'education', 'history', 'analysis'] as const;
 
 const journal = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/journal' }),
+  loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
   schema: z.object({
     title: z.string().min(1),
     summary: z.string().min(1),
@@ -55,6 +55,9 @@ const journal = defineCollection({
     })).default([]),
     linkedinUrl: z.url().regex(/^https:\/\/(www\.)?linkedin\.com\//).optional(),
     linkedinEmbedUrl: z.url().regex(/^https:\/\/www\.linkedin\.com\/embed\/feed\/update\//).optional(),
+    image: z.string().regex(/^[a-z0-9][a-z0-9-]*\.(?:jpe?g|png|webp)$/).optional(),
+    video: z.string().regex(/^[a-z0-9][a-z0-9-]*\.(?:mp4|webm)$/).optional(),
+    mediaAlt: z.string().optional(),
   }),
 });
 

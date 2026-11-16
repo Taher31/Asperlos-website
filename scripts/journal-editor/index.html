@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ویرایش مجلهٔ اسپرلوس</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #08275a; --deep: #051a3d; --gold: #c3922d;
+      --paper: #f6f3ec; --card: #fffdf8; --line: #dcd3c3;
+      --ink: #13213a; --muted: #586476; --error: #982c29;
+      font-family: Tahoma, "Segoe UI", system-ui, sans-serif;
+      background: var(--paper); color: var(--ink); font-size: 15px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; line-height: 1.75; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    button, input, select, textarea { font: inherit; }
+    button, .button {
+      display: inline-flex; justify-content: center; align-items: center;
+      border: 1px solid var(--line); border-radius: 8px; min-height: 42px;
+      padding: 6px 14px; cursor: pointer; text-decoration: none;
+      color: var(--navy); background: var(--card); font-weight: 700;
+    }
+    button:hover, .button:hover { background: #eee8dd; }
+    button:disabled { cursor: wait; opacity: .58; }
+    input, select, textarea {
+      width: 100%; min-width: 0; min-height: 43px; padding: 8px 11px;
+      border: 1px solid #b9b6af; border-radius: 7px; background: #fff; color: var(--ink);
+    }
+    textarea { resize: vertical; }
+    input[readonly] { background: #f0ece3; color: var(--muted); }
+    fieldset { padding: 0; border: 0; margin: 0; min-width: 0; }
+    label { display: block; font-weight: 700; }
+    input, textarea, select { margin-top: 4px; }
+    .wrap { width: min(1160px, calc(100% - 42px)); margin-inline: auto; }
+    .top { background: var(--deep); color: #fff; border-block-end: 3px solid var(--gold); }
+    .top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 22px; }
+    h1 { margin: 0; font-size: clamp(1.25rem, 3vw, 1.65rem); line-height: 1.5; }
+    h2, h3 { color: var(--navy); margin: 0; line-height: 1.5; }
+    h2 { font-size: 1.16rem; }
+    h3 { font-size: 1rem; }
+    p { margin: 0; }
+    .top-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .top-actions button { background: transparent; color: #fff; border-color: #76849d; }
+    .top-actions button:hover { background: var(--navy); }
+    .top-actions .publish { background: var(--gold); border-color: var(--gold); color: var(--deep); }
+    .top-actions .publish:hover { background: #dfb24e; }
+    .layout {
+      display: grid; grid-template-columns: minmax(0, 255px) minmax(0, 1fr);
+      align-items: start; gap: 22px; padding-block: 24px 42px;
+    }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+    .library { padding: 16px; }
+    .library-top, .section-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .library-top button, .section-head button, .formatters button, .media button { min-height: 34px; padding: 4px 9px; font-size: .89rem; }
+    .article-list { display: grid; gap: 6px; margin: 13px 0; padding: 0; list-style: none; }
+    .article-list button {
+      width: 100%; justify-content: start; text-align: start; overflow-wrap: anywhere;
+      background: transparent; border-color: transparent; font-weight: 500;
+    }
+    .article-list button:hover { background: var(--paper); }
+    .article-list button[aria-current="true"] { background: #e9eef6; border-color: #bec9dc; font-weight: 700; }
+    .deploy { padding-block-start: 12px; border-block-start: 1px solid var(--line); }
+    .deploy-message, .subtle, .hint { color: var(--muted); font-size: .88rem; }
+    .deploy-message { margin-top: 4px; overflow-wrap: anywhere; }
+    .deploy[data-state="error"] .deploy-message, .status[data-state="error"] { color: var(--error); }
+    .deploy[data-state="success"] .deploy-message, .status[data-state="success"] { color: #176445; }
+    .deploy a { color: var(--navy); display: inline-block; margin-block-start: 5px; }
+    .editor { min-width: 0; padding: clamp(14px, 3vw, 24px); }
+    .editor-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-block-end: 12px; }
+    .status { margin-block-end: 12px; color: var(--muted); overflow-wrap: anywhere; }
+    .status:empty { display: none; }
+    .meta, .media { display: grid; gap: 12px; }
+    .meta { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); }
+    .media { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .section { margin-block-start: 21px; padding-block-start: 16px; border-block-start: 1px solid var(--line); }
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-block-end: 12px; }
+    .tabs button { min-width: 80px; }
+    .tabs button[aria-selected="true"] { color: #fff; background: var(--navy); border-color: var(--navy); }
+    .fields { display: grid; gap: 10px; }
+    .formatters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .formatters button { font-weight: 500; }
+    .media-card { min-width: 0; border: 1px dashed #aba69e; padding: 11px; border-radius: 9px; }
+    .media-card input { min-height: unset; padding: 4px; }
+    .media-card input::file-selector-button {
+      color: var(--navy); border: 0; border-radius: 5px; background: #e9eef6;
+      padding: 5px 8px; cursor: pointer; font: inherit;
+    }
+    .media-actions { display: flex; gap: 7px; align-items: center; justify-content: space-between; margin-top: 7px; }
+    .media-name { min-width: 0; overflow-wrap: anywhere; color: var(--muted); font-size: .85rem; }
+    .media img, .media video {
+      display: block; width: 100%; max-height: 215px; object-fit: contain;
+      border-radius: 6px; background: var(--paper); margin-top: 8px;
+    }
+    .sources { display: grid; gap: 9px; margin-top: 10px; }
+    .source { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr) auto; gap: 8px; align-items: end; }
+    .source button { min-height: 43px; }
+    .hint { font-weight: 400; margin-block: 4px; }
+    @media (max-width: 790px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .article-list { grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); }
+      .top .wrap { align-items: start; }
+    }
+    @media (max-width: 550px) {
+      .wrap { width: calc(100% - 24px); }
+      .top .wrap { flex-direction: column; gap: 10px; padding-block: 14px; }
+      .top-actions { width: 100%; }
+      .top-actions button { flex: 1; }
+      .meta, .media, .source { grid-template-columns: minmax(0, 1fr); }
+      .source { border: 1px solid var(--line); padding: 9px; border-radius: 8px; }
+      .source button { justify-self: start; }
+      .tabs button { min-width: 68px; flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>ویرایش مجلهٔ اسپرلوس</h1>
+      <div class="top-actions">
+        <button id="save" type="button" disabled>ذخیرهٔ محلی</button>
+        <button class="publish" id="publish" type="button" disabled>انتشار روی سایت</button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap layout">
+    <aside class="panel library" aria-labelledby="library-title">
+      <div class="library-top">
+        <h2 id="library-title">مطالب مجله</h2>
+        <button id="new" type="button" disabled>مطلب تازه</button>
+      </div>
+      <ul class="article-list" id="articles"></ul>
+      <p class="subtle" id="empty-articles">در حال دریافت مطالب…</p>
+      <button id="retry" type="button" hidden>تلاش دوباره</button>
+      <section class="deploy" id="deployment" aria-labelledby="deployment-title" data-state="idle">
+        <h3 id="deployment-title">انتشار روی سایت</h3>
+        <p class="deploy-message" id="deployment-message" role="status">هنوز انتشاری از این پنل شروع نشده است.</p>
+        <a id="deployment-link" target="_blank" rel="noopener noreferrer" hidden>مشاهدهٔ گزارش انتشار</a>
+        <a id="public-journal" href="https://asperlos.ir/fa/journal/" target="_blank" rel="noopener noreferrer" hidden>مشاهدهٔ مجله روی سایت</a>
+      </section>
+    </aside>
+    <section class="editor panel" aria-labelledby="editor-title">
+      <div class="editor-top">
+        <h2 id="editor-title">مطلب تازه</h2>
+        <span class="subtle" id="save-state"></span>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <form id="editor-form" novalidate>
+        <fieldset id="editor-fields" disabled>
+          <div class="meta">
+            <label for="slug">نشانی مطلب
+              <input id="slug" dir="ltr" autocomplete="off" required placeholder="trade-notes">
+            </label>
+            <label for="category">دسته
+              <select id="category" required>
+                <option value="analysis">تحلیل بازار</option>
+                <option value="data">آمار تجارت</option>
+                <option value="education">آموزش بازرگانی</option>
+                <option value="history">روایت تاریخی</option>
+              </select>
+            </label>
+            <label for="date">تاریخ انتشار
+              <input id="date" dir="ltr" type="date" required aria-describedby="date-hint">
+            </label>
+          </div>
+          <p id="date-hint" class="hint">تاریخ برای مرتب‌سازی مطالب است.</p>
+          <div class="section">
+            <div class="tabs" role="tablist" aria-label="زبان مطلب">
+              <button type="button" id="tab-fa" role="tab" aria-selected="true" aria-controls="translation" data-lang="fa">فارسی</button>
+              <button type="button" id="tab-en" role="tab" aria-selected="false" aria-controls="translation" data-lang="en" tabindex="-1">انگلیسی</button>
+              <button type="button" id="tab-ru" role="tab" aria-selected="false" aria-controls="translation" data-lang="ru" tabindex="-1">روسی</button>
+            </div>
+            <div id="translation" class="fields" role="tabpanel" aria-labelledby="tab-fa">
+              <label for="title">عنوان<input id="title" dir="rtl"></label>
+              <label for="summary">خلاصه<textarea id="summary" dir="rtl" rows="2"></textarea></label>
+              <label for="body">متن مطلب</label>
+              <textarea id="body" dir="rtl" rows="12" aria-describedby="body-hint"></textarea>
+              <div class="formatters" aria-label="قالب‌بندی متن">
+                <button type="button" data-format="heading">تیتر</button>
+                <button type="button" data-format="bold">پررنگ</button>
+                <button type="button" data-format="list">فهرست</button>
+              </div>
+              <p class="hint" id="body-hint">برای قالب‌بندی، متن را انتخاب کن و یکی از دکمه‌ها را بزن.</p>
+              <label for="media-alt">متن جایگزین عکس
+                <input id="media-alt" dir="rtl" aria-describedby="alt-hint">
+              </label>
+              <p class="hint" id="alt-hint">اگر عکس داری، به همین زبان کوتاه بگو در تصویر چه دیده می‌شود.</p>
+            </div>
+          </div>
+          <div class="section">
+            <h3>عکس و فیلم مطلب</h3>
+            <p class="hint">همین فایل‌ها در نسخه‌های زبانی مطلب نمایش داده می‌شوند.</p>
+            <div class="media">
+              <div class="media-card">
+                <label for="image-file">افزودن عکس</label>
+                <input id="image-file" type="file" accept=".jpg,.jpeg,.png,.webp">
+                <img id="image-preview" alt="" hidden>
+                <div class="media-actions">
+                  <span class="media-name" id="image-name" dir="ltr"></span>
+                  <button id="image-remove" type="button" hidden>حذف عکس</button>
+                </div>
+              </div>
+              <div class="media-card">
+                <label for="video-file">افزودن فیلم</label>
+                <input id="video-file" type="file" accept=".mp4,.webm">
+                <video id="video-preview" controls playsinline preload="metadata" hidden></video>
+                <div class="media-actions">
+                  <span class="media-name" id="video-name" dir="ltr"></span>
+                  <button id="video-remove" type="button" hidden>حذف فیلم</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-head">
+              <h3>منابع</h3>
+              <button id="source-add" type="button">افزودن منبع</button>
+            </div>
+            <div class="sources" id="sources"></div>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+  </main>
+  <template id="source-template">
+    <div class="source">
+      <label>عنوان منبع<input data-source-label dir="auto"></label>
+      <label>پیوند منبع<input data-source-url dir="ltr" type="url" placeholder="https://…"></label>
+      <button type="button" data-source-remove>حذف</button>
+    </div>
+  </template>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const languages = { fa: 'فارسی', en: 'انگلیسی', ru: 'روسی' };
+    const fields = { title: $('title'), summary: $('summary'), body: $('body'), mediaAlt: $('media-alt') };
+    const tabs = Array.from(document.querySelectorAll('[data-lang]'));
+    const messages = {
+      idle: 'هنوز انتشاری از این پنل شروع نشده است.',
+      running: 'نسخهٔ سایت در حال انتشار است…',
+      success: 'نسخهٔ جدید روی سایت منتشر شد.',
+      error: 'انتشار کامل نشد. پس از بررسی دوباره تلاش کن.',
+    };
+    let model;
+    let activeLanguage = 'fa';
+    let activeSlug = '';
+    let articleList;
+    let busy = false;
+    let dirty = false;
+    let ready = false;
+    let publication = { state: 'idle' };
+    let pollTimer;
+
+    function localDate() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Tehran', year: 'numeric', month: '2-digit', day: '2-digit',
+      }).formatToParts(new Date());
+      const part = (name) => parts.find((entry) => entry.type === name).value;
+      return [part('year'), part('month'), part('day')].join('-');
+    }
+
+    function emptyArticle() {
+      return {
+        slug: '', category: 'analysis', date: localDate(), sources: [],
+        translations: Object.fromEntries(Object.keys(languages).map((lang) => [
+          lang, { title: '', summary: '', body: '', mediaAlt: '' },
+        ])),
+      };
+    }
+
+    function showStatus(message, state = '') {
+      $('status').dataset.state = state;
+      $('status').textContent = message;
+    }
+
+    function updateControls() {
+      const locked = busy || !ready || publication.state === 'running';
+      for (const id of ['save', 'publish', 'new', 'editor-fields']) $(id).disabled = locked;
+      for (const button of $('articles').querySelectorAll('button')) button.disabled = locked;
+      $('save-state').textContent = dirty ? 'تغییرات ذخیره نشده' : activeSlug ? 'ذخیره‌شده روی این رایانه' : '';
+    }
+
+    function markDirty() {
+      dirty = true;
+      updateControls();
+    }
+
+    function asHttps(url) {
+      try {
+        const value = new URL(url);
+        return value.protocol === 'https:' ? value.href : null;
+      } catch {
+        return null;
+      }
+    }
+
+    async function request(path, options = {}) {
+      const response = await fetch(path, { cache: 'no-store', ...options });
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error('پاسخ برنامه خوانده نشد. پنل محلی را بررسی کن.');
+      }
+      if (!response.ok) {
+        throw new Error(typeof data?.error === 'string' ? data.error : 'انجام درخواست ممکن نبود.');
+      }
+      return data;
+    }
+
+    function post(path, body = {}) {
+      return request(path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Journal-Editor': '1' },
+        body: JSON.stringify(body),
+      });
+    }
+
+    function renderArticles(list = articleList) {
+      const items = Array.isArray(list) ? list : [];
+      const fragment = document.createDocumentFragment();
+      for (const item of items) {
+        const row = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = item.title || item.slug;
+        if (item.slug === activeSlug) button.setAttribute('aria-current', 'true');
+        button.addEventListener('click', () => openArticle(item.slug));
+        row.append(button);
+        fragment.append(row);
+      }
+      $('articles').replaceChildren(fragment);
+      $('empty-articles').hidden = items.length > 0;
+      $('empty-articles').textContent = 'مطلبی پیدا نشد.';
+      updateControls();
+    }
+
+    function updatePublication(next) {
+      publication = next && messages[next.state] ? next : { state: 'idle' };
+      $('deployment').dataset.state = publication.state;
+      const message = publication.message || messages[publication.state];
+      if ($('deployment-message').textContent !== message) $('deployment-message').textContent = message;
+      const url = asHttps(publication.url);
+      const link = $('deployment-link');
+      link.hidden = !url;
+      if (url) link.href = url;
+      else link.removeAttribute('href');
+      $('public-journal').hidden = publication.state !== 'success';
+      updateControls();
+      clearTimeout(pollTimer);
+      if (publication.state === 'running') pollTimer = setTimeout(pollPublication, 2500);
+    }
+
+    async function refreshArticles() {
+      const data = await request('/api/articles');
+      const freshArticles = data.articles || [];
+      if (JSON.stringify(freshArticles) !== JSON.stringify(articleList)) {
+        articleList = freshArticles;
+        renderArticles();
+      }
+      updatePublication(data.deployment);
+      return articleList;
+    }
+
+    async function pollPublication() {
+      try {
+        await refreshArticles();
+      } catch {
+        $('deployment-message').textContent = 'وضعیت انتشار هنوز در دسترس نیست. در حال بررسی دوباره…';
+        pollTimer = setTimeout(pollPublication, 3500);
+      }
+    }
+
+    function readTranslation() {
+      if (!model) return;
+      model.translations[activeLanguage] = Object.fromEntries(
+        Object.entries(fields).map(([key, field]) => [key, field.value]),
+      );
+    }
+
+    function setLanguage(language, rememberPrevious = true) {
+      if (rememberPrevious) readTranslation();
+      activeLanguage = language;
+      const translation = model.translations[language];
+      for (const [key, field] of Object.entries(fields)) {
+        field.value = translation[key] ?? '';
+        field.dir = language === 'fa' ? 'rtl' : 'ltr';
+        field.lang = language;
+      }
+      for (const tab of tabs) {
+        const selected = tab.dataset.lang === language;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      }
+      $('translation').setAttribute('aria-labelledby', 'tab-' + language);
+    }
+
+    function addSource(source = { label: '', url: '' }) {
+      const row = $('source-template').content.firstElementChild.cloneNode(true);
+      row.querySelector('[data-source-label]').value = source.label;
+      row.querySelector('[data-source-url]').value = source.url;
+      row.querySelector('[data-source-remove]').addEventListener('click', () => {
+        row.remove();
+        markDirty();
+      });
+      $('sources').append(row);
+      return row;
+    }
+
+    function renderMedia(type) {
+      const name = model[type] || '';
+      const preview = $(type + '-preview');
+      const source = name ? '/media/' + encodeURIComponent(name) : '';
+      if (source && preview.getAttribute('src') !== source) preview.setAttribute('src', source);
+      if (!source) preview.removeAttribute('src');
+      preview.hidden = !name;
+      $(type + '-name').textContent = name;
+      $(type + '-remove').hidden = !name;
+    }
+
+    function showArticle(article, isSaved) {
+      const blank = emptyArticle();
+      model = { ...blank, ...article, translations: blank.translations };
+      for (const language of Object.keys(languages)) {
+        Object.assign(model.translations[language], article?.translations?.[language]);
+      }
+      activeSlug = isSaved ? model.slug : '';
+      $('slug').value = model.slug;
+      $('slug').readOnly = isSaved;
+      $('category').value = model.category;
+      $('date').value = model.date;
+      $('editor-title').textContent = isSaved ? (model.translations.fa.title || model.slug) : 'مطلب تازه';
+      $('sources').replaceChildren();
+      for (const source of model.sources || []) addSource(source);
+      for (const type of ['image', 'video']) renderMedia(type);
+      setLanguage('fa', false);
+      dirty = false;
+      showStatus('');
+      renderArticles();
+    }
+
+    function discardChanges() {
+      return !dirty || window.confirm('تغییرات ذخیره نشده‌اند. به مطلب دیگری برویم؟');
+    }
+
+    async function openArticle(slug, initial = false) {
+      if (slug === activeSlug || (!initial && !discardChanges())) return;
+      busy = true;
+      updateControls();
+      try {
+        const article = await request('/api/articles/' + encodeURIComponent(slug));
+        showArticle(article, true);
+      } catch (error) {
+        showStatus(error.message, 'error');
+      } finally {
+        busy = false;
+        updateControls();
+      }
+    }
+
+    function validateArticle() {
+      readTranslation();
+      model.slug = $('slug').value.trim();
+      model.category = $('category').value;
+      model.date = $('date').value;
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(model.slug)) {
+        throw new Error('برای نشانی مطلب فقط از حروف کوچک انگلیسی، عدد و خط تیره استفاده کن.');
+      }
+      if (!activeSlug && articleList?.some((article) => article.slug === model.slug)) {
+        throw new Error('این نشانی برای مطلب دیگری استفاده شده است. آن مطلب را از فهرست باز کن یا نشانی تازه‌ای بنویس.');
+      }
+      if (!model.date) throw new Error('تاریخ مطلب را وارد کن.');
+      model.sources = Array.from($('sources').children, (row) => ({
+        label: row.querySelector('[data-source-label]').value.trim(),
+        url: row.querySelector('[data-source-url]').value.trim(),
+      })).filter((source) => source.label || source.url);
+      for (const source of model.sources) {
+        if (!source.label || !asHttps(source.url)) throw new Error('برای هر منبع یک عنوان و پیوند کامل https وارد کن.');
+      }
+    }
+
+    async function saveArticle() {
+      validateArticle();
+      await post('/api/articles/' + encodeURIComponent(model.slug), model);
+      activeSlug = model.slug;
+      $('slug').readOnly = true;
+      $('editor-title').textContent = model.translations.fa.title.trim();
+      dirty = false;
+      showStatus('مطلب روی این رایانه ذخیره شد.', 'success');
+      updateControls();
+    }
+
+    async function perform(action) {
+      if (busy || !ready || publication.state === 'running') return;
+      busy = true;
+      updateControls();
+      showStatus('');
+      try {
+        await action();
+      } catch (error) {
+        showStatus(error.message, 'error');
+      } finally {
+        busy = false;
+        updateControls();
+      }
+    }
+
+    $('save').addEventListener('click', () => perform(async () => {
+      await saveArticle();
+      await refreshArticles();
+    }));
+
+    $('publish').addEventListener('click', () => perform(async () => {
+      if (dirty) await saveArticle();
+      await post('/api/publish');
+      updatePublication({ state: 'running' });
+      showStatus('درخواست انتشار ثبت شد. نتیجه در بخش وضعیت انتشار نمایش داده می‌شود.');
+      await pollPublication();
+    }));
+
+    $('new').addEventListener('click', () => {
+      if (!discardChanges()) return;
+      showArticle(emptyArticle(), false);
+      $('slug').focus();
+    });
+    $('editor-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      $('save').click();
+    });
+    $('editor-fields').addEventListener('input', (event) => {
+      if (event.target.type !== 'file') markDirty();
+    });
+    $('source-add').addEventListener('click', () => addSource().querySelector('input').focus());
+
+    for (const [index, tab] of tabs.entries()) {
+      tab.addEventListener('click', () => setLanguage(tab.dataset.lang));
+      tab.addEventListener('keydown', (event) => {
+        const shift = { ArrowRight: -1, ArrowLeft: 1 }[event.key];
+        let next;
+        if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        else if (shift) next = (index + shift + tabs.length) % tabs.length;
+        else return;
+        event.preventDefault();
+        tabs[next].click();
+        tabs[next].focus();
+      });
+    }
+
+    for (const button of document.querySelectorAll('[data-format]')) {
+      button.addEventListener('click', () => {
+        const field = fields.body;
+        const { selectionStart: start, selectionEnd: end } = field;
+        const text = field.value.slice(start, end);
+        let replacement;
+        if (button.dataset.format === 'bold') {
+          replacement = '**' + (text || 'متن') + '**';
+        } else {
+          const prefix = button.dataset.format === 'heading' ? '## ' : '- ';
+          const atLineStart = start === 0 || field.value[start - 1] === '\n';
+          replacement = (atLineStart ? '' : '\n') + (text || 'متن').split('\n')
+            .map((line) => prefix + line).join('\n');
+        }
+        field.setRangeText(replacement, start, end, 'select');
+        field.focus();
+        markDirty();
+      });
+    }
+
+    for (const type of ['image', 'video']) {
+      const input = $(type + '-file');
+      input.addEventListener('change', () => {
+        const file = input.files[0];
+        input.value = '';
+        if (!file) return;
+        perform(async () => {
+          showStatus('فایل در حال ذخیره است…');
+          const name = file.name.replace(/\.jpeg$/i, '.jpg');
+          const data = await request('/api/media?name=' + encodeURIComponent(name), {
+            method: 'POST', headers: { 'X-Journal-Editor': '1' }, body: file,
+          });
+          model[type] = data.name;
+          renderMedia(type);
+          markDirty();
+          showStatus('فایل اضافه شد.', 'success');
+        });
+      });
+      $(type + '-remove').addEventListener('click', () => {
+        delete model[type];
+        renderMedia(type);
+        markDirty();
+      });
+    }
+
+    async function start() {
+      $('retry').hidden = true;
+      try {
+        const list = await refreshArticles();
+        showArticle(emptyArticle(), false);
+        if (list[0]) await openArticle(list[0].slug, true);
+        ready = true;
+        updateControls();
+      } catch (error) {
+        $('empty-articles').textContent = 'فهرست مطالب دریافت نشد.';
+        $('retry').hidden = false;
+        showStatus(error.message, 'error');
+      }
+    }
+
+    window.addEventListener('beforeunload', (event) => {
+      if (!dirty) return;
+      event.preventDefault();
+      event.returnValue = '';
+    });
+    $('retry').addEventListener('click', start);
+    start();
+  </script>
+</body>
+</html>
