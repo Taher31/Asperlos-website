@@ -14,7 +14,7 @@ const linkedPosts = entries.filter((entry) => entry.data.linkedinUrl).slice(0, 3
 const linkedinCompany = channelLink('linkedin').href;
 ---
 <BaseLayout lang={lang} title={dict.journal.title} description={dict.journal.intro}>
-  <PageHeader lang={lang} title={dict.journal.title} intro={dict.journal.intro} />
+  <PageHeader lang={lang} title={dict.journal.title} intro={dict.journal.intro} showCypress />
   <section class="section alt journal">
     <div class="wrap grid">
       <div>

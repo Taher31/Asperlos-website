@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CypressBadge from '../../components/CypressBadge.astro';
 import HomeHero from '../../components/HomeHero.astro';
 import IranMap from '../../components/IranMap.astro';
 import LentilShipment from '../../components/LentilShipment.astro';
@@ -28,7 +29,10 @@ const panelSeeds = [
 
   <section class="section alt" id="services" aria-labelledby="services-title">
     <div class="wrap">
-      <h2 class="h2" id="services-title" data-reveal>{dict.home.servicesTitle}</h2>
+      <div class="services-heading" data-reveal>
+        <CypressBadge />
+        <h2 class="h2" id="services-title">{dict.home.servicesTitle}</h2>
+      </div>
       <ul class="services" role="list">
         {dict.home.services.map((service) => (
           <li data-reveal>
@@ -114,6 +118,8 @@ const panelSeeds = [
   .text { max-width: 520px; }
   .body { color: var(--muted); font-size: var(--fs-lead); margin: 0 0 32px; }
   .head { max-width: 720px; margin-bottom: clamp(36px, 5vw, 64px); }
+  .services-heading { display: flex; align-items: center; gap: clamp(12px, 2vw, 24px); }
+  .services-heading h2 { margin: 0; }
   .services {
     list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(16px, 3vw, 36px); margin: 32px 0 0; padding: 0;
