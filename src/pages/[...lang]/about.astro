@@ -7,14 +7,11 @@ import { langPaths, localizePath, useTranslations, type Lang } from '../../i18n'
 export const getStaticPaths = langPaths;
 
 const { lang } = Astro.props as { lang: Lang };
-const { dict, h } = useTranslations(lang);
+const { dict } = useTranslations(lang);
 const origins = await getOriginPages(lang);
 const facts = [
-  [dict.about.registeredName, dict.about.registeredNameValue],
   [dict.about.founded, dict.about.foundedValue],
-  [dict.about.registration, dict.about.registrationValue],
-  [dict.about.licences, dict.about.licencesValue],
-  [dict.contact.address, dict.contact.addressValue],
+  [dict.contact.location, dict.contact.locationValue],
 ];
 ---
 <BaseLayout lang={lang} title={dict.about.title} description={dict.meta.aboutDescription}>
@@ -27,7 +24,7 @@ const facts = [
         {facts.map(([label, value]) => (
           <div>
             <dt>{label}</dt>
-            <dd set:html={h(value)} />
+            <dd>{value}</dd>
           </div>
         ))}
       </dl>

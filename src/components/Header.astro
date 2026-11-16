@@ -13,7 +13,7 @@ interface Props {
   path: string;
 }
 const { lang, path } = Astro.props;
-const { dict, h } = useTranslations(lang);
+const { dict } = useTranslations(lang);
 const nav = [
   { href: '/products/', label: dict.nav.products },
   { href: '/origins/', label: dict.nav.origins },
@@ -85,8 +85,8 @@ const phone = channelLink('phone');
           </div>
         )}
         <div>
-          <dt>{dict.contact.address}</dt>
-          <dd set:html={h(dict.contact.addressValue)} />
+          <dt>{dict.contact.location}</dt>
+          <dd>{dict.contact.locationValue}</dd>
         </div>
       </dl>
       <div class="panel-lang">

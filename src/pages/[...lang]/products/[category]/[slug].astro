@@ -129,7 +129,7 @@ const schema = [
         )}
         <a class="btn btn-primary" href={inquiryHref}>{dict.cta.quoteProduct}</a>
         {messengers.map((m) => (
-          <a class="btn btn-secondary" href={m.href ?? localizePath(lang, '/contact/')}>{m.label}</a>
+          <a class="btn btn-secondary" href={m.href}>{m.label}</a>
         ))}
         {slug === 'green-lentils' && <GreenLentilPhotos lang={lang} placement="cover" />}
       </aside>

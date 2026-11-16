@@ -1,16 +1,12 @@
 {
-  "_comment": "Single source for all contact details. null = not confirmed yet (shown as a placeholder). Phone and WhatsApp in international format, e.g. +98 21 1234 5678. Telegram, Bale and Eitaa as usernames without @. LinkedIn as the full company page URL.",
-  "phone": "+98 51 3878 8331",
-  "whatsapp": null,
-  "telegram": null,
-  "bale": null,
-  "eitaa": null,
-  "email": null,
-  "linkedin": null,
-  "officeLocation": { "latitude": 36.30708966289818, "longitude": 59.65251217341543 },
+  "_comment": "The international phone number is shared by calls, WhatsApp, Telegram and Bale. Coordinates show the city, not an office address.",
+  "phone": "+989914329484",
+  "email": "info@asperlos.ir",
+  "linkedin": "https://www.linkedin.com/company/asperlos/",
+  "city": { "name": "Tehran", "latitude": 35.6892, "longitude": 51.3890 },
   "order": {
-    "en": ["email", "whatsapp", "telegram", "phone", "linkedin"],
-    "ru": ["email", "whatsapp", "telegram", "phone", "linkedin"],
-    "fa": ["phone", "whatsapp", "bale", "eitaa", "telegram", "email", "linkedin"]
+    "en": ["email", "whatsapp", "telegram", "phone", "bale", "linkedin"],
+    "ru": ["email", "whatsapp", "telegram", "phone", "bale", "linkedin"],
+    "fa": ["phone", "whatsapp", "telegram", "bale", "email", "linkedin"]
   }
 }

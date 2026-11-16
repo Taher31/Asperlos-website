@@ -8,7 +8,7 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const { dict, t, h } = useTranslations(lang);
+const { dict, t } = useTranslations(lang);
 ---
 <footer class="site-footer dark">
   <div class="wrap">
@@ -23,8 +23,7 @@ const { dict, t, h } = useTranslations(lang);
           <Image src={logoWhite} alt="" height={56} densities={[1, 2]} />
           <span>Asperlos</span>
         </a>
-        <p set:html={h(dict.footer.registeredName)} />
-        <p set:html={h(dict.contact.addressValue)} />
+        <p>{dict.contact.locationValue}</p>
       </div>
       <nav aria-label={dict.nav.main}>
         <a href={localizePath(lang, '/products/')}>{dict.nav.products}</a>
@@ -50,7 +49,7 @@ const { dict, t, h } = useTranslations(lang);
 </footer>
 
 <script>
-  // Office local time, so buyers abroad know whether it is working hours in Mashhad.
+  // Show the time in Tehran to buyers abroad.
   document.querySelectorAll<HTMLElement>('[data-clock]').forEach((el) => {
     const out = el.querySelector('time')!;
     const locale = { fa: 'fa-IR', ru: 'ru-RU', en: 'en-GB' }[el.dataset.clock!] ?? 'en-GB';

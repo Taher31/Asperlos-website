@@ -1,6 +1,7 @@
 // llms.txt (https://llmstxt.org): a plain summary of the company for AI assistants, built from the English content.
 // Lines that still contain a placeholder ([TBD: …]) are left out, so only confirmed facts are listed.
 import type { APIRoute } from 'astro';
+import { channelLink } from '../lib/contact';
 import { getOriginPages, getProducts, productPath, slugOf } from '../lib/content';
 import en from '../i18n/en.json';
 
@@ -12,11 +13,11 @@ export const GET: APIRoute = async ({ site }) => {
   const origins = await getOriginPages('en');
 
   const facts = [
-    `Registered name: ${en.about.registeredNameValue}`,
     `Founded: ${en.about.foundedValue}`,
-    `Registration: ${en.about.registrationValue}`,
-    `Address: ${en.contact.addressValue}`,
-    'Phone: +98 51 3878 8331',
+    `Location: ${en.contact.locationValue}`,
+    `Phone: ${channelLink('phone').display}`,
+    `Email: ${channelLink('email').display}`,
+    `LinkedIn: ${channelLink('linkedin').href}`,
     'Languages: English, Persian (/fa/), Russian (/ru/)',
   ];
   const productLines = products.map((p) => {

@@ -1,38 +1,33 @@
 import contact from '../data/contact.json';
 import type { Lang } from '../i18n';
 
-export type Channel = 'phone' | 'whatsapp' | 'telegram' | 'bale' | 'eitaa' | 'email' | 'linkedin';
+export type Channel = 'phone' | 'whatsapp' | 'telegram' | 'bale' | 'email' | 'linkedin';
 
 export interface ChannelLink {
   channel: Channel;
-  /** null when the detail is not confirmed yet */
-  href: string | null;
-  /** what the visitor sees next to the label, e.g. the number or username */
-  display: string | null;
+  href: string;
+  display: string;
 }
 
-const digits = (s: string) => s.replace(/[^\d]/g, '');
+const phoneDigits = contact.phone.replace(/\D/g, '');
 
 /** Builds the link for one channel; `message` pre-fills the chat where the app supports it. */
 export function channelLink(channel: Channel, message?: string): ChannelLink {
-  const value = contact[channel] as string | null;
-  if (!value) return { channel, href: null, display: null };
-  const text = message ? encodeURIComponent(message) : '';
+  const text = message ? `?text=${encodeURIComponent(message)}` : '';
   switch (channel) {
     case 'phone':
-      return { channel, href: `tel:+${digits(value)}`, display: value };
+      return { channel, href: `tel:${contact.phone}`, display: contact.phone };
     case 'whatsapp':
-      return { channel, href: `https://wa.me/${digits(value)}${text ? `?text=${text}` : ''}`, display: value };
+      return { channel, href: `https://wa.me/${phoneDigits}${text}`, display: contact.phone };
     case 'telegram':
-      return { channel, href: `https://t.me/${value}${text ? `?text=${text}` : ''}`, display: `@${value}` };
+      return { channel, href: `https://t.me/+${phoneDigits}${text}`, display: contact.phone };
     case 'bale':
-      return { channel, href: `https://ble.ir/${value}`, display: `@${value}` };
-    case 'eitaa':
-      return { channel, href: `https://eitaa.com/${value}`, display: `@${value}` };
+      // Direct chat URL from Bale's public phone-number profile.
+      return { channel, href: `https://web.bale.ai/+${phoneDigits}`, display: contact.phone };
     case 'email':
-      return { channel, href: `mailto:${value}`, display: value };
+      return { channel, href: `mailto:${contact.email}`, display: contact.email };
     case 'linkedin':
-      return { channel, href: value, display: value.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') };
+      return { channel, href: contact.linkedin, display: 'Asperlos' };
   }
 }
 
@@ -41,10 +36,10 @@ export const channelsFor = (lang: Lang) => contact.order[lang] as Channel[];
 /** Messenger buttons offered next to a product, in order of relevance for the language. */
 export const messengersFor = (lang: Lang): Channel[] => (lang === 'fa' ? ['whatsapp', 'bale'] : ['whatsapp', 'telegram']);
 
-export const officeLocation = contact.officeLocation;
-const officeCoordinates = `${officeLocation.latitude},${officeLocation.longitude}`;
-export const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeCoordinates)}`;
+export const cityLocation = contact.city;
+const cityQuery = encodeURIComponent(`${cityLocation.name}, Iran`);
+export const mapUrl = `https://www.google.com/maps/search/?api=1&query=${cityQuery}`;
 
-// Google Maps share embed for the office coordinates, at street level.
+// Show the city at city scale, since there is no public street address.
 export const mapEmbedUrl = (lang: Lang) =>
-  `https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s${officeCoordinates}!6i17!3m1!1s${lang}!5m1!1s${lang}`;
+  `https://www.google.com/maps?q=${cityQuery}&z=11&hl=${lang}&output=embed`;

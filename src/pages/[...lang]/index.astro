@@ -27,15 +27,6 @@ const panelSeeds = [
 <BaseLayout lang={lang} title={dict.meta.homeTitle} description={dict.meta.homeDescription}>
   <HomeHero lang={lang} />
 
-  <!-- Registration: who we are, verifiable -->
-  <div class="trust" data-reveal>
-    <div class="wrap trust-row">
-      <span class="trust-name">{dict.about.registeredNameValue}</span>
-      <span>{dict.about.registrationValue}</span>
-      <a class="line-link" href="https://www.rrk.ir/" rel="noopener" target="_blank">{dict.home.verify}</a>
-    </div>
-  </div>
-
   <!-- Documented quality -->
   <section class="section quality">
     <Seed product="green-lentils" variant={2} size={110} class="deco d1" style="--rot:12deg" parallax={0.25} />
@@ -125,10 +116,6 @@ const panelSeeds = [
 
 <style>
   .section { overflow: hidden; }
-  .trust { border-block: 1px solid var(--rule); background: var(--card); font-size: var(--fs-sm); color: var(--muted); }
-  .trust-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 32px; padding-block: 18px; }
-  .trust-name { color: var(--navy); font-weight: 600; }
-  .trust .line-link { margin-inline-start: auto; font-size: var(--fs-sm); }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 112px); align-items: center; }
   .two.reverse > :first-child { order: 2; }
   .text { max-width: 520px; }

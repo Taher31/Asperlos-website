@@ -12,7 +12,7 @@ const whatsapp = channelLink('whatsapp', dict.messenger.general);
 ---
 <div class="quickbar">
   <a class="btn btn-primary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
-  <a class="btn btn-secondary" href={whatsapp.href ?? localizePath(lang, '/contact/')}>{dict.quickbar.whatsapp}</a>
+  <a class="btn btn-secondary" href={whatsapp.href}>{dict.quickbar.whatsapp}</a>
 </div>
 
 <style>
