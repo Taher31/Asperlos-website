@@ -41,8 +41,19 @@ function field(string $key, int $limit): string
     return mb_substr(str_replace("\0", '', posted($key)), 0, $limit, 'UTF-8');
 }
 
+function emailAddress(string $value): ?string
+{
+    if (strlen($value) > 254 || strpbrk($value, "\r\n") !== false || !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        return null;
+    }
+    return $value;
+}
+
 function phoneNumber(string $value): ?string
 {
+    if (strlen($value) > 254) {
+        return null;
+    }
     $value = strtr($value, [
         '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
         '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
@@ -118,20 +129,28 @@ if (posted('website') !== '') {
 
 // --- Validate ------------------------------------------------------------------
 $name = field('name', 100);
+$productInput = $_POST['product'] ?? '';
 $product = posted('product');
 $products = json_decode((string)@file_get_contents(__DIR__ . '/products.json'), true) ?: [];
-if ($name === '' || ($product !== 'other' && !isset($products[$product]))) {
+if ($name === '' || !is_string($productInput) || ($product !== '' && $product !== 'other' && !isset($products[$product]))) {
     finish(false, 422, $prefix, $wantsJson, 'validation');
 }
 
-$contact = array_key_exists('contact', $_POST) ? posted('contact') : posted('phone');
-$email = null;
-$phone = null;
-if ($contact !== '' && strlen($contact) <= 254 && strpbrk($contact, "\r\n") === false) {
-    if (filter_var($contact, FILTER_VALIDATE_EMAIL)) {
-        $email = $contact;
-    } else {
-        $phone = phoneNumber($contact);
+if (!array_key_exists('email', $_POST) && array_key_exists('contact', $_POST)) {
+    // Cached pages may still submit the combined contact field.
+    $contact = posted('contact');
+    $email = emailAddress($contact);
+    $phone = $email === null ? phoneNumber($contact) : null;
+} else {
+    $emailInput = $_POST['email'] ?? '';
+    $phoneInput = $_POST['phone'] ?? '';
+    $email = emailAddress(posted('email'));
+    $phone = phoneNumber(posted('phone'));
+    if (!is_string($emailInput) || (trim($emailInput) !== '' && $email === null)) {
+        finish(false, 422, $prefix, $wantsJson, 'email');
+    }
+    if (!is_string($phoneInput) || (trim($phoneInput) !== '' && $phone === null)) {
+        finish(false, 422, $prefix, $wantsJson, 'phone');
     }
 }
 if ($email === null && $phone === null) {
@@ -164,10 +183,17 @@ $lines = [
     'New inquiry from the website',
     '',
     'Name: ' . $name,
-    $email !== null ? 'Email: ' . $email : 'Phone / WhatsApp: ' . $phone,
-    'Product: ' . $productName,
-    'Language: ' . $lang,
 ];
+if ($email !== null) {
+    $lines[] = 'Email: ' . $email;
+}
+if ($phone !== null) {
+    $lines[] = 'Phone / WhatsApp: ' . $phone;
+}
+if ($productName !== '') {
+    $lines[] = 'Product: ' . $productName;
+}
+$lines[] = 'Language: ' . $lang;
 if ($company !== '') {
     $lines[] = 'Company: ' . $company;
 }
@@ -183,7 +209,7 @@ $configuredSender = $config['from_email'] ?? '';
 $sender = filter_var($configuredSender, FILTER_VALIDATE_EMAIL) && str_ends_with(strtolower($configuredSender), '@asperlos.ir')
     ? $configuredSender
     : INQUIRY_EMAIL;
-$subject = "Website inquiry: $productName";
+$subject = $productName !== '' ? "Website inquiry: $productName" : 'Website inquiry';
 $headers = [
     'From' => "Asperlos website <$sender>",
     'MIME-Version' => '1.0',

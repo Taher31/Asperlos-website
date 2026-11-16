@@ -24,6 +24,8 @@ const id = (name: string) => `${idPrefix}-${name}`;
   data-msg-sending={dict.inquiry.sending}
   data-msg-error={dict.inquiry.error}
   data-msg-contact-error={dict.inquiry.contactError}
+  data-msg-email-error={dict.inquiry.emailError}
+  data-msg-phone-error={dict.inquiry.phoneError}
   data-msg-validation-error={dict.inquiry.validationError}
   data-msg-rate-error={dict.inquiry.rateError}
 >
@@ -38,19 +40,28 @@ const id = (name: string) => `${idPrefix}-${name}`;
     <label for={id('name')}>{dict.inquiry.name}</label>
     <input id={id('name')} name="name" autocomplete="name" required maxlength="100">
   </div>
+  <fieldset class="contact">
+    <legend>{dict.inquiry.contactGuide}</legend>
+    <div class="contact-fields">
+      <div class="field">
+        <label for={id('email')}>{dict.inquiry.email}</label>
+        <input id={id('email')} name="email" type="email" autocomplete="email" maxlength="254" dir="ltr">
+      </div>
+      <div class="field">
+        <label for={id('phone')}>{dict.inquiry.phone}</label>
+        <input id={id('phone')} name="phone" type="tel" autocomplete="tel" maxlength="40" dir="ltr">
+      </div>
+    </div>
+  </fieldset>
   <div class="field">
-    <label for={id('contact')}>{dict.inquiry.contact}</label>
-    <input id={id('contact')} name="contact" type="text" autocapitalize="off" spellcheck="false" required maxlength="254" dir="ltr">
-  </div>
-  <div class="field full">
-    <label for={id('product')}>{dict.inquiry.product}</label>
-    <select id={id('product')} name="product" required data-product-select>
+    <label for={id('product')}>{dict.inquiry.product} <small>{dict.inquiry.optional}</small></label>
+    <select id={id('product')} name="product" data-product-select>
       <option value="">{dict.inquiry.choose}</option>
       {products.map((p) => <option value={slugOf(p)} selected={slugOf(p) === product}>{p.data.title}</option>)}
       <option value="other">{dict.inquiry.other}</option>
     </select>
   </div>
-  <div class="field full">
+  <div class="field">
     <label for={id('msg')}>{dict.inquiry.msg} <small>{dict.inquiry.optional}</small></label>
     <textarea id={id('msg')} name="message" maxlength="2000"></textarea>
   </div>
@@ -70,36 +81,59 @@ const id = (name: string) => `${idPrefix}-${name}`;
 
     const status = form.querySelector<HTMLElement>('.status')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-    const contact = form.querySelector<HTMLInputElement>('input[name="contact"]')!;
+    const email = form.querySelector<HTMLInputElement>('input[name="email"]')!;
+    const phone = form.querySelector<HTMLInputElement>('input[name="phone"]')!;
+    const contactFields = [email, phone];
+    const errorFields = new Map([
+      ['contact', contactFields],
+      ['email', [email]],
+      ['phone', [phone]],
+    ]);
     const messages = new Map([
       ['contact', form.dataset.msgContactError],
+      ['email', form.dataset.msgEmailError],
+      ['phone', form.dataset.msgPhoneError],
       ['validation', form.dataset.msgValidationError],
       ['rate', form.dataset.msgRateError],
     ]);
 
-    const showError = (error: string) => {
-      status.textContent = messages.get(error) ?? form.dataset.msgError!;
-      status.classList.add('error');
-      if (error === 'contact') {
-        contact.setAttribute('aria-invalid', 'true');
-        contact.setAttribute('aria-describedby', status.id);
-        contact.focus();
+    const clearContactError = () => {
+      for (const field of contactFields) {
+        field.removeAttribute('aria-invalid');
+        field.removeAttribute('aria-describedby');
       }
     };
+    const showError = (error: string) => {
+      clearContactError();
+      status.textContent = messages.get(error) ?? form.dataset.msgError!;
+      status.classList.add('error');
+      const fields = errorFields.get(error) ?? [];
+      for (const field of fields) {
+        field.setAttribute('aria-invalid', 'true');
+        field.setAttribute('aria-describedby', status.id);
+      }
+      fields[0]?.focus();
+    };
 
-    contact.addEventListener('input', () => {
-      if (!contact.hasAttribute('aria-invalid')) return;
-      contact.removeAttribute('aria-invalid');
-      contact.removeAttribute('aria-describedby');
-      status.textContent = '';
-      status.classList.remove('error');
+    contactFields.forEach((field) => {
+      field.addEventListener('input', () => {
+        if (!field.hasAttribute('aria-invalid')) return;
+        clearContactError();
+        status.textContent = '';
+        status.classList.remove('error');
+      });
     });
     const redirectError = params.get('error');
     if (redirectError !== null) showError(redirectError);
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (!email.value.trim() && !phone.value.trim()) {
+        showError('contact');
+        return;
+      }
       button.disabled = true;
+      clearContactError();
       status.textContent = form.dataset.msgSending!;
       status.classList.remove('error');
       let error = '';
@@ -121,9 +155,11 @@ const id = (name: string) => `${idPrefix}-${name}`;
 </script>
 
 <style>
-  .form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+  .form { display: grid; gap: 18px; }
+  .contact { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+  .contact legend { padding: 0; margin-block-end: 6px; font-size: var(--fs-sm); color: var(--label-muted, var(--muted)); }
+  .contact-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
   .field { display: grid; gap: 6px; align-content: start; }
-  .field.full, .submit { grid-column: 1 / -1; }
   label { font-size: var(--fs-sm); font-weight: 500; }
   label small { color: var(--label-muted, var(--muted)); font-weight: 400; }
   input, select, textarea {
@@ -140,6 +176,6 @@ const id = (name: string) => `${idPrefix}-${name}`;
   .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   :global(.dark) .form { --label-muted: var(--on-dark-muted); --field-border: transparent; --error: #FFB4A8; }
   @media (max-width: 640px) {
-    .form { grid-template-columns: 1fr; }
+    .contact-fields { grid-template-columns: 1fr; }
   }
 </style>
