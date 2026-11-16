@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import cypress from '../assets/footer-cypress.webp';
 import logoWhite from '../assets/logo-mark-white.png';
 import { formatYear, languages, langMeta, localizePath, useTranslations, type Lang } from '../i18n';
 import ContactChannels from './ContactChannels.astro';
@@ -12,6 +13,10 @@ const { dict, t } = useTranslations(lang);
 ---
 <footer class="site-footer dark">
   <div class="wrap">
+    <div class="ornament" aria-hidden="true">
+      <Image src={cypress} alt="" height={112} densities={[1, 2]} format="webp" loading="lazy" />
+    </div>
+
     <a class="cta" href={localizePath(lang, '/inquiry/')}>
       <span class="display">{dict.cta.quote}</span>
       <span class="arrow" aria-hidden="true"></span>
@@ -64,7 +69,16 @@ const { dict, t } = useTranslations(lang);
 </script>
 
 <style>
-  .site-footer { padding-block: clamp(56px, 8vw, 104px) 32px; font-size: var(--fs-sm); color: var(--on-dark-muted); --value: var(--on-dark-muted); }
+  .site-footer { padding-block: clamp(24px, 4vw, 48px) 32px; font-size: var(--fs-sm); color: var(--on-dark-muted); --value: var(--on-dark-muted); }
+  .ornament {
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(12px, 3vw, 32px); margin-block-end: clamp(24px, 4vw, 48px);
+  }
+  .ornament::before, .ornament::after {
+    content: ""; flex: 0 1 clamp(44px, 14vw, 160px); height: 1px;
+    background: color-mix(in srgb, var(--gold) 56%, transparent);
+  }
+  .ornament img { height: clamp(80px, 10vw, 112px); width: auto; }
   .cta {
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding-bottom: clamp(32px, 5vw, 56px); margin-bottom: clamp(32px, 5vw, 56px);
