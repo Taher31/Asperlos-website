@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import HomeHero from '../../components/HomeHero.astro';
 import IranMap from '../../components/IranMap.astro';
 import LentilShipment from '../../components/LentilShipment.astro';
-import MarketFacts from '../../components/MarketFacts.astro';
 import Seed from '../../components/Seed.astro';
 import Steps from '../../components/Steps.astro';
 import InquirySection from '../../components/InquirySection.astro';
@@ -27,31 +26,21 @@ const panelSeeds = [
 <BaseLayout lang={lang} title={dict.meta.homeTitle} description={dict.meta.homeDescription}>
   <HomeHero lang={lang} />
 
-  <!-- Documented quality -->
-  <section class="section quality">
-    <Seed product="green-lentils" variant={2} size={110} class="deco d1" style="--rot:12deg" parallax={0.25} />
-    <Seed product="chickpeas" variant={3} size={90} class="deco d2" style="--rot:-20deg" parallax={0.4} />
-    <div class="wrap two">
-      <div class="text" data-reveal>
-        <p class="eyebrow">{dict.home.qualityEyebrow}</p>
-        <h2 class="h2">{dict.home.qualityTitle}</h2>
-        <p class="body">{dict.home.qualityText}</p>
-        <a class="line-link" href={localizePath(lang, '/how-we-work/')}>{dict.nav.how}</a>
-      </div>
-      <div class="docs" aria-hidden="true">
-        {(['phytosanitary', 'origin'] as const).map((c, i) => (
-          <div class={`doc doc-${i}`} data-reveal style={`--d:${0.15 + i * 0.15}s`}>
-            <span class="doc-title display">{dict.certificates[c]}</span>
-            <span class="lines"><i></i><i></i><i></i><i></i><i></i></span>
-            <span class="seal"></span>
-          </div>
+  <section class="section alt" id="services" aria-labelledby="services-title">
+    <div class="wrap">
+      <h2 class="h2" id="services-title" data-reveal>{dict.home.servicesTitle}</h2>
+      <ul class="services" role="list">
+        {dict.home.services.map((service) => (
+          <li data-reveal>
+            <h3 class="display">{service.title}</h3>
+            <p>{service.text}</p>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   </section>
 
-  <!-- Company and route -->
-  <section class="section alt company">
+  <section class="section company">
     <div class="wrap two reverse">
       <div class="text" data-reveal>
         <p class="eyebrow">{dict.home.companyEyebrow}</p>
@@ -63,13 +52,21 @@ const panelSeeds = [
     </div>
   </section>
 
-  <!-- Products by origin -->
-  <section class="section products">
-    <Seed product="seedless-raisins" variant={1} size={100} class="deco d3" style="--rot:28deg" parallax={0.3} />
+  <section class="section alt">
     <div class="wrap">
       <div class="head" data-reveal>
-        <p class="eyebrow">{dict.home.productsEyebrow}</p>
+        <h2 class="h2">{dict.home.howTitle}</h2>
+      </div>
+      <Steps lang={lang} />
+    </div>
+  </section>
+
+  <!-- Examples from the current catalogue -->
+  <section class="section products">
+    <div class="wrap">
+      <div class="head" data-reveal>
         <h2 class="h2">{dict.home.productsTitle}</h2>
+        <p class="section-intro">{dict.home.productsIntro}</p>
       </div>
       <div class="panels">
         {groups.map((group, gi) => (
@@ -98,19 +95,6 @@ const panelSeeds = [
   </section>
 
   <LentilShipment lang={lang} />
-  <MarketFacts lang={lang} />
-
-  <!-- How we work -->
-  <section class="section alt how">
-    <div class="wrap">
-      <div class="head" data-reveal>
-        <p class="eyebrow">{dict.home.howEyebrow}</p>
-        <h2 class="h2">{dict.home.howTitle}</h2>
-      </div>
-      <Steps lang={lang} />
-    </div>
-  </section>
-
   <InquirySection lang={lang} />
 </BaseLayout>
 
@@ -121,33 +105,16 @@ const panelSeeds = [
   .text { max-width: 520px; }
   .body { color: var(--muted); font-size: var(--fs-lead); margin: 0 0 32px; }
   .head { max-width: 720px; margin-bottom: clamp(36px, 5vw, 64px); }
-
-  .section :global(.deco) { z-index: 0; }
-  .section :global(.d1) { width: 92px; inset-inline-end: 3%; top: 4%; }
-  .section :global(.d2) { width: 70px; inset-inline-start: 44%; bottom: 6%; }
-  .section :global(.d3) { width: 80px; inset-inline-end: 6%; top: 6%; }
-
-  /* Certificate cards: a drawing of documents, not real ones (no issuer, no logos). */
-  .docs { position: relative; min-height: 400px; }
-  .doc {
-    position: absolute; width: min(300px, 68%); aspect-ratio: 3 / 4; padding: 28px 26px;
-    background: var(--card); border: 1px solid var(--rule); border-radius: 4px;
-    display: grid; align-content: start; gap: 18px;
+  .services {
+    list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 3vw, 36px); margin: 32px 0 0; padding: 0;
   }
-  .doc::after { content: ""; position: absolute; inset: 8px; border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); border-radius: 2px; pointer-events: none; }
-  .doc-0 { inset-inline-start: 4%; top: 0; rotate: -5deg; }
-  .doc-1 { inset-inline-end: 2%; top: 64px; rotate: 4deg; }
-  .doc-title { font-size: 1.5rem; line-height: 1.15; color: var(--navy); }
-  .lines { display: grid; gap: 10px; }
-  .lines i { display: block; height: 6px; border-radius: 3px; background: var(--sand); }
-  .lines i:nth-child(2n) { width: 82%; }
-  .lines i:last-child { width: 56%; }
-  .seal {
-    position: absolute; inset-inline-end: 24px; bottom: 26px; width: 64px; height: 64px; border-radius: 50%;
-    border: 1.5px solid var(--gold); display: grid; place-items: center;
+  .services li {
+    border: 1px solid var(--rule); border-block-start-color: var(--gold);
+    background: var(--card); border-radius: 4px; padding: clamp(20px, 3vw, 32px);
   }
-  .seal::before { content: ""; width: 44px; height: 44px; border-radius: 50%; border: 1px dashed var(--gold); }
-  .seal::after { content: ""; position: absolute; width: 16px; height: 8px; border: solid var(--gold-ink); border-width: 0 0 2px 2px; rotate: -45deg; translate: 0 -2px; }
+  .services h3 { margin: 0 0 12px; font-size: clamp(1.5rem, 2.35vw, 2.15rem); line-height: 1.14; font-weight: 600; }
+  .services p { margin: 0; color: var(--muted); }
 
   .panels { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 40px); }
   .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: clamp(24px, 3vw, 40px); }
@@ -169,7 +136,8 @@ const panelSeeds = [
   @media (max-width: 900px) {
     .two, .panels { grid-template-columns: 1fr; }
     .two.reverse > :first-child { order: 0; }
-    .docs { min-height: 360px; }
-    .section :global(.deco) { display: none; }
+  }
+  @media (max-width: 720px) {
+    .services { grid-template-columns: 1fr; }
   }
 </style>

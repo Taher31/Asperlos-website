@@ -1,6 +1,6 @@
 # Asperlos website
 
-Corporate B2B website for Asperlos, an Iranian trading company importing pulses from Russia and dried fruit from Uzbekistan.
+Corporate B2B website for Asperlos, a Tehran-based trading company for sourcing, import and export. The product catalogue, sourcing markets and shipment report are examples of its work.
 
 ## Required reading
 

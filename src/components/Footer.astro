@@ -26,10 +26,11 @@ const { dict, t } = useTranslations(lang);
         <p>{dict.contact.locationValue}</p>
       </div>
       <nav aria-label={dict.nav.main}>
-        <a href={localizePath(lang, '/products/')}>{dict.nav.products}</a>
-        <a href={localizePath(lang, '/origins/')}>{dict.nav.origins}</a>
+        <a href={localizePath(lang, '/#services')}>{dict.cta.tradeServices}</a>
         <a href={localizePath(lang, '/how-we-work/')}>{dict.nav.how}</a>
         <a href={localizePath(lang, '/about/')}>{dict.nav.about}</a>
+        <a href={localizePath(lang, '/products/')}>{dict.nav.products}</a>
+        <a href={localizePath(lang, '/origins/')}>{dict.nav.origins}</a>
         <a href={localizePath(lang, '/faq/')}>{dict.nav.faq}</a>
         <a href={localizePath(lang, '/contact/')}>{dict.nav.contact}</a>
       </nav>

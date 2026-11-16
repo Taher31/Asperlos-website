@@ -63,7 +63,8 @@ const id = (name: string) => `${idPrefix}-${name}`;
   </div>
   <div class="field">
     <label for={id('msg')}>{dict.inquiry.msg} <small>{dict.inquiry.optional}</small></label>
-    <textarea id={id('msg')} name="message" maxlength="2000"></textarea>
+    <textarea id={id('msg')} name="message" maxlength="2000" aria-describedby={id('msg-hint')}></textarea>
+    <p class="hint" id={id('msg-hint')}>{dict.inquiry.requestHint}</p>
   </div>
   <div class="submit">
     <button class="btn btn-gold" type="submit">{dict.cta.send}</button>
@@ -162,6 +163,7 @@ const id = (name: string) => `${idPrefix}-${name}`;
   .field { display: grid; gap: 6px; align-content: start; }
   label { font-size: var(--fs-sm); font-weight: 500; }
   label small { color: var(--label-muted, var(--muted)); font-weight: 400; }
+  .hint { color: var(--label-muted, var(--muted)); font-size: var(--fs-sm); margin: 0; }
   input, select, textarea {
     font: inherit; color: var(--ink); background: #fff; border: 1.5px solid var(--field-border, var(--rule)); border-radius: 4px;
     min-height: 48px; padding: 10px 12px; width: 100%;

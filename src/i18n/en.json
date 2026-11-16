@@ -1,19 +1,19 @@
 {
   "meta": {
     "siteName": "Asperlos",
-    "homeTitle": "Asperlos | Pulses and dried fruit supplier in Tehran",
-    "homeDescription": "Based in Tehran, Asperlos imports and supplies pulses and dried fruit for wholesalers, packers and food producers in Iran.",
-    "productsDescription": "Pulses and dried fruit in trade packaging for wholesale buyers in Iran.",
-    "howDescription": "How Asperlos works with buyers: from your inquiry to delivery at your warehouse.",
-    "aboutDescription": "Asperlos supplies and imports pulses and dried fruit for wholesale buyers and is based in Tehran, Iran.",
+    "homeTitle": "Asperlos | Trading, import and export in Tehran",
+    "homeDescription": "Asperlos is a Tehran-based trading company offering sourcing, import and export services for businesses.",
+    "productsDescription": "Explore goods in the Asperlos catalogue, including pulses and dried fruit. Send an inquiry for goods outside the catalogue.",
+    "howDescription": "How Asperlos handles a trade inquiry, from reviewing sourcing options to agreeing the documents, transport and delivery.",
+    "aboutDescription": "Asperlos is a trading company in Tehran, Iran. We work with businesses on sourcing, import and export orders.",
     "contactDescription": "Find the contact details and direct messaging links for Asperlos in Tehran, Iran.",
-    "inquiryDescription": "Request a quote for pulses and dried fruit from Asperlos.",
-    "faqDescription": "Answers to common questions from wholesale buyers about Asperlos: products, origins, documents, customs clearance and quotes."
+    "inquiryDescription": "Request a quote from Asperlos for sourcing, importing or exporting goods. You can enquire about goods outside the catalogue.",
+    "faqDescription": "Answers about the trading services Asperlos provides, including sourcing, import, export, shipment documents and quotes."
   },
   "nav": {
     "main": "Main",
-    "products": "Products",
-    "origins": "Origins",
+    "products": "Catalogue",
+    "origins": "Catalogue origins",
     "how": "How we work",
     "faq": "FAQ",
     "close": "Close",
@@ -40,17 +40,20 @@
     "email": "Email us",
     "linkedin": "LinkedIn",
     "downloadSpec": "Download specification",
-    "allProducts": "View all products"
+    "allProducts": "View the catalogue",
+    "tradeServices": "Trading services"
   },
   "hero": {
-    "l1": "Supplier and importer",
-    "l2": "of pulses and dried fruit,",
-    "l3": "for wholesale buyers in Iran.",
-    "lead": "Asperlos supplies pulses and dried fruit in trade packaging to wholesalers, packers and food producers. Each shipment travels with the documents it requires, and its specification is set out in the contract."
+    "l1": "Sourcing,",
+    "l2": "import and export",
+    "l3": "for businesses",
+    "lead": "Asperlos is a trading company in Tehran. Tell us what you need to source, import or export, and we will review options for your order.",
+    "imageCaption": "Illustrative image",
+    "imageAlt": "Freight containers at a logistics terminal"
   },
   "products": {
-    "title": "Products",
-    "intro": "Grouped by country of origin.",
+    "title": "Product catalogue",
+    "intro": "Browse examples of goods you can enquire about, grouped by country of origin. For goods outside the catalogue, describe what you need in the inquiry form.",
     "colProduct": "Product",
     "colPackaging": "Packaging",
     "colAvailability": "Availability",
@@ -78,8 +81,8 @@
     }
   },
   "origins": {
-    "title": "Origins",
-    "intro": "Where our products come from.",
+    "title": "Catalogue origins",
+    "intro": "Explore the countries that supply the products currently listed in our catalogue.",
     "russia": "Russia",
     "uzbekistan": "Uzbekistan",
     "productsFrom": "Products from {country}",
@@ -97,31 +100,31 @@
   },
   "how": {
     "title": "How we work",
-    "intro": "From your inquiry to delivery at your warehouse.",
+    "intro": "Tell us what you want to source, import or export. We will review what the order involves and agree the terms with you.",
     "steps": [
       {
         "t": "Inquiry",
-        "d": "Send us the product, quantity and delivery date."
+        "d": "Tell us what you need, including the quantity and destination if you know them."
       },
       {
-        "t": "Contract",
-        "d": "We agree price, specification and delivery terms in a contract."
+        "t": "Review",
+        "d": "We review sourcing options, the route and the documents the order will need."
+      },
+      {
+        "t": "Agreement",
+        "d": "We agree the goods, price, timing and delivery terms with you."
       },
       {
         "t": "Shipment",
-        "d": "Each shipment travels with a phytosanitary certificate and certificate of origin."
-      },
-      {
-        "t": "Customs clearance",
-        "d": "We handle customs clearance in Iran."
+        "d": "We coordinate transport and prepare the documents agreed for the shipment."
       },
       {
         "t": "Delivery",
-        "d": "Delivery to your warehouse in [TBD: city]."
+        "d": "We coordinate handover at the agreed destination."
       }
     ],
     "termsTitle": "Delivery terms",
-    "terms": "[TBD: delivery terms and transport routes]"
+    "terms": "We confirm who handles freight, customs clearance and delivery for each order before it is dispatched."
   },
   "inquiry": {
     "title": "Request a quote",
@@ -139,15 +142,16 @@
     "contactError": "Enter an email address or WhatsApp number.",
     "emailError": "Enter a valid email address.",
     "phoneError": "Enter a valid WhatsApp number.",
-    "validationError": "Check your name and any product you selected.",
+    "validationError": "Check your name and, if selected, the catalogue item.",
     "rateError": "Too many requests. Please wait a few minutes and try again.",
     "sentTitle": "Request received",
     "sentText": "Thank you. We will reply using the contact details you provided.",
-    "backHome": "Back to the home page"
+    "backHome": "Back to the home page",
+    "requestHint": "You can describe goods outside the catalogue here. Include the quantity and destination if known."
   },
   "contact": {
     "title": "Contact",
-    "intro": "Choose the channel that suits you. For a quote, the inquiry form is the fastest way.",
+    "intro": "Contact us to discuss sourcing, import or export. You can send the details through the inquiry form or reach us directly.",
     "direct": "Or contact us directly",
     "location": "Location",
     "locationValue": "Tehran, Iran",
@@ -159,7 +163,9 @@
     "factsTitle": "Company details",
     "founded": "Founded",
     "foundedValue": "2025",
-    "importTitle": "What we import"
+    "intro": "Asperlos is a Tehran-based trading company. We work with businesses on sourcing, import and export. For each order we agree the goods, delivery terms and work involved in getting them to the destination.",
+    "catalogueTitle": "Examples from our catalogue",
+    "catalogueText": "The catalogue shows goods such as pulses and dried fruit and where they come from. For other goods, send us your requirements."
   },
   "footer": {
     "copyright": "© {year} Asperlos",
@@ -173,25 +179,35 @@
     "product": "Hello, I would like a quote for {product}."
   },
   "home": {
-    "tickerLabel": "Supply and import",
-    "qualityEyebrow": "Documented quality",
-    "qualityTitle": "Shipments with documents",
-    "qualityText": "Every shipment is accompanied by a phytosanitary certificate and a certificate of origin. The specification of each shipment is agreed in writing in the contract before dispatch.",
     "companyEyebrow": "Company",
     "companyTitle": "Trading company based in Tehran",
-    "companyText": "Asperlos handles sourcing, import documentation and customs clearance in Iran. We agree prices and delivery terms directly with each buyer.",
+    "companyText": "We work with buyers and suppliers from the initial inquiry through to delivery. We agree prices, responsibilities and delivery terms for each order.",
     "mapSaratov": "Saratov region",
     "mapIran": "Iran",
-    "productsEyebrow": "Products",
-    "productsTitle": "Products",
-    "howEyebrow": "How we work",
-    "howTitle": "From your inquiry to delivery at your warehouse",
+    "productsTitle": "Examples from our catalogue",
+    "howTitle": "From inquiry to delivery",
     "mapCaspian": "Caspian Sea",
     "mapGulf": "Persian Gulf",
     "mapOman": "Gulf of Oman",
     "mapTehran": "Tehran",
     "mapCentralAsia": "Central Asia",
-    "mapCaption": "Supply directions are schematic. Borders: Natural Earth."
+    "mapCaption": "A schematic map of sample supply routes for catalogue goods. Border data from Natural Earth.",
+    "servicesTitle": "Trading services",
+    "services": [
+      {
+        "title": "Sourcing",
+        "text": "We look for suppliers based on the goods you need, their specifications and the quantity."
+      },
+      {
+        "title": "Import",
+        "text": "We coordinate import orders, including freight, documents and customs clearance as agreed for the shipment."
+      },
+      {
+        "title": "Export",
+        "text": "We arrange export shipments and coordinate the documents and transport for the agreed destination."
+      }
+    ],
+    "productsIntro": "Explore pulses and dried fruit in the catalogue. You can also request a quote for other goods."
   },
   "shipment": {
     "eyebrow": "Loading report",
@@ -202,39 +218,39 @@
   },
   "faq": {
     "title": "Frequently asked questions",
-    "intro": "Short answers for wholesale buyers.",
+    "intro": "Questions about working with Asperlos on sourcing, imports and exports.",
     "items": [
       {
-        "q": "What does Asperlos import?",
-        "a": "We supply pulses (red lentils, green lentils, chickpeas and dried peas) and dried fruit (seedless and seeded raisins)."
+        "q": "What services does Asperlos offer?",
+        "a": "We work with businesses to source, import and export goods. The order determines which documents, transport and delivery arrangements are needed."
       },
       {
-        "q": "Who do you supply?",
-        "a": "Wholesalers, packers and food producers in Iran."
+        "q": "Can I enquire about goods outside the catalogue?",
+        "a": "Yes. The catalogue shows examples, including pulses and dried fruit. Tell us what goods you need, the quantity and the destination if known."
       },
       {
         "q": "Where is the company based?",
         "a": "Asperlos is based in Tehran, Iran."
       },
       {
-        "q": "Why are there no prices on the website?",
-        "a": "Prices depend on the product, quantity and delivery terms. Request a quote through the inquiry form or a messenger and we will send current terms."
+        "q": "How is a quote calculated?",
+        "a": "The price depends on the goods, quantity, route and delivery terms. Send the details through the inquiry form or contact us directly."
       },
       {
-        "q": "What documents come with each shipment?",
-        "a": "Each shipment travels with a phytosanitary certificate and a certificate of origin."
+        "q": "What documents accompany a shipment?",
+        "a": "The documents depend on the goods and route. We identify the documents needed for each order before shipment."
       },
       {
-        "q": "Do you handle customs clearance?",
-        "a": "Yes. We handle customs clearance in Iran."
+        "q": "Who handles customs clearance?",
+        "a": "We agree who will handle clearance before dispatch, based on the route and delivery terms."
       },
       {
-        "q": "How are specifications agreed?",
-        "a": "Final specifications for each shipment are agreed in the contract. For example, our green lentils (crop 2026, Saratov region) have a calibre of 6 mm and above, moisture max. 14%, foreign matter max. 2% and broken kernels max. 5%, and are supplied in 25 kg PP bags."
+        "q": "How are the goods and delivery terms agreed?",
+        "a": "We confirm the specifications, quantity, timing and delivery terms with you before dispatch."
       },
       {
         "q": "How do I request a quote?",
-        "a": "Choose a product in the inquiry form and leave your email address or WhatsApp number. You can add order details in the message."
+        "a": "Leave your name and at least one contact detail, an email address or WhatsApp number, in the inquiry form. You can select a catalogue item or describe your request in the message."
       }
     ]
   },
@@ -245,8 +261,8 @@
   },
   "market": {
     "eyebrow": "Market",
-    "title": "The supply market in figures",
-    "intro": "Published figures on the markets we buy from, each with its source.",
+    "title": "Market figures for catalogue products",
+    "intro": "Published trade figures for pulses and dried fruit featured in the catalogue.",
     "note": "Third-party figures, not Asperlos data.",
     "items": [
       {

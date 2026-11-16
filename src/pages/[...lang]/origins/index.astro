@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import MarketFacts from '../../../components/MarketFacts.astro';
 import PageHeader from '../../../components/PageHeader.astro';
 import { getOriginPages, slugOf } from '../../../lib/content';
 import { origins } from '../../../content.config';
@@ -25,6 +26,7 @@ const pages = (await getOriginPages(lang)).sort(
       ))}
     </div>
   </section>
+  <MarketFacts lang={lang} />
 </BaseLayout>
 
 <style>

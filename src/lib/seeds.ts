@@ -17,16 +17,3 @@ export function seedImage(slug: string, n = 0): ImageMetadata | undefined {
 }
 
 export const hasSeeds = (slug: string) => bySlug.has(slug);
-
-/** One placement in a composition: position and size as % of the box, rotation in degrees. */
-export interface Placement { x: number; y: number; w: number; r: number; depth?: number }
-
-/** Loose cluster used for hero groups and product panels; seeds sit around the box edges, not on the text. */
-export const cluster: Placement[] = [
-  { x: 8, y: 6, w: 22, r: -12 },
-  { x: 66, y: 4, w: 17, r: 18 },
-  { x: 72, y: 62, w: 24, r: -6 },
-  { x: 4, y: 64, w: 16, r: 24 },
-  { x: 40, y: 80, w: 13, r: -30 },
-  { x: 42, y: 12, w: 11, r: 40 },
-];

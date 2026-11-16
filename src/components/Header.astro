@@ -3,7 +3,6 @@
 import { Image } from 'astro:assets';
 import logo from '../assets/logo-mark.png';
 import logoWhite from '../assets/logo-mark-white.png';
-import Seed from './Seed.astro';
 import { channelLink } from '../lib/contact';
 import { languages, langMeta, localizePath, useTranslations, type Lang } from '../i18n';
 
@@ -15,10 +14,11 @@ interface Props {
 const { lang, path } = Astro.props;
 const { dict } = useTranslations(lang);
 const nav = [
-  { href: '/products/', label: dict.nav.products },
-  { href: '/origins/', label: dict.nav.origins },
+  { href: '/#services', label: dict.cta.tradeServices },
   { href: '/how-we-work/', label: dict.nav.how },
   { href: '/about/', label: dict.nav.about },
+  { href: '/products/', label: dict.nav.products },
+  { href: '/origins/', label: dict.nav.origins },
   { href: '/faq/', label: dict.nav.faq },
   { href: '/contact/', label: dict.nav.contact },
 ];
@@ -96,9 +96,6 @@ const phone = channelLink('phone');
       </div>
     </aside>
   </div>
-  <Seed product="chickpeas" variant={1} size={150} class="p1" style="--rot:-14deg" />
-  <Seed product="red-lentils" variant={2} size={90} class="p2" style="--rot:20deg" />
-  <Seed product="seeded-raisins" variant={0} size={120} class="p3" style="--rot:34deg" />
 </dialog>
 
 <script>
@@ -209,11 +206,6 @@ const phone = channelLink('phone');
   .panel-lang a { color: var(--on-dark-muted); }
   .panel-lang a[aria-current="true"] { color: #fff; box-shadow: inset 0 -1px 0 var(--gold); }
 
-  .menu-panel :global(.seed) { opacity: 0.9; }
-  .menu-panel :global(.p1) { width: 150px; inset-inline-end: 6%; top: 18%; }
-  .menu-panel :global(.p2) { width: 90px; inset-inline-end: 30%; top: 8%; }
-  .menu-panel :global(.p3) { width: 120px; inset-inline-start: 46%; bottom: 6%; }
-
   @media (prefers-reduced-motion: no-preference) {
     .menu-panel[open] { animation: panel-in 0.55s var(--ease); }
     .menu-panel[open] li { animation: item-in 0.7s var(--ease) both; animation-delay: calc(0.12s + var(--i) * 0.05s); }
@@ -224,8 +216,6 @@ const phone = channelLink('phone');
   @media (max-width: 900px) {
     .quote { display: none; }
     .panel-body { grid-template-columns: 1fr; align-items: start; }
-    .menu-panel :global(.p1) { top: auto; bottom: 4%; width: 110px; }
-    .menu-panel :global(.p2), .menu-panel :global(.p3) { display: none; }
   }
   @media (max-width: 640px) {
     .bar { grid-template-columns: auto 1fr auto; }

@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHeader from '../../../components/PageHeader.astro';
 import ProductTable from '../../../components/ProductTable.astro';
-import { getProducts } from '../../../lib/content';
+import { getProducts, slugOf } from '../../../lib/content';
 import { categories } from '../../../content.config';
 import { langPaths, localizePath, useTranslations, type Lang } from '../../../i18n';
 
@@ -13,7 +13,7 @@ const { dict } = useTranslations(lang);
 const products = await getProducts(lang);
 ---
 <BaseLayout lang={lang} title={dict.products.title} description={dict.meta.productsDescription}>
-  <PageHeader lang={lang} title={dict.products.title} intro={dict.products.intro} />
+  <PageHeader lang={lang} title={dict.products.title} intro={dict.products.intro} seeds={products.slice(0, 3).map(slugOf)} />
   <section class="section alt">
     <div class="wrap">
       <nav class="cats" aria-label={dict.products.title}>
@@ -21,6 +21,7 @@ const products = await getProducts(lang);
         <a href={localizePath(lang, '/origins/')}>{dict.nav.origins}</a>
       </nav>
       <ProductTable lang={lang} products={products} />
+      <p class="request"><a class="btn btn-primary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a></p>
     </div>
   </section>
 </BaseLayout>
@@ -28,4 +29,5 @@ const products = await getProducts(lang);
 <style>
   .cats { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 32px; }
   .cats a { color: var(--navy); font-weight: 500; text-underline-offset: 4px; }
+  .request { margin: 32px 0 0; }
 </style>
