@@ -95,6 +95,15 @@ const panelSeeds = [
   </section>
 
   <LentilShipment lang={lang} />
+  <section class="section journal-teaser">
+    <div class="wrap teaser-row">
+      <div>
+        <h2 class="h2">{dict.journal.title}</h2>
+        <p>{dict.journal.intro}</p>
+      </div>
+      <a class="btn btn-secondary" href={localizePath(lang, '/journal/')}>{dict.journal.readJournal}</a>
+    </div>
+  </section>
   <InquirySection lang={lang} />
 </BaseLayout>
 
@@ -132,6 +141,10 @@ const panelSeeds = [
   .panel li a:hover { color: var(--navy); padding-inline-start: 8px; }
   .panel li a:hover::after { opacity: 1; }
   .more { margin: 40px 0 0; }
+  .journal-teaser { padding-block: clamp(38px, 5vw, 72px); }
+  .teaser-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 36px; }
+  .teaser-row .h2 { margin-block-end: 8px; }
+  .teaser-row p { color: var(--muted); margin: 0; }
 
   @media (max-width: 900px) {
     .two, .panels { grid-template-columns: 1fr; }

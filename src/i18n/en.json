@@ -1,4 +1,24 @@
 {
+  "journal": {
+    "nav": "Journal",
+    "title": "Asperlos Trade Journal",
+    "intro": "Trade data, practical guides, historical accounts and independent analysis for businesses.",
+    "latest": "Latest articles",
+    "readJournal": "Read the journal",
+    "languageNote": "Articles are published in Persian.",
+    "linkedinTitle": "Asperlos on LinkedIn",
+    "linkedinIntro": "Follow our company page for trade notes and updates.",
+    "linkedinCompany": "Visit our LinkedIn page",
+    "linkedinPost": "Related LinkedIn post",
+    "openLinkedinPost": "Open post on LinkedIn",
+    "sources": "Sources",
+    "categories": {
+      "data": "Trade data",
+      "education": "Trade guides",
+      "history": "Trade history",
+      "analysis": "Analysis"
+    }
+  },
   "meta": {
     "siteName": "Asperlos",
     "homeTitle": "Asperlos | Trading, import and export in Tehran",

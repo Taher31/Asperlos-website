@@ -49,6 +49,7 @@ export const GET: APIRoute = async ({ site }) => {
     `- [How we work](${abs('/how-we-work/')}): ${en.meta.howDescription}`,
     `- [About](${abs('/about/')}): ${en.meta.aboutDescription}`,
     `- [Contact](${abs('/contact/')}): ${en.meta.contactDescription}`,
+    `- [Trade journal](${abs('/journal/')}): ${en.journal.intro}`,
     `- [Request a quote](${abs('/inquiry/')}): ${en.meta.inquiryDescription}`,
     `- [FAQ](${abs('/faq/')}): ${en.meta.faqDescription}`,
     '',

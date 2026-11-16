@@ -34,9 +34,12 @@ interface Props {
   /** Extra JSON-LD objects for this page */
   schema?: object[];
   noindex?: boolean;
+  ogType?: 'website' | 'article';
+  /** Language switch from a page that only exists in the current language. */
+  languageFallback?: string;
 }
 
-const { lang, title, description, schema = [], noindex = false } = Astro.props;
+const { lang, title, description, schema = [], noindex = false, ogType = 'website', languageFallback } = Astro.props;
 const { dict } = useTranslations(lang);
 const path = unlocalizePath(Astro.url.pathname);
 const site = Astro.site!;
@@ -48,7 +51,7 @@ const organization = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Asperlos',
-  alternateName: ['آسپرلوس', 'Асперлос'],
+  alternateName: ['اسپرلوس', 'Асперлос'],
   url: abs('/'),
   logo: abs('/apple-touch-icon.png'),
   description: dict.meta.homeDescription,
@@ -72,10 +75,10 @@ const organization = {
   <meta name="description" content={description}>
   {noindex && <meta name="robots" content="noindex">}
   <link rel="canonical" href={canonical}>
-  {languages.map((l) => <link rel="alternate" hreflang={langMeta[l].hreflang} href={abs(localizePath(l, path))}>)}
-  <link rel="alternate" hreflang="x-default" href={abs(path)}>
+  {!languageFallback && languages.map((l) => <link rel="alternate" hreflang={langMeta[l].hreflang} href={abs(localizePath(l, path))}>)}
+  {!languageFallback && <link rel="alternate" hreflang="x-default" href={abs(path)}>}
 
-  <meta property="og:type" content="website">
+  <meta property="og:type" content={ogType}>
   <meta property="og:site_name" content="Asperlos">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
@@ -97,8 +100,8 @@ const organization = {
   </script>
 </head>
 <body>
-  <LangSuggestBar lang={lang} path={path} />
-  <Header lang={lang} path={path} />
+  {!languageFallback && <LangSuggestBar lang={lang} path={path} />}
+  <Header lang={lang} path={path} languageFallback={languageFallback} />
   <main id="main">
     <slot />
   </main>

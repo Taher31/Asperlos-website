@@ -40,4 +40,22 @@ const originPages = defineCollection({
   }),
 });
 
-export const collections = { products, origins: originPages };
+export const journalCategories = ['data', 'education', 'history', 'analysis'] as const;
+
+const journal = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/journal' }),
+  schema: z.object({
+    title: z.string().min(1),
+    summary: z.string().min(1),
+    category: z.enum(journalCategories),
+    date: z.coerce.date(),
+    sources: z.array(z.object({
+      label: z.string().min(1),
+      url: z.url().startsWith('https://'),
+    })).default([]),
+    linkedinUrl: z.url().regex(/^https:\/\/(www\.)?linkedin\.com\//).optional(),
+    linkedinEmbedUrl: z.url().regex(/^https:\/\/www\.linkedin\.com\/embed\/feed\/update\//).optional(),
+  }),
+});
+
+export const collections = { products, origins: originPages, journal };

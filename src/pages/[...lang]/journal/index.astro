@@ -1,0 +1,72 @@
+---
+import PageHeader from '../../../components/PageHeader.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { channelLink } from '../../../lib/contact';
+import { formatJournalDate, getJournalEntries, journalPath } from '../../../lib/journal';
+import { langPaths, useTranslations, type Lang } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const { dict } = useTranslations(lang);
+const persian = useTranslations('fa').dict.journal;
+const entries = await getJournalEntries();
+const linkedPosts = entries.filter((entry) => entry.data.linkedinUrl).slice(0, 3);
+const linkedinCompany = channelLink('linkedin').href;
+---
+<BaseLayout lang={lang} title={dict.journal.title} description={dict.journal.intro}>
+  <PageHeader lang={lang} title={dict.journal.title} intro={dict.journal.intro} />
+  <section class="section alt journal">
+    <div class="wrap grid">
+      <div>
+        <h2 class="h2">{dict.journal.latest}</h2>
+        {lang !== 'fa' && <p class="language-note">{dict.journal.languageNote}</p>}
+        <ul class="posts" role="list">
+          {entries.map((entry) => (
+            <li lang="fa" dir="rtl">
+              <div class="meta">
+                <span>{persian.categories[entry.data.category]}</span>
+                <time datetime={entry.data.date.toISOString().slice(0, 10)}>{formatJournalDate(entry.data.date)}</time>
+              </div>
+              <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
+              <p>{entry.data.summary}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <aside class="social dark" aria-labelledby="journal-linkedin">
+        <h2 id="journal-linkedin" class="display">{dict.journal.linkedinTitle}</h2>
+        <p>{dict.journal.linkedinIntro}</p>
+        {linkedPosts.length > 0 && (
+          <ul class="social-posts">
+            {linkedPosts.map((entry) => (
+              <li lang="fa" dir="rtl">
+                <a href={entry.data.linkedinUrl} target="_blank" rel="noopener">{entry.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+        <a class="line-link" href={linkedinCompany} target="_blank" rel="noopener">{dict.journal.linkedinCompany}</a>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .journal { padding-block-start: clamp(36px, 5vw, 64px); }
+  .grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; gap: clamp(24px, 5vw, 72px); }
+  .language-note { margin: -8px 0 20px; color: var(--muted); }
+  .posts { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  .posts li { padding: clamp(18px, 3vw, 32px); background: var(--card); border: 1px solid var(--rule); border-radius: 4px; font-family: "IBM Plex Sans Arabic", sans-serif; }
+  .posts h3 { color: var(--navy); font: 600 clamp(1.75rem, 3vw, 2.45rem)/1.25 "Markazi Text", serif; margin: 10px 0 8px; }
+  .posts a { text-decoration-thickness: 1px; text-decoration-color: var(--gold-ink); text-underline-offset: 5px; }
+  .posts a:hover { text-decoration-thickness: 2px; }
+  .posts p { color: var(--muted); margin: 0; }
+  .meta { display: flex; flex-wrap: wrap; gap: 2px 16px; align-items: baseline; font-size: var(--fs-sm); color: var(--muted); }
+  .meta span { color: var(--gold-ink); font-weight: 600; }
+  .social { padding: clamp(20px, 3vw, 32px); border-block-start: 2px solid var(--gold); border-radius: 4px; }
+  .social h2 { font-size: clamp(1.65rem, 2.6vw, 2.2rem); line-height: 1.15; margin: 0 0 12px; }
+  .social p { color: var(--on-dark-muted); margin: 0 0 20px; }
+  .social-posts { padding-inline-start: 1.25em; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+</style>

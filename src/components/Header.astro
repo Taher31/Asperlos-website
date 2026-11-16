@@ -10,8 +10,9 @@ interface Props {
   lang: Lang;
   /** current path without language prefix */
   path: string;
+  languageFallback?: string;
 }
-const { lang, path } = Astro.props;
+const { lang, path, languageFallback } = Astro.props;
 const { dict } = useTranslations(lang);
 const nav = [
   { href: '/#services', label: dict.cta.tradeServices },
@@ -19,18 +20,20 @@ const nav = [
   { href: '/about/', label: dict.nav.about },
   { href: '/products/', label: dict.nav.products },
   { href: '/origins/', label: dict.nav.origins },
+  { href: '/journal/', label: dict.journal.nav },
   { href: '/faq/', label: dict.nav.faq },
   { href: '/contact/', label: dict.nav.contact },
 ];
 const isCurrent = (href: string) => path === href || path.startsWith(href);
 const num = (i: number) => (lang === 'fa' ? (i + 1).toLocaleString('fa-IR', { minimumIntegerDigits: 2 }) : String(i + 1).padStart(2, '0'));
 const phone = channelLink('phone');
+const languageHref = (l: Lang) => localizePath(l, l === lang ? path : (languageFallback ?? path));
 ---
 <header class="site-header" data-header>
   <div class="bar wrap">
     <div class="lang" role="group" aria-label={dict.nav.language}>
       {languages.map((l) => (
-        <a href={localizePath(l, path)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>
+        <a href={languageHref(l)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>
           {langMeta[l].name}
         </a>
       ))}
@@ -91,7 +94,7 @@ const phone = channelLink('phone');
       </dl>
       <div class="panel-lang">
         {languages.map((l) => (
-          <a href={localizePath(l, path)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>{langMeta[l].name}</a>
+          <a href={languageHref(l)} lang={l} hreflang={l} aria-current={l === lang ? 'true' : undefined} data-lang-choice={l}>{langMeta[l].name}</a>
         ))}
       </div>
     </aside>
