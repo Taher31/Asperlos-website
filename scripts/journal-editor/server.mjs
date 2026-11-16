@@ -1,16 +1,20 @@
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { createReadStream } from 'node:fs';
-import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, realpath, stat, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { extname, join } from 'node:path';
-import { clearPublishedDrafts, incomingMedia, listArticles, mediaType, readArticle, resolveMedia, saveDraft, stageDrafts, validSlug } from './content.mjs';
+import { clearPublishedDrafts, incomingMedia, listArticles, mediaType, readArticle, resolveMedia, root, saveDraft, stageDrafts, validSlug } from './content.mjs';
 import { publishJournal } from './publish.mjs';
 
 const port = Number(process.env.JOURNAL_EDITOR_PORT || 4174);
-const host = '127.0.0.1:' + port;
+const address = '127.0.0.1';
+const host = address + ':' + port;
 const origin = 'http://' + host;
 const html = await readFile(new URL('./index.html', import.meta.url));
+const healthPath = '/api/health';
+const instanceHeader = 'X-Asperlos-Journal-Instance';
+const instance = createHash('sha256').update(await realpath(root)).digest('hex');
 let deployment = { state: 'idle', message: '' };
 let saving = 0;
 const MAX_JSON = 2 * 1024 * 1024;
@@ -95,6 +99,10 @@ async function handle(request, response) {
   if (request.headers.host !== host) return json(response, 403, { error: 'پنل فقط از همین رایانه در دسترس است.' });
   const url = new URL(request.url, origin);
   const { pathname } = url;
+  if (request.method === 'HEAD' && pathname === healthPath) {
+    response.writeHead(204, { [instanceHeader]: instance, 'Cache-Control': 'no-store' });
+    return response.end();
+  }
   if (request.method === 'GET') {
     if (pathname === '/') {
       response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
@@ -136,14 +144,43 @@ async function handle(request, response) {
   return json(response, 404, { error: 'این مسیر در پنل وجود ندارد.' });
 }
 
-createServer((request, response) => {
+function showEditor(message) {
+  console.log(message + ': ' + origin);
+  if (process.platform === 'win32' && process.argv.includes('--open')) {
+    execFile('rundll32.exe', ['url.dll,FileProtocolHandler', origin], { windowsHide: true });
+  }
+}
+
+async function isSameEditor() {
+  try {
+    const response = await fetch(origin + healthPath, {
+      method: 'HEAD',
+      redirect: 'error',
+      signal: AbortSignal.timeout(1500),
+    });
+    return response.status === 204 && response.headers.get(instanceHeader) === instance;
+  } catch {
+    return false;
+  }
+}
+
+const server = createServer((request, response) => {
   handle(request, response).catch((error) => {
     if (response.headersSent) return response.destroy();
     json(response, 400, { error: error.message || 'درخواست انجام نشد.' });
   });
-}).listen(port, '127.0.0.1', () => {
-  console.log('Asperlos journal editor: ' + origin);
-  if (process.platform === 'win32' && process.argv.includes('--open')) {
-    execFile('rundll32.exe', ['url.dll,FileProtocolHandler', origin], { windowsHide: true });
-  }
 });
+
+server.on('error', async (error) => {
+  if (error.code === 'EADDRINUSE') {
+    if (await isSameEditor()) {
+      showEditor('Asperlos journal editor is already running');
+      return;
+    }
+    console.error('Port ' + port + ' is already in use. If ' + origin + ' is an older journal editor, close its original terminal once, then reopen the shortcut.');
+  } else {
+    console.error('Could not start the Asperlos journal editor: ' + error.message);
+  }
+  process.exitCode = 1;
+});
+server.listen(port, address, () => showEditor('Asperlos journal editor'));
