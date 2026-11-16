@@ -6,6 +6,3 @@ export async function getJournalEntries() {
 }
 
 export const journalPath = (id: string) => `/fa/journal/${id}/`;
-
-const persianDate = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { dateStyle: 'long', timeZone: 'UTC' });
-export const formatJournalDate = (date: Date) => persianDate.format(date);

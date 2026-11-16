@@ -2,7 +2,7 @@
 import PageHeader from '../../../components/PageHeader.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { channelLink } from '../../../lib/contact';
-import { formatJournalDate, getJournalEntries, journalPath } from '../../../lib/journal';
+import { getJournalEntries, journalPath } from '../../../lib/journal';
 import { langPaths, useTranslations, type Lang } from '../../../i18n';
 
 export const getStaticPaths = langPaths;
@@ -23,10 +23,7 @@ const linkedinCompany = channelLink('linkedin').href;
         <ul class="posts" role="list">
           {entries.map((entry) => (
             <li lang="fa" dir="rtl">
-              <div class="meta">
-                <span>{persian.categories[entry.data.category]}</span>
-                <time datetime={entry.data.date.toISOString().slice(0, 10)}>{formatJournalDate(entry.data.date)}</time>
-              </div>
+              <span class="category">{persian.categories[entry.data.category]}</span>
               <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
               <p>{entry.data.summary}</p>
             </li>
@@ -62,8 +59,7 @@ const linkedinCompany = channelLink('linkedin').href;
   .posts a { text-decoration-thickness: 1px; text-decoration-color: var(--gold-ink); text-underline-offset: 5px; }
   .posts a:hover { text-decoration-thickness: 2px; }
   .posts p { color: var(--muted); margin: 0; }
-  .meta { display: flex; flex-wrap: wrap; gap: 2px 16px; align-items: baseline; font-size: var(--fs-sm); color: var(--muted); }
-  .meta span { color: var(--gold-ink); font-weight: 600; }
+  .category { font-size: var(--fs-sm); color: var(--gold-ink); font-weight: 600; }
   .social { padding: clamp(20px, 3vw, 32px); border-block-start: 2px solid var(--gold); border-radius: 4px; }
   .social h2 { font-size: clamp(1.65rem, 2.6vw, 2.2rem); line-height: 1.15; margin: 0 0 12px; }
   .social p { color: var(--on-dark-muted); margin: 0 0 20px; }
