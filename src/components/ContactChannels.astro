@@ -54,6 +54,7 @@ const items = channelsFor(lang).map((c) => ({ ...channelLink(c), label: dict.cta
   .compact li { border-bottom: 0; }
   .compact a { align-items: center; min-height: 34px; padding: 4px 0; }
   .compact .label { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--label, var(--ink)); }
+  .compact .value { flex-shrink: 0; max-width: 55%; }
   .contact-icon { flex: none; width: 20px; height: 20px; object-fit: contain; }
   :global(.dark) .channels { --line: rgba(255, 255, 255, 0.16); --value: var(--on-dark-muted); --label: #fff; }
 </style>
