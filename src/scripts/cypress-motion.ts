@@ -14,7 +14,6 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
   function reset() {
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
-    previousMove = undefined;
     gust = 0;
     angle = 0;
     speed = 0;
@@ -27,6 +26,7 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
       area.dataset.cypressVisible = 'true';
     } else {
       delete area.dataset.cypressVisible;
+      previousMove = undefined;
       reset();
     }
   }
@@ -50,34 +50,56 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
     frame = requestAnimationFrame(step);
   }
 
-  function handleMove(event: PointerEvent) {
-    if (!inView || document.hidden || reducedMotion.matches || !finePointer.matches || event.pointerType !== 'mouse') {
-      return;
-    }
-    const previous = previousMove;
-    previousMove = event;
-    if (!previous) return;
+  function isActive() {
+    return inView && !document.hidden && !reducedMotion.matches;
+  }
 
-    const elapsed = Math.max(8, event.timeStamp - previous.timeStamp);
-    const dx = event.clientX - previous.clientX;
-    const dy = event.clientY - previous.clientY;
-    // Vertical movement also pushes the tree, more gently than horizontal movement.
-    const movement = Math.abs(dx) >= Math.abs(dy) * .45 ? dx : dy * .45;
-    gust = Math.max(-maxAngle, Math.min(maxAngle, movement / elapsed * 4.8));
+  function push(target: number) {
+    gust = Math.max(-maxAngle, Math.min(maxAngle, target));
     if (!frame && Math.abs(gust) >= .015) {
       lastFrame = performance.now();
       frame = requestAnimationFrame(step);
     }
   }
 
+  function touchStart(event: PointerEvent) {
+    if (!isActive() || event.pointerType !== 'touch' || !event.isPrimary) return;
+    previousMove = event;
+    const bounds = artwork.getBoundingClientRect();
+    const fromLeft = event.clientX < bounds.left + bounds.width / 2;
+    push(fromLeft ? -2.5 : 2.5);
+  }
+
+  function handleMove(event: PointerEvent) {
+    if (!isActive()) return;
+    const mouse = event.pointerType === 'mouse' && finePointer.matches;
+    const touch = event.pointerType === 'touch' && event.isPrimary
+      && previousMove?.pointerId === event.pointerId && previousMove.pointerType === 'touch';
+    if (!mouse && !touch) return;
+
+    const previous = previousMove;
+    previousMove = event;
+    if (!previous || previous.pointerId !== event.pointerId) return;
+
+    const elapsed = Math.max(8, event.timeStamp - previous.timeStamp);
+    const dx = event.clientX - previous.clientX;
+    const dy = event.clientY - previous.clientY;
+    // Keep vertical swipes available for scrolling, while the mouse can sway the tree from any direction.
+    if (touch && Math.abs(dx) <= Math.abs(dy)) return;
+    const movement = mouse && Math.abs(dx) < Math.abs(dy) * .45 ? dy * .45 : dx;
+    push(movement / elapsed * 4.8);
+  }
+
   function release(event: PointerEvent) {
-    if (event.pointerType !== 'mouse') return;
+    if (previousMove?.pointerId !== event.pointerId) return;
     previousMove = undefined;
-    gust = 0;
+    if (event.pointerType === 'mouse' || event.type === 'pointercancel') gust = 0;
   }
 
   function motionPreferenceChanged() {
-    if (reducedMotion.matches || !finePointer.matches) reset();
+    if (!reducedMotion.matches) return;
+    previousMove = undefined;
+    reset();
   }
 
   if (typeof IntersectionObserver !== 'undefined') {
@@ -91,9 +113,10 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
   syncVisibility();
   document.addEventListener('visibilitychange', syncVisibility);
   reducedMotion.addEventListener('change', motionPreferenceChanged);
-  finePointer.addEventListener('change', motionPreferenceChanged);
+  area.addEventListener('pointerdown', touchStart, { passive: true });
   area.addEventListener('pointerenter', handleMove, { passive: true });
   area.addEventListener('pointermove', handleMove, { passive: true });
+  area.addEventListener('pointerup', release, { passive: true });
   area.addEventListener('pointerleave', release, { passive: true });
   area.addEventListener('pointercancel', release, { passive: true });
 }

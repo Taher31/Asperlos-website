@@ -27,6 +27,7 @@ const { variant } = Astro.props;
     justify-items: center;
     align-items: end;
     min-width: 0;
+    touch-action: pan-y pinch-zoom;
   }
   .cypress-halo {
     position: absolute;
@@ -65,13 +66,15 @@ const { variant } = Astro.props;
 
   @media (prefers-reduced-motion: no-preference) {
     .cypress img {
-      animation: cypress-breeze 6.8s ease-in-out infinite;
+      animation: cypress-breeze 8.4s ease-in-out infinite;
       animation-play-state: paused;
     }
     .cypress[data-cypress-visible] img { animation-play-state: running; }
     @keyframes cypress-breeze {
-      0%, 100% { transform: rotate(-.45deg); }
-      52% { transform: rotate(.65deg); }
+      0%, 100% { transform: skewX(-.55deg); }
+      28% { transform: skewX(1.8deg); }
+      49% { transform: skewX(.3deg); }
+      76% { transform: skewX(-1.45deg); }
     }
   }
   @media (prefers-reduced-motion: reduce) {
