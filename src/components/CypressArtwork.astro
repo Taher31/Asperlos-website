@@ -9,7 +9,7 @@ const { variant } = Astro.props;
 ---
 
 <div class:list={['cypress', variant]} data-cypress aria-hidden="true">
-  <div class="cypress-halo"></div>
+  {variant === 'masthead' && <div class="cypress-halo"></div>}
   <div class="cypress-sway" data-cypress-sway>
     <Image src={cypress} alt="" width={224} height={336} format="webp" loading={variant === 'footer' ? 'lazy' : 'eager'} decoding="async" />
   </div>
@@ -49,9 +49,7 @@ const { variant } = Astro.props;
     max-width: 880px;
     padding: 16px 0 8px;
     margin-inline: auto;
-    background: radial-gradient(ellipse 56% 86% at 50% 80%, #8a641626, transparent 75%);
   }
-  .footer .cypress-halo { inset-inline: clamp(0px, 4vw, 56px); }
   .masthead {
     --cypress-height: clamp(145px, 19vw, 246px);
     width: min(100%, 240px);
