@@ -28,6 +28,15 @@ const linkedinCompany = channelLink('linkedin').href;
                 <bdi class="category" lang={categoryLabel.lang}>{categoryLabel.text}</bdi>
                 <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
                 <p>{entry.data.summary}</p>
+                {entry.data.image && (
+                  <img
+                    class="post-cover"
+                    src={'/journal-media/' + entry.data.image}
+                    alt={entry.data.mediaAlt ?? ''}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
               </li>
             );
           })}
@@ -63,6 +72,15 @@ const linkedinCompany = channelLink('linkedin').href;
   .posts a { text-decoration-thickness: 1px; text-decoration-color: var(--gold-ink); text-underline-offset: 5px; }
   .posts a:hover { text-decoration-thickness: 2px; }
   .posts p { color: var(--muted); margin: 0; }
+  .post-cover {
+    display: block;
+    width: min(100%, 42rem);
+    aspect-ratio: 3 / 2;
+    object-fit: contain;
+    margin: clamp(14px, 2.3vw, 22px) auto 0;
+    border-radius: 4px;
+    background: var(--sand);
+  }
   .category { font-size: var(--fs-sm); color: var(--gold-ink); font-weight: 600; }
   .social { padding: clamp(20px, 3vw, 32px); border-block-start: 2px solid var(--gold); border-radius: 4px; }
   .social h2 { font-size: clamp(1.65rem, 2.6vw, 2.2rem); line-height: 1.15; margin: 0 0 12px; }
