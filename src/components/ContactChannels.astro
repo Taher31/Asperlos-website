@@ -1,5 +1,9 @@
 ---
-import { channelLink, channelsFor } from '../lib/contact';
+import baleIcon from '../assets/contact/bale.svg?url';
+import linkedinIcon from '../assets/contact/linkedin.png?url';
+import telegramIcon from '../assets/contact/telegram.svg?url';
+import whatsappIcon from '../assets/contact/whatsapp.png?url';
+import { channelLink, channelsFor, type Channel } from '../lib/contact';
 import { useTranslations, type Lang } from '../i18n';
 
 interface Props {
@@ -9,13 +13,30 @@ interface Props {
 }
 const { lang, compact = false } = Astro.props;
 const { dict } = useTranslations(lang);
-const items = channelsFor(lang).map((c) => ({ ...channelLink(c), label: dict.cta[c] }));
+const brandIcons: Partial<Record<Channel, string>> = {
+  whatsapp: whatsappIcon,
+  telegram: telegramIcon,
+  bale: baleIcon,
+  linkedin: linkedinIcon,
+};
+const items = channelsFor(lang).map((c) => ({ ...channelLink(c), label: dict.cta[c], icon: brandIcons[c] }));
 ---
 <ul class:list={['channels', { compact }]}>
   {items.map((item) => (
     <li>
       <a href={item.href} rel={item.href.startsWith('https:') ? 'noopener' : undefined} target={item.href.startsWith('https:') ? '_blank' : undefined}>
-        <span class="label">{item.label}</span>
+        <span class="label">
+          {compact && (
+            item.icon
+              ? <img class="contact-icon" src={item.icon} width="20" height="20" alt="" />
+              : <svg class="contact-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  {item.channel === 'phone'
+                    ? <path d="M7 3H5a2 2 0 0 0-2 2 16 16 0 0 0 16 16 2 2 0 0 0 2-2v-2a1 1 0 0 0-.76-.97l-3.5-.87a1 1 0 0 0-1 .27L14.3 17a13 13 0 0 1-7.3-7.3l1.57-1.44a1 1 0 0 0 .27-1l-.87-3.5A1 1 0 0 0 7 3Z" />
+                    : <><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></>}
+                </svg>
+          )}
+          <span class="label-text">{item.label}</span>
+        </span>
         <span class="value" dir="ltr">{item.display}</span>
       </a>
     </li>
@@ -28,10 +49,11 @@ const items = channelsFor(lang).map((c) => ({ ...channelLink(c), label: dict.cta
   a { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 14px 0; text-decoration: none; color: inherit; }
   .value { color: var(--value, var(--muted)); unicode-bidi: isolate; overflow-wrap: anywhere; text-align: end; }
   :global([dir='rtl']) .value { text-align: start; }
-  a:hover .label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+  a:hover .label-text { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
   .compact { border-top: 0; }
   .compact li { border-bottom: 0; }
-  .compact a { padding: 4px 0; }
-  .compact .label { color: var(--label, var(--ink)); }
+  .compact a { align-items: center; min-height: 34px; padding: 4px 0; }
+  .compact .label { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--label, var(--ink)); }
+  .contact-icon { flex: none; width: 20px; height: 20px; object-fit: contain; }
   :global(.dark) .channels { --line: rgba(255, 255, 255, 0.16); --value: var(--on-dark-muted); --label: #fff; }
 </style>
