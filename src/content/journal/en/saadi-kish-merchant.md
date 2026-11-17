@@ -10,6 +10,9 @@ sources:
     url: https://ganjoor.net/saadi/golestan/gbab3/sh21
   - label: دانشنامهٔ ایرانیکا، مدخل کیش
     url: https://www.iranicaonline.org/articles/kish/
+  - label: commons.wikimedia.org
+    url: https://commons.wikimedia.org/wiki/File:Marco_Polo_with_elephants_and_camels_arriving_at_Hormuz_on_the_Gulf_of_Persia_from_India.jpeg?utm_source=chatgpt.com
+image: af50e9cc5df3832e8d40e7f5f10bd00e.jpg
 ---
 
 In the third chapter of the *Golestan*, the narrator spends an evening as the guest of a merchant at his shop on the island of Kish. The merchant talks of another voyage that is to be his last. He plans to take Persian sulphur to China, buy porcelain there and trade in several other markets before returning to Persia. He tells Saadi that he will give up trading after the voyage.
