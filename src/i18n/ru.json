@@ -11,13 +11,7 @@
     "linkedinCompany": "Страница компании в LinkedIn",
     "linkedinPost": "Публикация по теме в LinkedIn",
     "openLinkedinPost": "Открыть публикацию в LinkedIn",
-    "sources": "Источники",
-    "categories": {
-      "data": "Торговая статистика",
-      "education": "Руководства",
-      "history": "История торговли",
-      "analysis": "Аналитика"
-    }
+    "sources": "Источники"
   },
   "meta": {
     "siteName": "Асперлос",

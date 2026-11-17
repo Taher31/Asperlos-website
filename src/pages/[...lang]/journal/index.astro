@@ -2,7 +2,7 @@
 import PageHeader from '../../../components/PageHeader.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { channelLink } from '../../../lib/contact';
-import { getJournalEntries, journalLang, journalPath, journalSlug } from '../../../lib/journal';
+import { getJournalEntries, journalCategoryLabel, journalLang, journalPath, journalSlug } from '../../../lib/journal';
 import { langMeta, langPaths, useTranslations, type Lang } from '../../../i18n';
 
 export const getStaticPaths = langPaths;
@@ -23,7 +23,7 @@ const linkedinCompany = channelLink('linkedin').href;
         <ul class="posts" role="list">
           {entries.map((entry) => (
             <li lang={journalLang(entry.id)} dir={langMeta[journalLang(entry.id)].dir}>
-              <span class="category">{dict.journal.categories[entry.data.category]}</span>
+              <span class="category" lang={lang} dir={langMeta[lang].dir}>{journalCategoryLabel(entry.data.category, lang)}</span>
               <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
               <p>{entry.data.summary}</p>
             </li>

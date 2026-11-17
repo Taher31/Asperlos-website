@@ -1,0 +1,34 @@
+[
+  {
+    "id": "analysis",
+    "labels": {
+      "fa": "تحلیل بازار",
+      "en": "Analysis",
+      "ru": "Аналитика"
+    }
+  },
+  {
+    "id": "data",
+    "labels": {
+      "fa": "داده‌های تجاری",
+      "en": "Trade data",
+      "ru": "Торговая статистика"
+    }
+  },
+  {
+    "id": "education",
+    "labels": {
+      "fa": "آموزش بازرگانی",
+      "en": "Trade guides",
+      "ru": "Руководства"
+    }
+  },
+  {
+    "id": "history",
+    "labels": {
+      "fa": "تاریخ بازرگانی",
+      "en": "Trade history",
+      "ru": "История торговли"
+    }
+  }
+]

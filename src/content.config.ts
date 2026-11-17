@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import journalCategories from './data/journal-categories.json';
 
 // Slugs and terms follow the glossary in docs/brand-guide.md (section 10).
 export const categories = ['pulses', 'dried-fruit'] as const;
@@ -40,14 +41,12 @@ const originPages = defineCollection({
   }),
 });
 
-export const journalCategories = ['data', 'education', 'history', 'analysis'] as const;
-
 const journal = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
   schema: z.object({
     title: z.string().min(1),
     summary: z.string().min(1),
-    category: z.enum(journalCategories),
+    category: z.enum(journalCategories.map(({ id }) => id)),
     date: z.coerce.date(),
     sources: z.array(z.object({
       label: z.string().min(1),

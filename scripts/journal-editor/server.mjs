@@ -4,7 +4,11 @@ import { createReadStream } from 'node:fs';
 import { mkdir, readFile, realpath, stat, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { extname, join } from 'node:path';
-import { clearPublishedDrafts, incomingMedia, listArticles, mediaType, readArticle, resolveMedia, root, saveDraft, stageDrafts, validSlug } from './content.mjs';
+import {
+  clearPublishedDrafts, incomingMedia, listArticles, listCategories, mediaType,
+  readArticle, resolveMedia, root, saveCategory, saveDraft, stageDrafts, validSlug,
+} from './content.mjs';
+import { browserEditor } from './bundle-editor.mjs';
 import { publishJournal } from './publish.mjs';
 
 const port = Number(process.env.JOURNAL_EDITOR_PORT || 4174);
@@ -17,6 +21,7 @@ const instanceHeader = 'X-Asperlos-Journal-Instance';
 const instance = createHash('sha256').update(await realpath(root)).digest('hex');
 let deployment = { state: 'idle', message: '' };
 let saving = 0;
+let savingCategory = false;
 const MAX_JSON = 2 * 1024 * 1024;
 const MAX_MEDIA = 75 * 1024 * 1024;
 const mime = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.mp4': 'video/mp4', '.webm': 'video/webm' };
@@ -108,8 +113,20 @@ async function handle(request, response) {
       response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
       return response.end(html);
     }
+    if (pathname === '/editor.mjs') {
+      const script = await browserEditor();
+      response.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-store' });
+      return response.end(script);
+    }
+    if (pathname === '/editor.css') {
+      const css = await readFile(new URL('./editor.css', import.meta.url));
+      response.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8', 'Cache-Control': 'no-store' });
+      return response.end(css);
+    }
     if (pathname === '/api/articles') return json(response, 200, { articles: await listArticles(), deployment });
+    if (pathname === '/api/categories') return json(response, 200, await listCategories());
     if (pathname.startsWith('/media/')) return sendMedia(request, response, pathname.slice(7));
+    if (pathname.startsWith('/journal-media/')) return sendMedia(request, response, pathname.slice(15));
     if (pathname.startsWith('/api/articles/')) {
       const article = await readArticle(pathname.slice(14));
       return article ? json(response, 200, article) : json(response, 404, { error: 'مطلب پیدا نشد.' });
@@ -128,6 +145,21 @@ async function handle(request, response) {
       return json(response, 202, deployment);
     }
     if (pathname === '/api/media') return json(response, 201, { name: await saveMedia(request, url.searchParams.get('name')) });
+    if (pathname.startsWith('/api/categories/')) {
+      const id = pathname.slice(16);
+      const input = JSON.parse((await bytes(request, 16 * 1024)).toString('utf8'));
+      if (deployment.state === 'running' || savingCategory) {
+        return json(response, 409, { error: 'ذخیره یا انتشار در جریان است. دوباره تلاش کنید.' });
+      }
+      savingCategory = true;
+      saving += 1;
+      try {
+        return json(response, input?.mode === 'create' ? 201 : 200, await saveCategory(id, input));
+      } finally {
+        savingCategory = false;
+        saving -= 1;
+      }
+    }
     if (pathname.startsWith('/api/articles/')) {
       const slug = pathname.slice(14);
       if (!validSlug(slug)) return json(response, 400, { error: 'شناسهٔ مطلب معتبر نیست.' });

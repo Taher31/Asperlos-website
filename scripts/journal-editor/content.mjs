@@ -2,16 +2,20 @@ import { randomUUID } from 'node:crypto';
 import { access, copyFile, mkdir, readFile, readdir, rename, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import MarkdownIt from 'markdown-it';
 import { parse, stringify } from 'yaml';
+import { journalImageName } from '../../src/lib/journal-figures.mjs';
 
 export const root = fileURLToPath(new URL('../../', import.meta.url));
 const content = join(root, 'src', 'content', 'journal');
 const working = join(root, '.journal-editor');
 const draftFolder = join(working, 'drafts');
+export const categoryFile = 'src/data/journal-categories.json';
+const categoryDraftFile = join(working, 'journal-categories.json');
 export const incomingMedia = join(working, 'media');
 export const publishedMedia = join(root, 'public', 'journal-media');
 export const languages = ['fa', 'en', 'ru'];
-const categories = ['data', 'education', 'history', 'analysis'];
+const markdown = new MarkdownIt();
 export const validSlug = (s) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s) && s.length <= 90;
 export const mediaType = (s) => {
   if (/^[a-z0-9][a-z0-9-]*\.(?:jpe?g|png|webp)$/.test(s)) return 'image';
@@ -82,6 +86,44 @@ export async function listArticles() {
 }
 
 const clean = (value) => typeof value === 'string' ? value.trim() : '';
+const asJson = (value) => JSON.stringify(value, null, 2) + '\n';
+
+async function categoryDrafts() {
+  const raw = await optional(() => readFile(categoryDraftFile, 'utf8'));
+  return raw ? JSON.parse(raw) : [];
+}
+
+async function mergeCategories(drafts) {
+  const published = JSON.parse(await readFile(join(root, categoryFile), 'utf8'));
+  return [...new Map([...published, ...drafts].map((category) => [category.id, category])).values()];
+}
+
+export async function listCategories() {
+  const drafts = await categoryDrafts();
+  return { categories: await mergeCategories(drafts), pending: drafts.length > 0 };
+}
+
+export async function saveCategory(id, input) {
+  if (!validSlug(id)) throw new Error('شناسهٔ دسته باید با حروف انگلیسی کوچک، عدد و خط تیره باشد.');
+  const mode = input?.mode;
+  if (mode !== 'create' && mode !== 'rename') throw new Error('نوع تغییر دسته معتبر نیست.');
+  const labels = Object.fromEntries(languages.map((lang) => [lang, clean(input?.labels?.[lang])]));
+  if (Object.values(labels).some((label) => !label || label.length > 80 || /[\r\n]/.test(label))) {
+    throw new Error('نام دسته را در هر سه زبان، در یک خط و حداکثر ۸۰ نویسه بنویسید.');
+  }
+  const drafts = await categoryDrafts();
+  const categories = await mergeCategories(drafts);
+  const exists = categories.some((category) => category.id === id);
+  if (mode === 'create' && exists) throw new Error('دسته‌ای با این شناسه وجود دارد.');
+  if (mode === 'rename' && !exists) throw new Error('دستهٔ انتخاب‌شده پیدا نشد.');
+  const category = { id, labels };
+  const updated = new Map(drafts.map((draft) => [draft.id, draft]));
+  updated.set(id, category);
+  await mkdir(working, { recursive: true });
+  await writeAtomic(categoryDraftFile, asJson([...updated.values()]));
+  return { category, ...(await listCategories()) };
+}
+
 const safeUrl = (value) => {
   try {
     const url = new URL(value);
@@ -99,7 +141,8 @@ export async function saveDraft(slug, input) {
     throw new Error('تاریخ داخلی معتبر نیست.');
   }
   const category = clean(input.category);
-  if (!categories.includes(category)) throw new Error('دستهٔ مطلب را انتخاب کنید.');
+  const { categories } = await listCategories();
+  if (!categories.some(({ id }) => id === category)) throw new Error('دستهٔ مطلب را انتخاب کنید.');
   const sources = (Array.isArray(input.sources) ? input.sources : [])
     .map((source) => ({ label: clean(source?.label), url: clean(source?.url) }))
     .filter((source) => source.url || source.label);
@@ -121,7 +164,7 @@ export async function saveDraft(slug, input) {
     if (previous?.[key]) draft[key] = previous[key];
   }
   await mkdir(draftFolder, { recursive: true });
-  await writeAtomic(draftFile(slug), JSON.stringify(draft, null, 2) + '\n');
+  await writeAtomic(draftFile(slug), asJson(draft));
   return draft;
 }
 
@@ -134,12 +177,19 @@ export async function resolveMedia(name) {
 }
 
 async function mediaSources(article) {
+  const names = new Set([article.image, article.video].filter(Boolean));
+  for (const { body } of Object.values(article.translations)) {
+    for (const token of markdown.parse(body, {}).flatMap((block) => block.children ?? [])) {
+      if (token.type !== 'image') continue;
+      const name = journalImageName(token.attrGet('src'));
+      if (name) names.add(name);
+    }
+  }
   const files = [];
-  for (const key of ['image', 'video']) {
-    if (!article[key]) continue;
-    const file = await resolveMedia(article[key]);
-    if (!file) throw new Error('رسانهٔ مطلب پیدا نشد.');
-    files.push({ source: file, name: article[key] });
+  for (const name of names) {
+    const source = await resolveMedia(name);
+    if (!source) throw new Error('رسانهٔ مطلب پیدا نشد: ' + name);
+    files.push({ source, name });
   }
   return files;
 }
@@ -186,18 +236,24 @@ export async function writeArticle(article, { preservePersian = false } = {}) {
 export async function stageDrafts() {
   const slugs = names(await optional(() => readdir(draftFolder)), '.json');
   const drafts = await Promise.all(slugs.map(readArticle));
+  const categoryChanges = await categoryDrafts();
+  const categories = await mergeCategories(categoryChanges);
+  const categoryIds = new Set(categories.map(({ id }) => id));
   for (const article of drafts) {
     try {
+      if (!categoryIds.has(article.category)) throw new Error('دستهٔ مطلب پیدا نشد.');
       completedTranslations(article);
       await mediaSources(article);
     } catch (error) {
       throw new Error(article.slug + ': ' + error.message);
     }
   }
+  if (categoryChanges.length) await writeAtomic(join(root, categoryFile), asJson(categories));
   for (const article of drafts) await writeArticle(article);
-  return slugs;
+  return { slugs, stagedCategories: categoryChanges.length > 0 };
 }
 
-export async function clearPublishedDrafts(slugs) {
+export async function clearPublishedDrafts({ slugs, stagedCategories }) {
   for (const slug of slugs) await optional(() => unlink(draftFile(slug)));
+  if (stagedCategories) await optional(() => unlink(categoryDraftFile));
 }

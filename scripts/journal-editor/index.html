@@ -35,9 +35,9 @@
     fieldset { padding: 0; border: 0; margin: 0; min-width: 0; }
     label { display: block; font-weight: 700; }
     input, textarea, select { margin-top: 4px; }
-    .wrap { width: min(1160px, calc(100% - 42px)); margin-inline: auto; }
-    .top { background: var(--deep); color: #fff; border-block-end: 3px solid var(--gold); }
-    .top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 22px; }
+    .wrap { width: min(1360px, calc(100% - 42px)); margin-inline: auto; }
+    .top { position: sticky; inset-block-start: 0; z-index: 3; background: var(--deep); color: #fff; border-block-end: 3px solid var(--gold); }
+    .top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 14px; }
     h1 { margin: 0; font-size: clamp(1.25rem, 3vw, 1.65rem); line-height: 1.5; }
     h2, h3 { color: var(--navy); margin: 0; line-height: 1.5; }
     h2 { font-size: 1.16rem; }
@@ -49,13 +49,13 @@
     .top-actions .publish { background: var(--gold); border-color: var(--gold); color: var(--deep); }
     .top-actions .publish:hover { background: #dfb24e; }
     .layout {
-      display: grid; grid-template-columns: minmax(0, 255px) minmax(0, 1fr);
+      display: grid; grid-template-columns: minmax(0, 230px) minmax(0, 1fr);
       align-items: start; gap: 22px; padding-block: 24px 42px;
     }
     .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
     .library { padding: 16px; }
     .library-top, .section-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-    .library-top button, .section-head button, .formatters button, .media button { min-height: 34px; padding: 4px 9px; font-size: .89rem; }
+    .library-top button, .section-head button, .media button { min-height: 34px; padding: 4px 9px; font-size: .89rem; }
     .article-list { display: grid; gap: 6px; margin: 13px 0; padding: 0; list-style: none; }
     .article-list button {
       width: 100%; justify-content: start; text-align: start; overflow-wrap: anywhere;
@@ -81,8 +81,22 @@
     .tabs button { min-width: 80px; }
     .tabs button[aria-selected="true"] { color: #fff; background: var(--navy); border-color: var(--navy); }
     .fields { display: grid; gap: 10px; }
-    .formatters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-    .formatters button { font-weight: 500; }
+    .category-field { min-width: 0; }
+    .category-label { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .category-label button { min-height: 24px; padding: 0 4px; border-color: transparent; background: transparent; color: var(--navy); font-size: .84rem; }
+    .category-label button:hover { background: var(--paper); text-decoration: underline; }
+    .category-dialog {
+      width: min(480px, calc(100% - 28px)); max-height: calc(100dvh - 28px);
+      padding: clamp(16px, 4vw, 26px); border: 1px solid var(--line); border-radius: 14px;
+      background: var(--card); color: var(--ink);
+    }
+    .category-dialog::backdrop { background: #051a3d73; }
+    .category-dialog fieldset { display: grid; gap: 12px; }
+    .category-dialog .section-head { margin-block-end: 12px; }
+    .category-picker { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; }
+    .category-actions { display: flex; justify-content: end; gap: 8px; }
+    .category-actions button[type="submit"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .category-actions button[type="submit"]:hover { background: var(--deep); }
     .media-card { min-width: 0; border: 1px dashed #aba69e; padding: 11px; border-radius: 9px; }
     .media-card input { min-height: unset; padding: 4px; }
     .media-card input::file-selector-button {
@@ -115,6 +129,7 @@
       .tabs button { min-width: 68px; flex: 1; }
     }
   </style>
+  <link rel="stylesheet" href="/editor.css">
 </head>
 <body>
   <header class="top">
@@ -138,6 +153,7 @@
       <section class="deploy" id="deployment" aria-labelledby="deployment-title" data-state="idle">
         <h3 id="deployment-title">انتشار روی سایت</h3>
         <p class="deploy-message" id="deployment-message" role="status">هنوز انتشاری از این پنل شروع نشده است.</p>
+        <p class="hint" id="pending-categories" hidden>تغییرات دسته‌ها منتظر انتشار است.</p>
         <a id="deployment-link" target="_blank" rel="noopener noreferrer" hidden>مشاهدهٔ گزارش انتشار</a>
         <a id="public-journal" href="https://asperlos.ir/fa/journal/" target="_blank" rel="noopener noreferrer" hidden>مشاهدهٔ مجله روی سایت</a>
       </section>
@@ -154,14 +170,13 @@
             <label for="slug">نشانی مطلب
               <input id="slug" dir="ltr" autocomplete="off" required placeholder="trade-notes">
             </label>
-            <label for="category">دسته
-              <select id="category" required>
-                <option value="analysis">تحلیل بازار</option>
-                <option value="data">آمار تجارت</option>
-                <option value="education">آموزش بازرگانی</option>
-                <option value="history">روایت تاریخی</option>
-              </select>
-            </label>
+            <div class="category-field">
+              <div class="category-label">
+                <label for="category">دسته</label>
+                <button type="button" id="manage-categories" aria-haspopup="dialog" aria-controls="category-dialog">مدیریت دسته‌ها</button>
+              </div>
+              <select id="category" required></select>
+            </div>
             <label for="date">تاریخ انتشار
               <input id="date" dir="ltr" type="date" required aria-describedby="date-hint">
             </label>
@@ -176,26 +191,20 @@
             <div id="translation" class="fields" role="tabpanel" aria-labelledby="tab-fa">
               <label for="title">عنوان<input id="title" dir="rtl"></label>
               <label for="summary">خلاصه<textarea id="summary" dir="rtl" rows="2"></textarea></label>
-              <label for="body">متن مطلب</label>
-              <textarea id="body" dir="rtl" rows="12" aria-describedby="body-hint"></textarea>
-              <div class="formatters" aria-label="قالب‌بندی متن">
-                <button type="button" data-format="heading">تیتر</button>
-                <button type="button" data-format="bold">پررنگ</button>
-                <button type="button" data-format="list">فهرست</button>
-              </div>
-              <p class="hint" id="body-hint">برای قالب‌بندی، متن را انتخاب کن و یکی از دکمه‌ها را بزن.</p>
-              <label for="media-alt">متن جایگزین عکس
+              <label for="body" id="body-label">متن مطلب</label>
+              <textarea id="body" dir="rtl" rows="14" placeholder="متن مطلب را از اینجا شروع کنید…"></textarea>
+              <label for="media-alt">متن جایگزین عکس جلد
                 <input id="media-alt" dir="rtl" aria-describedby="alt-hint">
               </label>
               <p class="hint" id="alt-hint">اگر عکس داری، به همین زبان کوتاه بگو در تصویر چه دیده می‌شود.</p>
             </div>
           </div>
           <div class="section">
-            <h3>عکس و فیلم مطلب</h3>
-            <p class="hint">همین فایل‌ها در نسخه‌های زبانی مطلب نمایش داده می‌شوند.</p>
+            <h3>عکس جلد و فیلم مطلب</h3>
+            <p class="hint">عکس جلد و فیلم در همهٔ نسخه‌های زبانی مشترک‌اند. عکس‌های داخل متن را از نوار ابزار متن اضافه کنید.</p>
             <div class="media">
               <div class="media-card">
-                <label for="image-file">افزودن عکس</label>
+                <label for="image-file">عکس جلد</label>
                 <input id="image-file" type="file" accept=".jpg,.jpeg,.png,.webp">
                 <img id="image-preview" alt="" hidden>
                 <div class="media-actions">
@@ -225,6 +234,28 @@
       </form>
     </section>
   </main>
+  <dialog id="category-dialog" class="category-dialog" aria-labelledby="category-title">
+    <div class="section-head">
+      <h2 id="category-title">مدیریت دسته‌های مجله</h2>
+      <button type="button" id="category-close" aria-label="بستن مدیریت دسته‌ها">بستن</button>
+    </div>
+    <form id="category-form">
+      <fieldset id="category-fields">
+        <div class="category-picker">
+          <label for="category-mode">دسته برای ویرایش
+            <select id="category-mode" autofocus></select>
+          </label>
+          <button type="button" id="category-new">دستهٔ تازه</button>
+        </div>
+        <label for="category-fa">نام فارسی<input type="text" id="category-fa" required maxlength="80" lang="fa" dir="rtl"></label>
+        <label for="category-en">نام انگلیسی<input type="text" id="category-en" required maxlength="80" lang="en" dir="ltr"></label>
+        <label for="category-ru">نام روسی<input type="text" id="category-ru" required maxlength="80" lang="ru" dir="ltr"></label>
+        <p class="hint">برای اعمال نام‌ها روی سایت، از دکمهٔ «انتشار روی سایت» استفاده کنید.</p>
+        <p class="status" id="category-status" role="status" aria-live="polite"></p>
+        <div class="category-actions"><button type="submit">ذخیرهٔ دسته</button></div>
+      </fieldset>
+    </form>
+  </dialog>
   <template id="source-template">
     <div class="source">
       <label>عنوان منبع<input data-source-label dir="auto"></label>
@@ -232,11 +263,15 @@
       <button type="button" data-source-remove>حذف</button>
     </div>
   </template>
-  <script>
+  <script type="module">
+    import { mountJournalEditor } from '/editor.mjs';
+
     const $ = (id) => document.getElementById(id);
     const languages = { fa: 'فارسی', en: 'انگلیسی', ru: 'روسی' };
     const fields = { title: $('title'), summary: $('summary'), body: $('body'), mediaAlt: $('media-alt') };
     const tabs = Array.from(document.querySelectorAll('[data-lang]'));
+    const categoryDialog = $('category-dialog');
+    const journalBody = mountJournalEditor(fields.body, { uploadImage: uploadInlineImage });
     const messages = {
       idle: 'هنوز انتشاری از این پنل شروع نشده است.',
       running: 'نسخهٔ سایت در حال انتشار است…',
@@ -247,6 +282,7 @@
     let activeLanguage = 'fa';
     let activeSlug = '';
     let articleList;
+    let categories = [];
     let busy = false;
     let dirty = false;
     let ready = false;
@@ -263,7 +299,7 @@
 
     function emptyArticle() {
       return {
-        slug: '', category: 'analysis', date: localDate(), sources: [],
+        slug: '', category: categories.find(({ id }) => id === 'analysis')?.id || categories[0]?.id || '', date: localDate(), sources: [],
         translations: Object.fromEntries(Object.keys(languages).map((lang) => [
           lang, { title: '', summary: '', body: '', mediaAlt: '' },
         ])),
@@ -277,7 +313,8 @@
 
     function updateControls() {
       const locked = busy || !ready || publication.state === 'running';
-      for (const id of ['save', 'publish', 'new', 'editor-fields']) $(id).disabled = locked;
+      for (const id of ['save', 'publish', 'new', 'editor-fields', 'category-fields', 'category-close']) $(id).disabled = locked;
+      journalBody.setDisabled(locked);
       for (const button of $('articles').querySelectorAll('button')) button.disabled = locked;
       $('save-state').textContent = dirty ? 'تغییرات ذخیره نشده' : activeSlug ? 'ذخیره‌شده روی این رایانه' : '';
     }
@@ -316,6 +353,43 @@
         headers: { 'Content-Type': 'application/json', 'X-Journal-Editor': '1' },
         body: JSON.stringify(body),
       });
+    }
+
+    async function uploadInlineImage(file) {
+      if (busy || publication.state === 'running') throw new Error('پس از پایان عملیات، دوباره تلاش کنید.');
+      const data = await uploadMedia(file);
+      return '/journal-media/' + encodeURIComponent(data.name);
+    }
+
+    function uploadMedia(file) {
+      const name = file.name.replace(/\.jpeg$/i, '.jpg');
+      return request('/api/media?name=' + encodeURIComponent(name), {
+        method: 'POST', headers: { 'X-Journal-Editor': '1' }, body: file,
+      });
+    }
+
+    function renderCategories(next, pending) {
+      const selected = $('category').value;
+      categories = next;
+      $('pending-categories').hidden = !pending;
+      const options = categories.map(({ id, labels }) => new Option(labels.fa, id));
+      $('category').replaceChildren(...options);
+      $('category').value = categories.some(({ id }) => id === selected) ? selected : emptyArticle().category;
+    }
+
+    function setCategoryForm(id) {
+      const saved = categories.find((entry) => entry.id === id);
+      for (const lang of Object.keys(languages)) $('category-' + lang).value = saved?.labels[lang] ?? '';
+      $('category-status').textContent = '';
+    }
+
+    function newCategoryId(label) {
+      const base = label.normalize('NFKD').toLowerCase().replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70).replace(/-$/, '');
+      if (!base) throw new Error('در نام انگلیسی، دست‌کم یک حرف انگلیسی وارد کنید.');
+      let id = base;
+      for (let suffix = 2; categories.some((entry) => entry.id === id); suffix++) id = base + '-' + suffix;
+      return id;
     }
 
     function renderArticles(list = articleList) {
@@ -367,6 +441,10 @@
     async function pollPublication() {
       try {
         await refreshArticles();
+        if (publication.state === 'success') {
+          const { categories: next, pending } = await request('/api/categories');
+          renderCategories(next, pending);
+        }
       } catch {
         $('deployment-message').textContent = 'وضعیت انتشار هنوز در دسترس نیست. در حال بررسی دوباره…';
         pollTimer = setTimeout(pollPublication, 3500);
@@ -389,6 +467,7 @@
         field.dir = language === 'fa' ? 'rtl' : 'ltr';
         field.lang = language;
       }
+      journalBody.refresh(language);
       for (const tab of tabs) {
         const selected = tab.dataset.lang === language;
         tab.setAttribute('aria-selected', String(selected));
@@ -471,6 +550,7 @@
       if (!activeSlug && articleList?.some((article) => article.slug === model.slug)) {
         throw new Error('این نشانی برای مطلب دیگری استفاده شده است. آن مطلب را از فهرست باز کن یا نشانی تازه‌ای بنویس.');
       }
+      if (!model.category) throw new Error('دستهٔ مطلب را انتخاب کنید.');
       if (!model.date) throw new Error('تاریخ مطلب را وارد کن.');
       model.sources = Array.from($('sources').children, (row) => ({
         label: row.querySelector('[data-source-label]').value.trim(),
@@ -549,25 +629,52 @@
       });
     }
 
-    for (const button of document.querySelectorAll('[data-format]')) {
-      button.addEventListener('click', () => {
-        const field = fields.body;
-        const { selectionStart: start, selectionEnd: end } = field;
-        const text = field.value.slice(start, end);
-        let replacement;
-        if (button.dataset.format === 'bold') {
-          replacement = '**' + (text || 'متن') + '**';
-        } else {
-          const prefix = button.dataset.format === 'heading' ? '## ' : '- ';
-          const atLineStart = start === 0 || field.value[start - 1] === '\n';
-          replacement = (atLineStart ? '' : '\n') + (text || 'متن').split('\n')
-            .map((line) => prefix + line).join('\n');
-        }
-        field.setRangeText(replacement, start, end, 'select');
-        field.focus();
-        markDirty();
-      });
-    }
+    $('manage-categories').addEventListener('click', () => {
+      const select = $('category-mode');
+      const options = categories.map(({ id, labels }) => new Option(labels.fa, id));
+      select.replaceChildren(new Option('افزودن دستهٔ تازه', ''), ...options);
+      select.value = $('category').value;
+      setCategoryForm(select.value);
+      categoryDialog.showModal();
+    });
+    $('category-close').addEventListener('click', () => categoryDialog.close());
+    categoryDialog.addEventListener('cancel', (event) => {
+      if (busy) event.preventDefault();
+    });
+    $('category-mode').addEventListener('change', (event) => setCategoryForm(event.target.value));
+    $('category-new').addEventListener('click', () => {
+      $('category-mode').value = '';
+      setCategoryForm('');
+      $('category-fa').focus();
+    });
+    $('category-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (busy || publication.state === 'running') return;
+      const selected = $('category-mode').value;
+      const labels = Object.fromEntries(Object.keys(languages).map((lang) => [lang, $('category-' + lang).value.trim()]));
+      const status = $('category-status');
+      busy = true;
+      updateControls();
+      status.dataset.state = '';
+      status.textContent = 'در حال ذخیره…';
+      try {
+        const id = selected || newCategoryId(labels.en);
+        const { categories: next, pending } = await post('/api/categories/' + encodeURIComponent(id), {
+          labels,
+          mode: selected ? 'rename' : 'create',
+        });
+        renderCategories(next, pending);
+        categoryDialog.close();
+        showStatus('دسته روی این رایانه ذخیره شد و با انتشارِ بعدی روی سایت اعمال می‌شود.', 'success');
+      } catch (error) {
+        status.dataset.state = 'error';
+        status.textContent = error.message;
+      } finally {
+        busy = false;
+        updateControls();
+        if (categoryDialog.open) $('category-mode').focus();
+      }
+    });
 
     for (const type of ['image', 'video']) {
       const input = $(type + '-file');
@@ -577,10 +684,7 @@
         if (!file) return;
         perform(async () => {
           showStatus('فایل در حال ذخیره است…');
-          const name = file.name.replace(/\.jpeg$/i, '.jpg');
-          const data = await request('/api/media?name=' + encodeURIComponent(name), {
-            method: 'POST', headers: { 'X-Journal-Editor': '1' }, body: file,
-          });
+          const data = await uploadMedia(file);
           model[type] = data.name;
           renderMedia(type);
           markDirty();
@@ -597,13 +701,14 @@
     async function start() {
       $('retry').hidden = true;
       try {
-        const list = await refreshArticles();
+        const [{ categories: next, pending }, list] = await Promise.all([request('/api/categories'), refreshArticles()]);
+        renderCategories(next, pending);
         showArticle(emptyArticle(), false);
         if (list[0]) await openArticle(list[0].slug, true);
         ready = true;
         updateControls();
       } catch (error) {
-        $('empty-articles').textContent = 'فهرست مطالب دریافت نشد.';
+        $('empty-articles').textContent = 'مطالب یا دسته‌ها دریافت نشدند.';
         $('retry').hidden = false;
         showStatus(error.message, 'error');
       }

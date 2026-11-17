@@ -3,12 +3,12 @@ import { dirname, join } from 'node:path';
 import { existsSync } from 'node:fs';
 import { promisify } from 'node:util';
 import { setTimeout as delay } from 'node:timers/promises';
-import { root } from './content.mjs';
+import { categoryFile, root } from './content.mjs';
 
 const exec = promisify(execFile);
 const repo = 'Taher31/Asperlos-website';
 const site = 'https://asperlos.ir';
-const allowed = (name) => name.startsWith('src/content/journal/') || name.startsWith('public/journal-media/');
+const allowed = (name) => name === categoryFile || name.startsWith('src/content/journal/') || name.startsWith('public/journal-media/');
 const paths = (raw) => raw.split('\0').filter(Boolean);
 
 async function run(file, ...args) {
@@ -71,7 +71,7 @@ export async function publishJournal() {
   if ([...paths(ahead), ...paths(staged)].some((name) => !allowed(name.trim()))) {
     throw new Error('تغییرات آمادهٔ انتشار شامل فایل‌هایی بیرون از مجله است.');
   }
-  const changed = await run('git', 'status', '--porcelain', '--untracked-files=all', '--', 'src/content/journal', 'public/journal-media');
+  const changed = await run('git', 'status', '--porcelain', '--untracked-files=all', '--', 'src/content/journal', 'public/journal-media', categoryFile);
   if (changed) {
     if (process.platform === 'win32') {
       const npm = process.env.npm_execpath || join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js');
@@ -79,7 +79,7 @@ export async function publishJournal() {
     } else {
       await run('npm', 'run', 'build');
     }
-    const targets = ['src/content/journal'];
+    const targets = ['src/content/journal', categoryFile];
     if (existsSync(join(root, 'public', 'journal-media')) || await run('git', 'ls-files', '--', 'public/journal-media')) {
       targets.push('public/journal-media');
     }

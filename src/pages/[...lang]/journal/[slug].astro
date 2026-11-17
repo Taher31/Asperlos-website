@@ -1,7 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getJournalEntries, journalLang, journalPath, journalSlug } from '../../../lib/journal';
+import { getJournalEntries, journalCategoryLabel, journalLang, journalPath, journalSlug } from '../../../lib/journal';
 import { languages, localizePath, useTranslations } from '../../../i18n';
 
 export async function getStaticPaths() {
@@ -37,7 +37,7 @@ const schema = {
   <article class="wrap article">
     <header class="article-head">
       <a class="text-link" href={localizePath(lang, '/journal/')}>{dict.journal.title}</a>
-      <p class="category">{dict.journal.categories[category]}</p>
+      <p class="category">{journalCategoryLabel(category, lang)}</p>
       <h1>{title}</h1>
       <p class="intro">{summary}</p>
     </header>
@@ -80,6 +80,9 @@ const schema = {
   .copy :global(th), .copy :global(td) { padding: 10px; border: 1px solid var(--rule); text-align: start; vertical-align: top; }
   .copy :global(th) { background: var(--sand); }
   .copy :global(blockquote) { border-inline-start: 3px solid var(--gold); margin-inline: 0; padding-inline-start: 18px; }
+  .copy :global(.journal-figure) { margin: 24px 0; }
+  .copy :global(.journal-figure img) { display: block; max-width: 100%; max-height: 580px; height: auto; border-radius: 4px; }
+  .copy :global(.journal-figure figcaption) { margin-block-start: 8px; color: var(--muted); font-size: var(--fs-sm); }
   .sources { max-width: var(--measure); margin-block-start: 32px; border-block-start: 1px solid var(--rule); padding-block-start: 20px; }
   .sources h2, .post h2 { font-size: var(--fs-h3); margin: 0 0 8px; }
   .sources ul { margin: 0; padding-inline-start: 1.3em; }

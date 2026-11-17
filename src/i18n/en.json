@@ -11,13 +11,7 @@
     "linkedinCompany": "Visit our LinkedIn page",
     "linkedinPost": "Related LinkedIn post",
     "openLinkedinPost": "Open post on LinkedIn",
-    "sources": "Sources",
-    "categories": {
-      "data": "Trade data",
-      "education": "Trade guides",
-      "history": "Trade history",
-      "analysis": "Analysis"
-    }
+    "sources": "Sources"
   },
   "meta": {
     "siteName": "Asperlos",
