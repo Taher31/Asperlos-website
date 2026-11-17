@@ -1,5 +1,5 @@
 ---
-import CypressBadge from './CypressBadge.astro';
+import CypressArtwork from './CypressArtwork.astro';
 import Seed from './Seed.astro';
 import { useTranslations, type Lang } from '../i18n';
 
@@ -22,7 +22,7 @@ const spots = [
 ];
 ---
 <header class="page-header">
-  <div class:list={['wrap', { 'with-art': seeds.length > 0 }]}>
+  <div class:list={['wrap', { 'with-art': seeds.length > 0 || showCypress, 'with-cypress': showCypress }]}>
     <div class="text">
       {trail.length > 0 && (
         <nav class="trail" aria-label="Breadcrumb">
@@ -31,11 +31,10 @@ const spots = [
           </ol>
         </nav>
       )}
-      {showCypress && <div class="masthead-mark"><CypressBadge /></div>}
       <h1 data-reveal>{title}</h1>
       {intro && <p class="intro" data-reveal style="--d:0.12s" set:html={h(intro)} />}
     </div>
-    {seeds.length > 0 && (
+    {showCypress ? <CypressArtwork variant="masthead" /> : seeds.length > 0 && (
       <div class="art" aria-hidden="true">
         {seeds.slice(0, 3).map((slug, i) => (
           <Seed
@@ -54,7 +53,7 @@ const spots = [
 <style>
   .page-header { padding-block: clamp(40px, 7vw, 96px) clamp(32px, 5vw, 64px); overflow: hidden; }
   .with-art { display: grid; grid-template-columns: 1fr 260px; gap: 40px; align-items: center; }
-  .masthead-mark { display: flex; margin-block-end: 16px; }
+  .with-cypress { grid-template-columns: minmax(0, 1fr) minmax(160px, 240px); }
   h1 { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0; text-wrap: balance; }
   .intro { font-size: var(--fs-lead); color: var(--muted); max-width: 56ch; margin: 20px 0 0; }
   .trail ol { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; font-size: var(--fs-sm); }
@@ -62,7 +61,8 @@ const spots = [
   .trail a { color: var(--muted); text-underline-offset: 3px; }
   .art { position: relative; aspect-ratio: 1 / 1; }
   @media (max-width: 760px) {
-    .with-art { grid-template-columns: 1fr; }
+    .with-art, .with-cypress { grid-template-columns: 1fr; }
+    .with-cypress { gap: 26px; }
     .art { display: none; }
   }
 </style>

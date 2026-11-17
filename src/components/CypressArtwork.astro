@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import cypress from '../assets/footer-cypress.webp';
+
+interface Props {
+  variant: 'footer' | 'masthead';
+}
+const { variant } = Astro.props;
+---
+
+<div class:list={['cypress', variant]} data-cypress aria-hidden="true">
+  <div class="cypress-halo"></div>
+  <div class="cypress-sway" data-cypress-sway>
+    <Image src={cypress} alt="" width={224} height={336} format="webp" loading={variant === 'footer' ? 'lazy' : 'eager'} decoding="async" />
+  </div>
+</div>
+
+<script>
+  import '../scripts/cypress-motion';
+</script>
+
+<style>
+  .cypress {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    align-items: end;
+    min-width: 0;
+  }
+  .cypress-halo {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 12px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.24;
+    pointer-events: none;
+  }
+  .cypress-sway {
+    position: relative;
+    transform-origin: 50% 95%;
+    transform: translateX(var(--sway-shift, 0px)) rotate(var(--sway-angle, 0deg));
+  }
+  .cypress img { width: auto; height: var(--cypress-height); transform-origin: 50% 95%; }
+  .footer {
+    --cypress-height: clamp(230px, 35vw, 408px);
+    max-width: 880px;
+    padding: 16px 0 8px;
+    margin-inline: auto;
+    background: radial-gradient(ellipse 56% 86% at 50% 80%, #8a641626, transparent 75%);
+  }
+  .footer .cypress-halo { inset-inline: clamp(0px, 4vw, 56px); }
+  .masthead {
+    --cypress-height: clamp(145px, 19vw, 246px);
+    width: min(100%, 240px);
+    min-height: clamp(190px, 24vw, 300px);
+    margin-inline: auto;
+    padding: 18px 0 12px;
+    border: 1px solid #c3922d75;
+    border-radius: 50% 50% 4px 4px / 40% 40% 4px 4px;
+    background: var(--navy-deep);
+  }
+  .masthead .cypress-halo { inset-inline: 14%; inset-block-end: 17px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cypress img {
+      animation: cypress-breeze 6.8s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    .cypress[data-cypress-visible] img { animation-play-state: running; }
+    @keyframes cypress-breeze {
+      0%, 100% { transform: rotate(-.45deg); }
+      52% { transform: rotate(.65deg); }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cypress-sway { transform: none; }
+  }
+</style>
