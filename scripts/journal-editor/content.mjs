@@ -108,14 +108,18 @@ export async function saveCategory(id, input) {
   const mode = input?.mode;
   if (mode !== 'create' && mode !== 'rename') throw new Error('نوع تغییر دسته معتبر نیست.');
   const labels = Object.fromEntries(languages.map((lang) => [lang, clean(input?.labels?.[lang])]));
-  if (Object.values(labels).some((label) => !label || label.length > 80 || /[\r\n]/.test(label))) {
-    throw new Error('نام دسته را در هر سه زبان، در یک خط و حداکثر ۸۰ نویسه بنویسید.');
+  if (!labels.fa) throw new Error('نام فارسی نوع مطلب را بنویسید.');
+  if (Object.values(labels).some((label) => label.length > 80 || /[\r\n]/.test(label))) {
+    throw new Error('نام نوع مطلب را در یک خط و حداکثر ۸۰ نویسه بنویسید.');
   }
   const drafts = await categoryDrafts();
   const categories = await mergeCategories(drafts);
-  const exists = categories.some((category) => category.id === id);
-  if (mode === 'create' && exists) throw new Error('دسته‌ای با این شناسه وجود دارد.');
-  if (mode === 'rename' && !exists) throw new Error('دستهٔ انتخاب‌شده پیدا نشد.');
+  const existing = categories.find((category) => category.id === id);
+  if (mode === 'create' && existing) throw new Error('دسته‌ای با این شناسه وجود دارد.');
+  if (mode === 'rename' && !existing) throw new Error('دستهٔ انتخاب‌شده پیدا نشد.');
+  for (const lang of ['en', 'ru']) {
+    if (!labels[lang]) labels[lang] = existing?.labels[lang] ?? '';
+  }
   const category = { id, labels };
   const updated = new Map(drafts.map((draft) => [draft.id, draft]));
   updated.set(id, category);

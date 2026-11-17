@@ -21,13 +21,16 @@ const linkedinCompany = channelLink('linkedin').href;
       <div>
         <h2 class="h2">{dict.journal.latest}</h2>
         <ul class="posts" role="list">
-          {entries.map((entry) => (
-            <li lang={journalLang(entry.id)} dir={langMeta[journalLang(entry.id)].dir}>
-              <span class="category" lang={lang} dir={langMeta[lang].dir}>{journalCategoryLabel(entry.data.category, lang)}</span>
-              <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
-              <p>{entry.data.summary}</p>
-            </li>
-          ))}
+          {entries.map((entry) => {
+            const categoryLabel = journalCategoryLabel(entry.data.category, lang);
+            return (
+              <li lang={journalLang(entry.id)} dir={langMeta[journalLang(entry.id)].dir}>
+                <bdi class="category" lang={categoryLabel.lang}>{categoryLabel.text}</bdi>
+                <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
+                <p>{entry.data.summary}</p>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
