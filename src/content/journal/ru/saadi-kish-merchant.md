@@ -11,6 +11,7 @@ sources:
     url: https://www.iranicaonline.org/articles/kish/
   - label: commons.wikimedia.org
     url: https://commons.wikimedia.org/wiki/File:Marco_Polo_with_elephants_and_camels_arriving_at_Hormuz_on_the_Gulf_of_Persia_from_India.jpeg?utm_source=chatgpt.com
+pinned: true
 image: af50e9cc5df3832e8d40e7f5f10bd00e.jpg
 ---
 
