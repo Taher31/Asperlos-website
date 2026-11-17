@@ -25,6 +25,7 @@ const { dict, t } = useTranslations(lang);
           <span>Asperlos</span>
         </a>
         <p>{dict.contact.locationValue}</p>
+        <div class="footer-art"><CypressArtwork variant="footer" /></div>
       </div>
       <nav aria-label={dict.nav.main}>
         <a href={localizePath(lang, '/#services')}>{dict.cta.tradeServices}</a>
@@ -40,8 +41,6 @@ const { dict, t } = useTranslations(lang);
         <ContactChannels lang={lang} compact />
       </div>
     </div>
-
-    <div class="footer-art"><CypressArtwork variant="footer" /></div>
 
     <div class="bottom">
       <p>{t(dict.footer.copyright, { year: formatYear(lang) })}</p>
@@ -68,7 +67,7 @@ const { dict, t } = useTranslations(lang);
 
 <style>
   .site-footer { padding-block: clamp(24px, 4vw, 48px) 32px; font-size: var(--fs-sm); color: var(--on-dark-muted); --value: var(--on-dark-muted); }
-  .footer-art { margin-block-start: clamp(24px, 5vw, 56px); }
+  .footer-art { width: min(100%, 10rem); margin-block-start: 10px; }
   .cta {
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding-bottom: clamp(32px, 5vw, 56px); margin-bottom: clamp(32px, 5vw, 56px);
@@ -90,15 +89,18 @@ const { dict, t } = useTranslations(lang);
   /* Pages that already end with the inquiry form do not repeat the call to action. */
   :global(body:has(#inquiry)) .cta { display: none; }
   :global(body:has(#inquiry)) .site-footer { border-top: 1px solid var(--rule); }
-  .cols { display: grid; grid-template-columns: 1.3fr 1fr 1.3fr; gap: 32px 56px; align-items: start; }
+  .cols {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: clamp(20px, 4vw, 56px); align-items: start;
+  }
   .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; margin-bottom: 16px; }
   .brand img { height: 56px; width: auto; }
   .brand span { font: 600 1.6rem/1 "Cormorant Garamond", serif; }
   p { margin: 4px 0; }
-  nav { display: grid; gap: 10px; }
+  nav { display: grid; gap: 6px; align-self: end; }
   nav a { color: #fff; text-decoration: none; width: fit-content; }
   nav a:hover { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
-  .bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 20px; margin-top: clamp(18px, 3vw, 32px); }
+  .bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule); padding-top: 20px; margin-top: clamp(14px, 2.4vw, 26px); }
   .langs { display: flex; gap: 14px; }
   .clock time { color: #fff; font-variant-numeric: tabular-nums; }
   .langs a { color: var(--on-dark-muted); text-decoration: none; }
@@ -106,9 +108,14 @@ const { dict, t } = useTranslations(lang);
   .langs a:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
   .langs a:lang(en), .langs a:lang(ru) { font-family: "IBM Plex Sans", sans-serif; }
   @media (max-width: 860px) {
-    .cols { grid-template-columns: 1fr; }
+    .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .channels { grid-column: 1 / -1; }
   }
   @media (max-width: 640px) {
-    .site-footer { padding-bottom: 96px; } /* room for the mobile quick bar */
+    .site-footer { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+    .brand { gap: 8px; margin-bottom: 8px; }
+    .brand img { height: 42px; }
+    .brand span { font-size: 1.3rem; }
+    .footer-art { width: min(100%, 8rem); margin-block-start: 6px; }
   }
 </style>
