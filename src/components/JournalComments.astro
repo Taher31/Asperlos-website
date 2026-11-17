@@ -1,0 +1,270 @@
+---
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  article: string;
+}
+
+const { lang, article } = Astro.props;
+const copy = {
+  fa: {
+    title: 'نظرها',
+    name: 'نام نمایشی',
+    message: 'نظر شما',
+    send: 'ثبت نظر',
+    sending: 'در حال ثبت نظر…',
+    posted: 'نظر شما ثبت شد.',
+    loading: 'در حال خواندن نظرها…',
+    empty: 'هنوز نظری ثبت نشده است.',
+    loadError: 'نظرها بارگیری نشدند.',
+    retry: 'تلاش دوباره',
+    error: 'نظر ثبت نشد. دوباره تلاش کنید.',
+    invalid: 'نام نمایشی و متن نظر را بررسی کنید.',
+    rateLimit: 'برای ثبت نظر بعدی کمی صبر کنید.',
+    noScript: 'برای دیدن و ثبت نظرها، جاوااسکریپت مرورگر را فعال کنید.',
+  },
+  en: {
+    title: 'Comments',
+    name: 'Display name',
+    message: 'Your comment',
+    send: 'Post comment',
+    sending: 'Posting your comment…',
+    posted: 'Your comment was posted.',
+    loading: 'Loading comments…',
+    empty: 'No comments yet.',
+    loadError: 'Comments could not be loaded.',
+    retry: 'Try again',
+    error: 'Your comment could not be posted. Please try again.',
+    invalid: 'Check your display name and comment.',
+    rateLimit: 'Please wait before posting another comment.',
+    noScript: 'Enable JavaScript to read and post comments.',
+  },
+  ru: {
+    title: 'Комментарии',
+    name: 'Имя для публикации',
+    message: 'Ваш комментарий',
+    send: 'Оставить комментарий',
+    sending: 'Отправляем комментарий…',
+    posted: 'Ваш комментарий опубликован.',
+    loading: 'Загружаем комментарии…',
+    empty: 'Комментариев пока нет.',
+    loadError: 'Не удалось загрузить комментарии.',
+    retry: 'Попробовать снова',
+    error: 'Не удалось отправить комментарий. Попробуйте снова.',
+    invalid: 'Проверьте имя и текст комментария.',
+    rateLimit: 'Немного подождите перед отправкой следующего комментария.',
+    noScript: 'Включите JavaScript, чтобы читать и оставлять комментарии.',
+  },
+} satisfies Record<Lang, Record<string, string>>;
+const text = copy[lang];
+const endpoint = '/api/journal-comments.php?article=' + encodeURIComponent(article);
+---
+<section
+  class="comments"
+  id="comments"
+  lang={lang}
+  aria-labelledby="comments-title"
+  data-journal-comments
+  data-endpoint={endpoint}
+  data-sending={text.sending}
+  data-posted={text.posted}
+  data-loading={text.loading}
+  data-empty={text.empty}
+  data-load-error={text.loadError}
+  data-error={text.error}
+  data-invalid={text.invalid}
+  data-rate-limit={text.rateLimit}
+>
+  <h2 class="h2" id="comments-title">{text.title}</h2>
+  <noscript><p>{text.noScript}</p></noscript>
+  <form method="post" action={endpoint} class="comment-form" hidden>
+    <div class="field">
+      <label for="comment-name">{text.name}</label>
+      <input id="comment-name" name="name" dir="auto" autocomplete="nickname" maxlength="60" required />
+    </div>
+    <div class="field">
+      <label for="comment-body">{text.message}</label>
+      <textarea id="comment-body" name="body" dir="auto" rows="4" maxlength="1500" required></textarea>
+    </div>
+    <div class="visually-hidden" aria-hidden="true">
+      <label for="comment-website">Website</label>
+      <input id="comment-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">{text.send}</button>
+      <p class="feedback" data-submit-status role="status"></p>
+    </div>
+  </form>
+  <div class="comment-feed" hidden>
+    <div class="actions">
+      <p class="feedback" data-list-status role="status"></p>
+      <button type="button" class="btn btn-secondary" data-retry hidden>{text.retry}</button>
+    </div>
+    <ol class="comment-list" role="list"></ol>
+  </div>
+</section>
+
+<script>
+  interface ReaderComment {
+    name: string;
+    body: string;
+    createdAt: string;
+  }
+
+  function isComment(value: unknown): value is ReaderComment {
+    if (typeof value !== 'object' || value === null) return false;
+    const item = value as Partial<ReaderComment>;
+    return typeof item.name === 'string' && typeof item.body === 'string' && typeof item.createdAt === 'string';
+  }
+
+  for (const section of document.querySelectorAll<HTMLElement>('[data-journal-comments]')) {
+    const settings = section.dataset;
+    const endpoint = settings.endpoint!;
+    const form = section.querySelector<HTMLFormElement>('form')!;
+    const name = form.querySelector<HTMLInputElement>('[name="name"]')!;
+    const body = form.querySelector<HTMLTextAreaElement>('[name="body"]')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const submitStatus = section.querySelector<HTMLElement>('[data-submit-status]')!;
+    const retry = section.querySelector<HTMLButtonElement>('[data-retry]')!;
+    const list = section.querySelector<HTMLOListElement>('.comment-list')!;
+    const listStatus = section.querySelector<HTMLElement>('[data-list-status]')!;
+    const date = new Intl.DateTimeFormat(section.lang, { dateStyle: 'medium' });
+
+    function showStatus(target: HTMLElement, message: string, error = false) {
+      target.textContent = message;
+      target.classList.toggle('error', error);
+    }
+
+    function renderComment(comment: ReaderComment) {
+      const entry = document.createElement('li');
+      const header = document.createElement('div');
+      header.className = 'comment-header';
+      const author = document.createElement('bdi');
+      author.textContent = comment.name;
+      header.append(author);
+      const createdAt = new Date(comment.createdAt);
+      if (!Number.isNaN(createdAt.getTime())) {
+        const stamp = document.createElement('time');
+        stamp.dateTime = comment.createdAt;
+        stamp.textContent = date.format(createdAt);
+        header.append(stamp);
+      }
+      const message = document.createElement('p');
+      message.dir = 'auto';
+      message.textContent = comment.body;
+      entry.append(header, message);
+      return entry;
+    }
+
+    async function loadComments() {
+      submit.disabled = true;
+      retry.hidden = true;
+      showStatus(listStatus, settings.loading!);
+      try {
+        const res = await fetch(endpoint, {
+          headers: { Accept: 'application/json' },
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!res.ok) throw new Error();
+        const { comments } = await res.json();
+        if (!Array.isArray(comments) || !comments.every(isComment)) throw new Error();
+        list.replaceChildren(...comments.map(renderComment));
+        showStatus(listStatus, comments.length ? '' : settings.empty!);
+      } catch {
+        showStatus(listStatus, settings.loadError!, true);
+        retry.hidden = false;
+      } finally {
+        submit.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (submit.disabled) return;
+      const displayName = name.value.trim();
+      const message = body.value.trim();
+      if (!displayName || !message) {
+        showStatus(submitStatus, settings.invalid!, true);
+        (displayName ? body : name).focus();
+        return;
+      }
+      const website = new FormData(form).get('website');
+      submit.disabled = true;
+      retry.disabled = true;
+      showStatus(submitStatus, settings.sending!);
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ name: displayName, body: message, website }),
+          signal: AbortSignal.timeout(10000),
+        });
+        const result = await res.json();
+        if (res.status === 201 && isComment(result.comment)) {
+          list.prepend(renderComment(result.comment));
+          if (retry.hidden) showStatus(listStatus, '');
+          form.reset();
+          showStatus(submitStatus, settings.posted!);
+        } else {
+          const error = result.error === 'rate_limit' ? settings.rateLimit
+            : result.error === 'invalid' ? settings.invalid : settings.error;
+          showStatus(submitStatus, error!, true);
+        }
+      } catch {
+        showStatus(submitStatus, settings.error!, true);
+      } finally {
+        retry.disabled = false;
+        submit.disabled = false;
+      }
+    });
+
+    retry.addEventListener('click', loadComments);
+    form.hidden = false;
+    section.querySelector<HTMLElement>('.comment-feed')!.hidden = false;
+    void loadComments();
+  }
+</script>
+
+<style>
+  .comments {
+    max-width: 760px;
+    margin-block-start: 40px;
+    padding-block-start: 28px;
+    border-block-start: 1px solid var(--rule);
+  }
+  .comments h2 { margin-block-end: 14px; }
+  .comments [hidden] { display: none; }
+  .comment-form {
+    display: grid;
+    gap: 14px;
+    padding: clamp(14px, 3vw, 24px);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--card);
+  }
+  .field { display: grid; gap: 5px; }
+  .field label { color: var(--navy); font-size: var(--fs-sm); font-weight: 600; }
+  .field :is(input, textarea) {
+    width: 100%;
+    min-width: 0;
+    padding: 9px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+  }
+  .field input { max-width: 28rem; min-height: 44px; }
+  .field textarea { resize: vertical; }
+  .comments button:disabled { opacity: .6; cursor: wait; }
+  .feedback { color: var(--muted); font-size: var(--fs-sm); margin: 0; }
+  .feedback:empty { display: none; }
+  .feedback.error { color: #a3261b; }
+  .comment-feed { margin-block-start: 20px; }
+  .comment-list { list-style: none; margin: 0; padding: 0; }
+  .comment-list :global(li) { padding: 14px 0; border-block-end: 1px solid var(--rule); overflow-wrap: anywhere; }
+  .comment-list :global(.comment-header) { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 14px; color: var(--navy); font-weight: 600; }
+  .comment-list :global(time) { color: var(--muted); font-size: var(--fs-sm); font-weight: 400; }
+  .comment-list :global(p) { margin: 4px 0 0; white-space: pre-wrap; }
+</style>

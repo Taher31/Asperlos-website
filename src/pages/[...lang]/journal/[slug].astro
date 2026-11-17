@@ -1,6 +1,8 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import JournalComments from '../../../components/JournalComments.astro';
+import { journalBodyImageNames } from '../../../lib/journal-body-media.mjs';
 import { getJournalEntries, journalLang, journalPath, journalSlug } from '../../../lib/journal';
 import { languages, localizePath, useTranslations } from '../../../i18n';
 
@@ -21,6 +23,7 @@ const lang = journalLang(entry.id);
 const { dict } = useTranslations(lang);
 const { Content } = await render(entry);
 const { title, summary, date, sources, linkedinUrl, linkedinEmbedUrl, image, video, mediaAlt } = entry.data;
+const coverAlreadyInBody = image && journalBodyImageNames(entry.body ?? '').has(image);
 const dateIso = date.toISOString().slice(0, 10);
 const schema = {
   '@context': 'https://schema.org',
@@ -42,9 +45,9 @@ const schema = {
     </header>
     <div class:list={['article-grid', { 'with-social': linkedinUrl || linkedinEmbedUrl }]}>
       <div>
-        {image && <img class="article-media" src={'/journal-media/' + image} alt={mediaAlt ?? ''} loading="lazy" decoding="async" />}
-        {video && <video class="article-media" src={'/journal-media/' + video} controls playsinline preload="metadata" aria-label={title}></video>}
         <div class="prose copy"><Content /></div>
+        {image && !coverAlreadyInBody && <img class="article-media" src={'/journal-media/' + image} alt={mediaAlt ?? ''} loading="lazy" decoding="async" />}
+        {video && <video class="article-media" src={'/journal-media/' + video} controls playsinline preload="metadata" aria-label={title}></video>}
         {sources.length > 0 && (
           <section class="sources" aria-labelledby="journal-sources">
             <h2 id="journal-sources" class="display">{dict.journal.sources}</h2>
@@ -62,6 +65,7 @@ const schema = {
         </aside>
       )}
     </div>
+    <JournalComments lang={lang} article={journalSlug(entry.id)} />
   </article>
 </BaseLayout>
 
@@ -70,7 +74,7 @@ const schema = {
   .article-head { max-width: 760px; border-bottom: 1px solid var(--rule); margin-block-end: 32px; padding-block-end: 20px; }
   h1 { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 14px 0 12px; }
   .intro { font-size: var(--fs-lead); color: var(--muted); margin: 0; }
-  .article-media { display: block; width: min(100%, 800px); height: auto; max-height: 580px; object-fit: contain; margin: 0 0 24px; border-radius: 4px; background: var(--sand); }
+  .article-media { display: block; width: min(100%, 800px); height: auto; max-height: 580px; object-fit: contain; margin: 24px 0 0; border-radius: 4px; background: var(--sand); }
   .with-social { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); }
   .copy { line-height: 1.95; overflow-x: auto; }
   .copy :global(h2) { font-size: var(--fs-h3); line-height: var(--lh-tight); margin: 24px 0 8px; }

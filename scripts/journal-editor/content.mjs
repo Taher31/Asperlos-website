@@ -2,9 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { access, copyFile, mkdir, readFile, readdir, rename, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import MarkdownIt from 'markdown-it';
 import { parse, stringify } from 'yaml';
-import { journalImageName } from '../../src/lib/journal-figures.mjs';
+import { journalBodyImageNames } from '../../src/lib/journal-body-media.mjs';
 
 export const root = fileURLToPath(new URL('../../', import.meta.url));
 const content = join(root, 'src', 'content', 'journal');
@@ -15,7 +14,6 @@ const categoryDraftFile = join(working, 'journal-categories.json');
 export const incomingMedia = join(working, 'media');
 export const publishedMedia = join(root, 'public', 'journal-media');
 export const languages = ['fa', 'en', 'ru'];
-const markdown = new MarkdownIt();
 export const validSlug = (s) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s) && s.length <= 90;
 export const mediaType = (s) => {
   if (/^[a-z0-9][a-z0-9-]*\.(?:jpe?g|png|webp)$/.test(s)) return 'image';
@@ -189,11 +187,7 @@ export async function resolveMedia(name) {
 async function mediaSources(article) {
   const names = new Set([article.image, article.video].filter(Boolean));
   for (const { body } of Object.values(article.translations)) {
-    for (const token of markdown.parse(body, {}).flatMap((block) => block.children ?? [])) {
-      if (token.type !== 'image') continue;
-      const name = journalImageName(token.attrGet('src'));
-      if (name) names.add(name);
-    }
+    for (const name of journalBodyImageNames(body)) names.add(name);
   }
   const files = [];
   for (const name of names) {
