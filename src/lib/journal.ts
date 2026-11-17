@@ -22,3 +22,13 @@ export const journalLang = (id: string): Lang => {
 };
 export const journalSlug = (id: string) => id.split('/').at(-1)!;
 export const journalPath = (id: string) => localizePath(journalLang(id), `/journal/${journalSlug(id)}/`);
+
+export async function getLocalizedJournalEntries(lang: Lang) {
+  const entries = await getJournalEntries();
+  const localized = new Map(
+    entries.filter((entry) => journalLang(entry.id) === lang).map((entry) => [journalSlug(entry.id), entry]),
+  );
+  return entries
+    .filter((entry) => journalLang(entry.id) === 'fa')
+    .map((entry) => localized.get(journalSlug(entry.id)) ?? entry);
+}

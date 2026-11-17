@@ -1,0 +1,79 @@
+---
+import { langMeta, localizePath, useTranslations, type Lang } from '../i18n';
+import { getLocalizedJournalEntries, journalCategoryLabel, journalLang, journalPath } from '../lib/journal';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { dict } = useTranslations(lang);
+const recent = (await getLocalizedJournalEntries(lang)).slice(0, 3);
+const lead = recent.find((entry) => entry.data.image) ?? recent[0];
+const articles = lead ? [lead, ...recent.filter((entry) => entry !== lead)] : [];
+---
+
+<section class="section journal-preview" id="home-journal" aria-labelledby="home-journal-title">
+  <div class="wrap">
+    <div class="journal-heading">
+      <div>
+        <h2 class="h2" id="home-journal-title">{dict.journal.title}</h2>
+        <p class="section-intro">{dict.journal.intro}</p>
+      </div>
+      <a class="btn btn-secondary journal-link" href={localizePath(lang, '/journal/')}>{dict.journal.readJournal}</a>
+    </div>
+
+    {articles.length > 0 && (
+      <ul class:list={['journal-cards', { 'has-briefs': articles.length > 1, 'has-two-briefs': articles.length === 3 }]} role="list">
+        {articles.map((entry, index) => {
+          const entryLang = journalLang(entry.id);
+          const category = journalCategoryLabel(entry.data.category, lang);
+          return (
+            <li class:list={['journal-card', { 'journal-lead': index === 0 }]} lang={entryLang} dir={langMeta[entryLang].dir}>
+              <bdi class="journal-category" lang={category.lang}>{category.text}</bdi>
+              <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
+              <p>{entry.data.summary}</p>
+              {entry.data.image && (
+                <img class="journal-cover" src={'/journal-media/' + entry.data.image} alt={entry.data.mediaAlt ?? ''} loading="lazy" decoding="async" />
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style>
+  .journal-preview { padding-block: clamp(48px, 7vw, 88px); border-block-end: 1px solid var(--rule); }
+  .journal-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 32px; }
+  .journal-heading .h2 { margin-block-end: 8px; }
+  .journal-heading .section-intro { margin: 0; }
+  .journal-cards {
+    list-style: none; display: grid; gap: clamp(12px, 2vw, 20px);
+    padding: 0; margin: clamp(24px, 4vw, 38px) 0 0;
+  }
+  .journal-card {
+    min-width: 0; padding: clamp(18px, 3vw, 30px);
+    background: var(--card); border: 1px solid var(--rule); border-radius: 4px;
+    overflow-wrap: anywhere;
+  }
+  .journal-lead { border-block-start: 2px solid var(--gold); }
+  .journal-category { color: var(--gold-ink); font-size: var(--fs-sm); font-weight: 600; }
+  .journal-card h3 { font-size: clamp(1.55rem, 2.5vw, 2.05rem); line-height: 1.2; margin: 8px 0 10px; }
+  .journal-lead h3 { font-size: clamp(1.85rem, 3vw, 2.55rem); }
+  .journal-card:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
+  .journal-card:lang(fa) h3 { font-family: "Markazi Text", serif; line-height: 1.27; }
+  .journal-card a { text-decoration-color: var(--gold-ink); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .journal-card a:hover { text-decoration-thickness: 2px; }
+  .journal-card p { margin: 0; color: var(--muted); }
+  .journal-cover {
+    width: 100%; aspect-ratio: 3 / 2; object-fit: contain; max-height: 25rem;
+    border-radius: 4px; margin-block-start: 16px; background: var(--sand);
+  }
+
+  @media (min-width: 761px) {
+    .has-briefs { grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr); }
+    .has-two-briefs .journal-lead { grid-row: span 2; }
+  }
+</style>
