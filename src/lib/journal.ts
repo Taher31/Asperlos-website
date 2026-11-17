@@ -21,5 +21,12 @@ export async function getLocalizedJournalEntries(lang: Lang) {
   );
   return entries
     .filter((entry) => journalLang(entry.id) === 'fa')
-    .map((entry) => localized.get(journalSlug(entry.id)) ?? entry);
+    // The stable sort keeps the existing date and ID order within each pin group.
+    .sort((a, b) => Number(b.data.pinned) - Number(a.data.pinned))
+    .map((original) => {
+      const entry = localized.get(journalSlug(original.id)) ?? original;
+      return entry.data.pinned === original.data.pinned
+        ? entry
+        : { ...entry, data: { ...entry.data, pinned: original.data.pinned } };
+    });
 }

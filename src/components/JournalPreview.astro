@@ -9,7 +9,7 @@ interface Props {
 const { lang } = Astro.props;
 const { dict } = useTranslations(lang);
 const recent = (await getLocalizedJournalEntries(lang)).slice(0, 3);
-const lead = recent.find((entry) => entry.data.image) ?? recent[0];
+const lead = recent[0]?.data.pinned ? recent[0] : (recent.find((entry) => entry.data.image) ?? recent[0]);
 const articles = lead ? [lead, ...recent.filter((entry) => entry !== lead)] : [];
 ---
 
@@ -70,7 +70,9 @@ const articles = lead ? [lead, ...recent.filter((entry) => entry !== lead)] : []
   }
 
   @media (min-width: 761px) {
-    .has-briefs { grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr); }
-    .has-two-briefs .journal-lead { grid-row: span 2; }
+    .has-briefs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .has-briefs:has(.journal-lead .journal-cover) { grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr); }
+    .has-two-briefs .journal-lead:has(.journal-cover) { grid-row: span 2; }
+    .has-two-briefs .journal-lead:not(:has(.journal-cover)) { grid-column: 1 / -1; }
   }
 </style>

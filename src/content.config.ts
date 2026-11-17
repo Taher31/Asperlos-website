@@ -48,6 +48,7 @@ const journal = defineCollection({
     summary: z.string().min(1),
     category: z.enum(journalCategories.map(({ id }) => id)),
     date: z.coerce.date(),
+    pinned: z.boolean().default(false),
     sources: z.array(z.object({
       label: z.string().min(1),
       url: z.url().startsWith('https://'),

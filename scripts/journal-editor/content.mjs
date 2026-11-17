@@ -54,8 +54,11 @@ async function liveArticle(slug) {
   const fa = await optional(() => readFile(articleFile(slug, 'fa'), 'utf8'));
   if (!fa) return undefined;
   const original = parseMarkdown(fa);
-  const { category, date, sources = [], image, video, linkedinUrl, linkedinEmbedUrl } = original;
-  const article = { slug, category, date: String(date), sources, image, video, linkedinUrl, linkedinEmbedUrl, translations: {} };
+  const { category, date, pinned, sources = [], image, video, linkedinUrl, linkedinEmbedUrl } = original;
+  const article = {
+    slug, category, date: String(date), pinned: pinned === true,
+    sources, image, video, linkedinUrl, linkedinEmbedUrl, translations: {},
+  };
   for (const lang of languages) {
     const raw = lang === 'fa' ? fa : await optional(() => readFile(articleFile(slug, lang), 'utf8'));
     const data = raw ? parseMarkdown(raw) : {};
@@ -67,7 +70,9 @@ async function liveArticle(slug) {
 export async function readArticle(slug) {
   if (!validSlug(slug)) return undefined;
   const raw = await optional(() => readFile(draftFile(slug), 'utf8'));
-  return raw ? { ...JSON.parse(raw), draft: true } : liveArticle(slug);
+  if (!raw) return liveArticle(slug);
+  const draft = JSON.parse(raw);
+  return { ...draft, pinned: draft.pinned === true, draft: true };
 }
 
 function names(files, extension) {
@@ -154,7 +159,8 @@ export async function saveDraft(slug, input) {
   for (const lang of languages) {
     translations[lang] = Object.fromEntries(fields.map((field) => [field, clean(input.translations?.[lang]?.[field])]));
   }
-  const draft = { slug, category, date, sources, translations };
+  const pinned = typeof input.pinned === 'boolean' ? input.pinned : previous?.pinned ?? false;
+  const draft = { slug, category, date, pinned, sources, translations };
   for (const type of ['image', 'video']) {
     const filename = clean(input[type]);
     if (filename) {
@@ -228,6 +234,7 @@ export async function writeArticle(article, { preservePersian = false } = {}) {
     const { title, summary, body, mediaAlt } = article.translations[lang];
     const metadata = {
       title, summary, category: article.category, date: article.date, sources: article.sources,
+      ...(article.pinned === true ? { pinned: true } : {}),
       ...Object.fromEntries(['image', 'video', 'linkedinUrl', 'linkedinEmbedUrl']
         .filter((key) => article[key]).map((key) => [key, article[key]])),
       ...(mediaAlt ? { mediaAlt } : {}),

@@ -75,6 +75,22 @@
     .status:empty { display: none; }
     .meta, .media { display: grid; gap: 12px; }
     .meta { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+    .publication-options {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 7px 16px; flex-wrap: wrap; margin-block-start: 8px;
+    }
+    .pin-option {
+      display: inline-flex; gap: 8px; align-items: center;
+      min-height: 40px; padding: 5px 10px;
+      border: 1px solid var(--line); border-radius: 7px;
+      background: var(--card); color: var(--navy); cursor: pointer; font-size: .89rem;
+    }
+    .pin-option:has(:checked) { border-color: var(--gold); background: #f8efd8; }
+    .pin-option input {
+      accent-color: var(--navy);
+      flex: none; width: 16px; height: 16px; min-height: 0; margin: 0; padding: 0;
+      cursor: inherit;
+    }
     .media { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .section { margin-block-start: 21px; padding-block-start: 16px; border-block-start: 1px solid var(--line); }
     .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-block-end: 12px; }
@@ -195,7 +211,10 @@
               <input id="date" dir="ltr" type="date" required aria-describedby="date-hint">
             </label>
           </div>
-          <p id="date-hint" class="hint">تاریخ برای مرتب‌سازی مطالب است.</p>
+          <div class="publication-options">
+            <p id="date-hint" class="hint">تاریخ برای مرتب‌سازی مطالب است.</p>
+            <label class="pin-option"><input type="checkbox" id="pinned">پین در بالای مجله</label>
+          </div>
           <section class="type-panel" aria-labelledby="category-heading">
             <div class="section-head">
               <h3 id="category-heading">نوع مطلب</h3>
@@ -323,7 +342,7 @@
 
     function emptyArticle() {
       return {
-        slug: '', category: categories.find(({ id }) => id === 'analysis')?.id || categories[0]?.id || '', date: localDate(), sources: [],
+        slug: '', category: categories.find(({ id }) => id === 'analysis')?.id || categories[0]?.id || '', date: localDate(), pinned: false, sources: [],
         translations: Object.fromEntries(Object.keys(languages).map((lang) => [
           lang, { title: '', summary: '', body: '', mediaAlt: '' },
         ])),
@@ -555,6 +574,7 @@
       $('slug').readOnly = isSaved;
       renderCategoryOptions();
       $('date').value = model.date;
+      $('pinned').checked = model.pinned === true;
       $('editor-title').textContent = isSaved ? (model.translations.fa.title || model.slug) : 'مطلب تازه';
       $('sources').replaceChildren();
       for (const source of model.sources || []) addSource(source);
@@ -588,6 +608,7 @@
       readTranslation();
       model.slug = $('slug').value.trim();
       model.date = $('date').value;
+      model.pinned = $('pinned').checked;
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(model.slug)) {
         throw new Error('برای نشانی مطلب فقط از حروف کوچک انگلیسی، عدد و خط تیره استفاده کن.');
       }
