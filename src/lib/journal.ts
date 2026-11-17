@@ -1,15 +1,6 @@
 import { getCollection } from 'astro:content';
 import { localizePath, type Lang } from '../i18n';
-import journalCategories from '../data/journal-categories.json';
 
-const journalLabels = new Map(journalCategories.map(({ id, labels }) => [id, labels]));
-
-export function journalCategoryLabel(id: string, lang: Lang) {
-  const labels = journalLabels.get(id);
-  if (labels?.[lang]) return { text: labels[lang], lang };
-  if (labels?.fa) return { text: labels.fa, lang: 'fa' as const };
-  return { text: id, lang };
-}
 
 export async function getJournalEntries(lang?: Lang) {
   const entries = await getCollection('journal', (entry) => !lang || journalLang(entry.id) === lang);

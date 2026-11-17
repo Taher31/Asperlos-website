@@ -1,6 +1,6 @@
 ---
 import { langMeta, localizePath, useTranslations, type Lang } from '../i18n';
-import { getLocalizedJournalEntries, journalCategoryLabel, journalLang, journalPath } from '../lib/journal';
+import { getLocalizedJournalEntries, journalLang, journalPath } from '../lib/journal';
 
 interface Props {
   lang: Lang;
@@ -27,10 +27,8 @@ const articles = lead ? [lead, ...recent.filter((entry) => entry !== lead)] : []
       <ul class:list={['journal-cards', { 'has-briefs': articles.length > 1, 'has-two-briefs': articles.length === 3 }]} role="list">
         {articles.map((entry, index) => {
           const entryLang = journalLang(entry.id);
-          const category = journalCategoryLabel(entry.data.category, lang);
           return (
             <li class:list={['journal-card', { 'journal-lead': index === 0 }]} lang={entryLang} dir={langMeta[entryLang].dir}>
-              <bdi class="journal-category" lang={category.lang}>{category.text}</bdi>
               <h3 class="display"><a href={journalPath(entry.id)}>{entry.data.title}</a></h3>
               <p>{entry.data.summary}</p>
               {entry.data.image && (
@@ -59,8 +57,7 @@ const articles = lead ? [lead, ...recent.filter((entry) => entry !== lead)] : []
     overflow-wrap: anywhere;
   }
   .journal-lead { border-block-start: 2px solid var(--gold); }
-  .journal-category { color: var(--gold-ink); font-size: var(--fs-sm); font-weight: 600; }
-  .journal-card h3 { font-size: clamp(1.55rem, 2.5vw, 2.05rem); line-height: 1.2; margin: 8px 0 10px; }
+  .journal-card h3 { font-size: clamp(1.55rem, 2.5vw, 2.05rem); line-height: 1.2; margin: 0 0 10px; }
   .journal-lead h3 { font-size: clamp(1.85rem, 3vw, 2.55rem); }
   .journal-card:lang(fa) { font-family: "IBM Plex Sans Arabic", sans-serif; }
   .journal-card:lang(fa) h3 { font-family: "Markazi Text", serif; line-height: 1.27; }
