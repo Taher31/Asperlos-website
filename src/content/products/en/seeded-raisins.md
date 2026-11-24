@@ -4,14 +4,8 @@ category: dried-fruit
 origin: uzbekistan
 order: 2
 featured: true
-summary: "Seeded raisins for wholesalers, packers and food producers."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Wholesale Uzbek seeded raisins"
+summary: "Request a wholesale quote for seeded raisins from Uzbekistan. Tell us the berry size, volume and packaging you need."
 ---
 
-[TBD: product description from the supplier specification: variety, growing region, crop year.]
+Include the preferred berry size and any moisture limits when enquiring. We confirm grade and specifications for the shipment.

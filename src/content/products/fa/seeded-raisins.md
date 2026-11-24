@@ -4,14 +4,8 @@ category: dried-fruit
 origin: uzbekistan
 order: 2
 featured: true
-summary: "مویز برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "خرید عمده مویز ازبکستان"
+summary: "برای خرید عمده مویز ازبکستان استعلام بگیرید. اندازه دانه، مقدار و نوع بسته‌بندی مورد نیاز را با ما در میان بگذارید."
 ---
 
-[تکمیل شود: توضیح محصول طبق مشخصات تأمین‌کننده: رقم، منطقه کشت، سال محصول.]
+اندازه دانه و حد رطوبت مورد نیاز را در استعلام بنویسید. درجه کیفی و مشخصات فنی برای هر محموله تعیین می‌شود.

@@ -10,9 +10,10 @@ interface Props {
   lang: Lang;
   /** current path without language prefix */
   path: string;
+  localizedLanguages: readonly Lang[];
   languageFallback?: string;
 }
-const { lang, path, languageFallback } = Astro.props;
+const { lang, path, localizedLanguages, languageFallback } = Astro.props;
 const { dict } = useTranslations(lang);
 const nav = [
   { href: '/#services', label: dict.cta.tradeServices },
@@ -24,10 +25,10 @@ const nav = [
   { href: '/faq/', label: dict.nav.faq },
   { href: '/contact/', label: dict.nav.contact },
 ];
-const isCurrent = (href: string) => path === href || path.startsWith(href);
+const isCurrent = (href: string) => path === href || path.startsWith(href) || (href === '/#services' && path.startsWith('/services/'));
 const num = (i: number) => (lang === 'fa' ? (i + 1).toLocaleString('fa-IR', { minimumIntegerDigits: 2 }) : String(i + 1).padStart(2, '0'));
 const phone = channelLink('phone');
-const languageHref = (l: Lang) => localizePath(l, l === lang ? path : (languageFallback ?? path));
+const languageHref = (l: Lang) => localizePath(l, localizedLanguages.includes(l) ? path : (languageFallback ?? path));
 ---
 <header class="site-header" data-header>
   <div class="bar wrap">

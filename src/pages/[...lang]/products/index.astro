@@ -12,8 +12,8 @@ const { lang } = Astro.props as { lang: Lang };
 const { dict } = useTranslations(lang);
 const products = await getProducts(lang);
 ---
-<BaseLayout lang={lang} title={dict.products.title} description={dict.meta.productsDescription}>
-  <PageHeader lang={lang} title={dict.products.title} intro={dict.products.intro} seeds={products.slice(0, 3).map(slugOf)} />
+<BaseLayout lang={lang} title={dict.products.seoTitle} description={dict.products.intro}>
+  <PageHeader lang={lang} title={dict.products.seoTitle} intro={dict.products.intro} seeds={products.slice(0, 3).map(slugOf)} />
   <section class="section alt">
     <div class="wrap">
       <nav class="cats" aria-label={dict.products.title}>

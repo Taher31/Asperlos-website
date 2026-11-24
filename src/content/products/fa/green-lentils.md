@@ -4,7 +4,8 @@ category: pulses
 origin: russia
 order: 2
 featured: true
-summary: "عدس سبز برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
+seoTitle: "خرید عمده عدس سبز روسیه"
+summary: "برای خرید عمده عدس سبز روسیه استعلام بگیرید. مشخصات فنی و بسته‌بندی یکی از محموله‌های عدس سبز ساراتوف را در این صفحه ببینید."
 # From supply contract AGRO030926 (IMP-2026-000001). Availability and MOQ still to confirm.
 # availability: in-stock   # in-stock | seasonal | on-request
 # moq: ""
@@ -18,4 +19,4 @@ specs:
 certificates: [phytosanitary, origin]
 ---
 
-عدس سبز با کالیبر ۶ میلی‌متر و بالاتر، محصول ۲۰۲۶ استان ساراتوف روسیه. در کیسه پلی‌پروپیلن ۲۵ کیلوگرمی عرضه می‌شود.
+این محمولهٔ عدس سبز محصول ۲۰۲۶ استان ساراتوف روسیه بود و در کیسه‌های پلی‌پروپیلن ۲۵ کیلوگرمی بسته‌بندی شد.

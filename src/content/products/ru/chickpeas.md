@@ -4,14 +4,8 @@ category: pulses
 origin: russia
 order: 3
 featured: true
-summary: "Нут для оптовых покупателей, фасовочных и пищевых предприятий."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Нут из России оптом"
+summary: "Запросите предложение на нут из России для фасовки или пищевого производства. Калибр, упаковку и наличие уточняем по запросу."
 ---
 
-[уточняется: описание товара по спецификации поставщика: сорт, регион выращивания, год урожая.]
+Для расчета предложения укажите калибр, объем и пункт назначения. Характеристики партии уточняем при рассмотрении запроса.

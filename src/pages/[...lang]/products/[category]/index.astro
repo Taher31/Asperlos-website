@@ -17,10 +17,11 @@ const { dict } = useTranslations(lang);
 const products = (await getProducts(lang)).filter((p) => p.data.category === category);
 const cat = dict.categories[category];
 ---
-<BaseLayout lang={lang} title={cat.name} description={`${cat.group}. ${dict.meta.productsDescription}`}>
+<BaseLayout lang={lang} title={cat.seoTitle} description={cat.intro}>
   <PageHeader
     lang={lang}
-    title={cat.group}
+    title={cat.seoTitle}
+    intro={cat.intro}
     trail={[{ href: localizePath(lang, '/products/'), label: dict.products.title }]}
     seeds={products.map(slugOf)}
   />

@@ -17,24 +17,26 @@ export async function getStaticPaths() {
 }
 
 const { lang, page } = Astro.props as { lang: Lang; page: OriginPage };
-const { dict, t, h } = useTranslations(lang);
+const { dict, t } = useTranslations(lang);
 const { Content } = await render(page);
-const products = (await getProducts(lang)).filter((p) => p.data.origin === slugOf(page));
+const origin = slugOf(page);
+const products = (await getProducts(lang)).filter((p) => p.data.origin === origin);
+const heading = page.data.seoTitle ?? page.data.title;
 ---
-<BaseLayout lang={lang} title={page.data.title} description={page.data.summary}>
+<BaseLayout lang={lang} title={heading} description={page.data.summary}>
   <PageHeader
     lang={lang}
-    title={page.data.title}
+    title={heading}
     intro={page.data.summary}
     trail={[{ href: localizePath(lang, '/origins/'), label: dict.origins.title }]}
     seeds={products.map(slugOf)}
   />
   <section class="section">
     <div class="wrap">
-      <dl class="facts">
+      {page.data.regions && <dl class="facts">
         <dt>{dict.origins.regions}</dt>
-        <dd set:html={h(page.data.regions)} />
-      </dl>
+        <dd>{page.data.regions}</dd>
+      </dl>}
       <div class="prose"><Content /></div>
     </div>
   </section>

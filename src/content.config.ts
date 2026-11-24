@@ -20,7 +20,8 @@ const products = defineCollection({
       order: z.number(),
       featured: z.boolean().default(false),
       summary: z.string(),
-      // Omit until confirmed; the page then shows a placeholder and the publish check fails.
+      seoTitle: z.string().min(1).optional(),
+      // Omit unconfirmed commercial details; the page directs buyers to enquire.
       availability: z.enum(availability).optional(),
       packaging: z.array(z.string()).optional(),
       moq: z.string().optional(),
@@ -37,7 +38,8 @@ const originPages = defineCollection({
   schema: z.object({
     title: z.string(),
     summary: z.string(),
-    regions: z.string(),
+    seoTitle: z.string().min(1).optional(),
+    regions: z.string().optional(),
   }),
 });
 

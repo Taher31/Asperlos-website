@@ -4,14 +4,8 @@ category: pulses
 origin: russia
 order: 3
 featured: true
-summary: "Chickpeas for wholesalers, packers and food producers."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Wholesale Russian chickpeas"
+summary: "Enquire about bulk chickpeas from Russia for packing or food production. Ask us to confirm calibre, packaging and availability."
 ---
 
-[TBD: product description from the supplier specification: variety, growing region, crop year.]
+For an accurate quote, include the calibre, quantity and delivery destination. We confirm the batch specifications when reviewing your request.

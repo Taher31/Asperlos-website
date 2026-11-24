@@ -4,14 +4,8 @@ category: dried-fruit
 origin: uzbekistan
 order: 2
 featured: true
-summary: "Изюм с косточкой для оптовых покупателей, фасовочных и пищевых предприятий."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Изюм с косточкой из Узбекистана оптом"
+summary: "Отправьте запрос на оптовую поставку изюма с косточкой из Узбекистана. Укажите размер ягод, объем и упаковку."
 ---
 
-[уточняется: описание товара по спецификации поставщика: сорт, регион выращивания, год урожая.]
+Укажите предпочтительный размер ягод и требования к влажности. Класс и характеристики согласовываются для каждой партии.

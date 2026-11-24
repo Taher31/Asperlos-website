@@ -4,14 +4,8 @@ category: pulses
 origin: russia
 order: 1
 featured: true
-summary: "Красная чечевица для оптовых покупателей, фасовочных и пищевых предприятий."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Красная чечевица из России оптом"
+summary: "Отправьте запрос на оптовую поставку красной чечевицы из России. Укажите класс, объем и пункт назначения."
 ---
 
-[уточняется: описание товара по спецификации поставщика: сорт, регион выращивания, год урожая.]
+Укажите, нужна ли вам цельная или колотая чечевица, и какой класс качества вы ищете. Это поможет подобрать варианты поставки.

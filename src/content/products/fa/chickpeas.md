@@ -4,14 +4,8 @@ category: pulses
 origin: russia
 order: 3
 featured: true
-summary: "نخود برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "خرید عمده نخود روسیه"
+summary: "برای تأمین عمده نخود روسیه ویژه بسته‌بندی و تولید مواد غذایی استعلام بگیرید. کالیبر، بسته‌بندی و موجودی با استعلام مشخص می‌شود."
 ---
 
-[تکمیل شود: توضیح محصول طبق مشخصات تأمین‌کننده: رقم، منطقه کشت، سال محصول.]
+برای دریافت پیشنهاد دقیق، کالیبر، مقدار و مقصد تحویل را در استعلام بنویسید. مشخصات محموله هنگام بررسی درخواست تعیین می‌شود.

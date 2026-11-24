@@ -12,7 +12,7 @@ interface Props {
   grouped?: boolean;
 }
 const { lang, products, grouped = true } = Astro.props;
-const { dict, h } = useTranslations(lang);
+const { dict } = useTranslations(lang);
 const groups = groupByCategory(products);
 ---
 <table class="products">
@@ -44,7 +44,7 @@ const groups = groupByCategory(products);
             </a>
           </td>
           <td class="pack">
-            {p.data.packaging?.length ? p.data.packaging.join(listSep[lang]) : <span set:html={h(dict.products.packagingTbd)} />}
+            {p.data.packaging?.length ? p.data.packaging.join(listSep[lang]) : dict.products.confirmOnRequest}
           </td>
           <td class="avail"><StatusMark lang={lang} status={p.data.availability} /></td>
           <td class="act">

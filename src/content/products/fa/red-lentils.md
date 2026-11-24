@@ -4,14 +4,8 @@ category: pulses
 origin: russia
 order: 1
 featured: true
-summary: "عدس قرمز برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "خرید عمده عدس قرمز روسیه"
+summary: "برای خرید عمده عدس قرمز روسیه، درجه کیفی، مقدار و مقصد تحویل را در استعلام بنویسید."
 ---
 
-[تکمیل شود: توضیح محصول طبق مشخصات تأمین‌کننده: رقم، منطقه کشت، سال محصول.]
+در درخواست مشخص کنید عدس کامل می‌خواهید یا دال عدس و چه درجهٔ کیفی مدنظرتان است تا بتوانیم گزینه‌های تأمین را بررسی کنیم.

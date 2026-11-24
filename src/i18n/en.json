@@ -3,6 +3,8 @@
     "nav": "Journal",
     "title": "Asperlos Trade Journal",
     "intro": "Trade data, practical guides, historical accounts and independent analysis for businesses.",
+    "seoTitle": "International trade journal and market data",
+    "seoDescription": "Read the Asperlos Trade Journal for Iran–Russia trade data, market analysis, practical trade guides and accounts of Iran's trading history.",
     "latest": "Latest articles",
     "readJournal": "Read the journal",
     "languageNote": "Articles are published in Persian.",
@@ -15,9 +17,8 @@
   },
   "meta": {
     "siteName": "Asperlos",
-    "homeTitle": "Asperlos | Trading, import and export in Tehran",
-    "homeDescription": "Asperlos is a Tehran-based trading company offering sourcing, import and export services for businesses.",
-    "productsDescription": "Explore goods in the Asperlos catalogue, including pulses and dried fruit. Send an inquiry for goods outside the catalogue.",
+    "homeTitle": "Iran import, export and sourcing company | Asperlos",
+    "homeDescription": "Asperlos is a trading company in Tehran, Iran, offering international sourcing, import and export services for businesses. Browse our catalogue or request a quote.",
     "howDescription": "How Asperlos handles a trade inquiry, from reviewing sourcing options to agreeing the documents, transport and delivery.",
     "aboutDescription": "Asperlos is a trading company in Tehran, Iran. We work with businesses on sourcing, import and export orders.",
     "contactDescription": "Find the contact details and direct messaging links for Asperlos in Tehran, Iran.",
@@ -67,7 +68,8 @@
   },
   "products": {
     "title": "Product catalogue",
-    "intro": "Browse examples of goods you can enquire about, grouped by country of origin. For goods outside the catalogue, describe what you need in the inquiry form.",
+    "seoTitle": "Wholesale pulses and dried fruit catalogue",
+    "intro": "Browse Russian lentils, chickpeas and dried peas, and raisins from Uzbekistan. Request a wholesale quote or enquire about other goods.",
     "colProduct": "Product",
     "colPackaging": "Packaging",
     "colAvailability": "Availability",
@@ -76,27 +78,31 @@
     "packaging": "Packaging",
     "moq": "Minimum order quantity (MOQ)",
     "availability": "Availability",
-    "certificates": "Documents with each shipment",
+    "certificates": "Shipment documents",
     "specs": "Specification",
     "specParameter": "Parameter",
     "specValue": "Value",
-    "packagingTbd": "[TBD: packaging]",
-    "specsTbd": "[TBD: specification from the supply contract]",
+    "confirmOnRequest": "Confirm on request",
     "illustration": "Illustration"
   },
   "categories": {
     "pulses": {
       "name": "Pulses",
-      "group": "Pulses"
+      "group": "Pulses",
+      "seoTitle": "Wholesale pulses from Russia",
+      "intro": "Enquire about green and red lentils, chickpeas and dried peas from Russia for wholesale, packing or food production."
     },
     "dried-fruit": {
       "name": "Dried fruit",
-      "group": "Dried fruit"
+      "group": "Dried fruit",
+      "seoTitle": "Wholesale dried fruit from Uzbekistan",
+      "intro": "Enquire about seedless Kishmish and seeded raisins from Uzbekistan. Tell us the grade, volume and destination for your order."
     }
   },
   "origins": {
     "title": "Catalogue origins",
-    "intro": "Explore the countries that supply the products currently listed in our catalogue.",
+    "seoTitle": "Sourcing from Russia and Uzbekistan",
+    "intro": "Explore Russian pulses and Uzbek dried fruit in the Asperlos catalogue. View product specifications where available and request a wholesale quote.",
     "russia": "Russia",
     "uzbekistan": "Uzbekistan",
     "productsFrom": "Products from {country}",
@@ -207,20 +213,20 @@
     "mapCentralAsia": "Central Asia",
     "mapCaption": "A schematic map of sample supply routes for catalogue goods. Border data from Natural Earth.",
     "servicesTitle": "Trading services",
-    "services": [
-      {
+    "services": {
+      "sourcing": {
         "title": "Sourcing",
         "text": "We look for suppliers based on the goods you need, their specifications and the quantity."
       },
-      {
+      "import": {
         "title": "Import",
         "text": "We coordinate import orders, including freight, documents and customs clearance as agreed for the shipment."
       },
-      {
+      "export": {
         "title": "Export",
         "text": "We arrange export shipments and coordinate the documents and transport for the agreed destination."
       }
-    ],
+    },
     "productsIntro": "Explore pulses and dried fruit in the catalogue. You can also request a quote for other goods."
   },
   "shipment": {

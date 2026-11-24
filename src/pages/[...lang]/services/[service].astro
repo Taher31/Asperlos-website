@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import { langPaths, localizePath, useTranslations, type Lang } from '../../../i18n';
+import { tradeServices, tradeServiceSlugs, type TradeServiceSlug } from '../../../lib/trade-services';
+
+export function getStaticPaths() {
+  return langPaths().flatMap(({ params, props }) =>
+    tradeServiceSlugs.map((service) => ({ params: { ...params, service }, props: { ...props, service } })),
+  );
+}
+
+interface Props {
+  lang: Lang;
+  service: TradeServiceSlug;
+}
+
+const { lang, service } = Astro.props;
+const { dict } = useTranslations(lang);
+const { inquiryTitle, relatedTitle, pages } = tradeServices[lang];
+const page = pages[service];
+const related = tradeServiceSlugs.filter((slug) => slug !== service);
+const nextLink = {
+  sourcing: { href: '/products/', label: dict.cta.allProducts },
+  import: { href: '/#lentil-shipment', label: dict.shipment.title },
+  export: { href: '/how-we-work/', label: dict.nav.how },
+}[service];
+---
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <PageHeader
+    lang={lang}
+    title={page.title}
+    intro={page.description}
+    trail={[{ href: localizePath(lang, '/'), label: dict.nav.home }]}
+  />
+
+  <div class="section alt service-details">
+    <div class="wrap details-grid">
+      <section aria-labelledby="scope-title">
+        <h2 class="h2" id="scope-title">{page.scopeTitle}</h2>
+        <div class="prose">
+          {page.scope.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+        <a class="text-link" href={localizePath(lang, nextLink.href)}>{nextLink.label}</a>
+      </section>
+
+      <section class="inquiry-card" aria-labelledby="inquiry-title">
+        <h2 class="display" id="inquiry-title">{inquiryTitle}</h2>
+        <ul>
+          {page.inquiry.map((detail) => <li>{detail}</li>)}
+        </ul>
+        <a class="btn btn-primary" href={localizePath(lang, '/inquiry/')}>{dict.cta.quote}</a>
+      </section>
+    </div>
+  </div>
+
+  <nav class="section alt related-services" aria-labelledby="related-title">
+    <div class="wrap">
+      <h2 class="h2" id="related-title">{relatedTitle}</h2>
+      <ul role="list">
+        {related.map((slug) => (
+          <li>
+            <a class="text-link" href={localizePath(lang, `/services/${slug}/`)}>{pages[slug].title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</BaseLayout>
+
+<style>
+  .service-details, .related-services { padding-block: clamp(36px, 5vw, 72px); }
+  .details-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: clamp(28px, 6vw, 88px);
+    align-items: start;
+  }
+  .h2 { margin: 0 0 20px; }
+  .prose { color: var(--muted); }
+  .inquiry-card {
+    background: var(--card); border: 1px solid var(--rule); border-block-start-color: var(--gold);
+    border-radius: 4px; padding: clamp(20px, 3vw, 36px);
+  }
+  .inquiry-card h2 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2.2rem); line-height: 1.2; }
+  .inquiry-card ul { margin: 18px 0 24px; padding-inline-start: 1.25em; }
+  .inquiry-card li { margin-block: 8px; }
+  .related-services ul { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 760px) {
+    .details-grid { grid-template-columns: 1fr; }
+  }
+</style>

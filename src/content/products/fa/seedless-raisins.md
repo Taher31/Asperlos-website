@@ -4,14 +4,8 @@ category: dried-fruit
 origin: uzbekistan
 order: 1
 featured: true
-summary: "کشمش برای عمده‌فروشان، بسته‌بندی‌ها و تولیدکنندگان مواد غذایی."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "خرید عمده کشمش بی‌دانه ازبکستان"
+summary: "برای خرید عمده کشمش بی‌دانه ازبکستان، درجه کیفی، مقدار و مقصد تحویل را در فرم استعلام وارد کنید."
 ---
 
-[تکمیل شود: توضیح محصول طبق مشخصات تأمین‌کننده: رقم، منطقه کشت، سال محصول.]
+برای استعلام، اندازه دانه و درجه کیفی را مشخص کنید و بگویید کشمش را برای بسته‌بندی خرده‌فروشی می‌خواهید یا برای تولید مواد غذایی.

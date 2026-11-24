@@ -24,8 +24,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import QuickBar from '../components/QuickBar.astro';
 import LangSuggestBar from '../components/LangSuggestBar.astro';
-import { languages, langMeta, localizePath, unlocalizePath, useTranslations, type Lang } from '../i18n';
+import { defaultLang, languages, langMeta, localizePath, unlocalizePath, useTranslations, type Lang } from '../i18n';
 import { channelLink, cityLocation } from '../lib/contact';
+import { serializeJsonLd } from '../lib/structured-data';
 
 interface Props {
   lang: Lang;
@@ -35,11 +36,17 @@ interface Props {
   schema?: object[];
   noindex?: boolean;
   ogType?: 'website' | 'article';
-  /** Language switch from a page that only exists in the current language. */
+  image?: { src: string; alt?: string };
+  /** Languages that have a version of this page. */
+  localizedLanguages?: readonly Lang[];
+  /** Language switch destination when a translation is missing. */
   languageFallback?: string;
 }
 
-const { lang, title, description, schema = [], noindex = false, ogType = 'website', languageFallback } = Astro.props;
+const {
+  lang, title, description, schema = [], noindex = false, ogType = 'website',
+  image, localizedLanguages = languages, languageFallback,
+} = Astro.props;
 const { dict } = useTranslations(lang);
 const path = unlocalizePath(Astro.url.pathname);
 const site = Astro.site!;
@@ -50,6 +57,7 @@ const pageTitle = title === dict.meta.homeTitle ? title : `${title} | ${dict.met
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': abs('/#organization'),
   name: 'Asperlos',
   alternateName: ['اسپرلوس', 'Асперлос'],
   url: abs('/'),
@@ -65,6 +73,16 @@ const organization = {
   email: channelLink('email').display,
   sameAs: [channelLink('linkedin').href],
 };
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': abs('/#website'),
+  url: abs('/'),
+  name: 'Asperlos',
+  alternateName: ['اسپرلوس', 'Асперлос'],
+  publisher: { '@id': organization['@id'] },
+};
+const structuredData = [organization, ...(path === '/' && lang === defaultLang ? [website] : []), ...schema];
 ---
 <!doctype html>
 <html lang={lang} dir={langMeta[lang].dir}>
@@ -75,16 +93,22 @@ const organization = {
   <meta name="description" content={description}>
   {noindex && <meta name="robots" content="noindex">}
   <link rel="canonical" href={canonical}>
-  {!languageFallback && languages.map((l) => <link rel="alternate" hreflang={langMeta[l].hreflang} href={abs(localizePath(l, path))}>)}
-  {!languageFallback && <link rel="alternate" hreflang="x-default" href={abs(path)}>}
+  {!noindex && localizedLanguages.length > 1 && localizedLanguages.map((l) => (
+    <link rel="alternate" hreflang={langMeta[l].hreflang} href={abs(localizePath(l, path))}>
+  ))}
+  {!noindex && localizedLanguages.length > 1 && localizedLanguages.includes(defaultLang) && (
+    <link rel="alternate" hreflang="x-default" href={abs(localizePath(defaultLang, path))}>
+  )}
 
   <meta property="og:type" content={ogType}>
   <meta property="og:site_name" content="Asperlos">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:url" content={canonical}>
-  <meta property="og:image" content={abs('/og-image.png')}>
+  <meta property="og:image" content={abs(image?.src ?? '/og-image.png')}>
+  {image?.alt && <meta property="og:image:alt" content={image.alt}>}
   <meta property="og:locale" content={langMeta[lang].ogLocale}>
+  {localizedLanguages.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={langMeta[l].ogLocale}>)}
 
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
@@ -93,7 +117,7 @@ const organization = {
   <meta name="theme-color" content="#08275A">
   <link rel="sitemap" href="/sitemap-index.xml">
 
-  {[organization, ...schema].map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  {structuredData.map((s) => <script type="application/ld+json" set:html={serializeJsonLd(s)} />)}
   <!-- Scroll animations only when JS runs and the visitor has not asked for reduced motion. -->
   <script is:inline>
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
@@ -101,8 +125,8 @@ const organization = {
 </head>
 <body>
   <div class="site-background" data-site-background aria-hidden="true"></div>
-  {!languageFallback && <LangSuggestBar lang={lang} path={path} />}
-  <Header lang={lang} path={path} languageFallback={languageFallback} />
+  {localizedLanguages.length === languages.length && <LangSuggestBar lang={lang} path={path} />}
+  <Header lang={lang} path={path} localizedLanguages={localizedLanguages} languageFallback={languageFallback} />
   <main id="main">
     <slot />
   </main>

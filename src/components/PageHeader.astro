@@ -2,6 +2,7 @@
 import CypressArtwork from './CypressArtwork.astro';
 import Seed from './Seed.astro';
 import { useTranslations, type Lang } from '../i18n';
+import { breadcrumbSchema, serializeJsonLd } from '../lib/structured-data';
 
 interface Props {
   lang: Lang;
@@ -15,12 +16,16 @@ interface Props {
 }
 const { lang, title, intro, trail = [], seeds = [], showCypress = false } = Astro.props;
 const { h } = useTranslations(lang);
+const breadcrumbs = trail.length > 0
+  ? breadcrumbSchema(Astro.site!, [...trail, { href: Astro.url.pathname, label: title }])
+  : undefined;
 const spots = [
   { x: 10, y: 8, w: 40, r: -14 },
   { x: 58, y: 30, w: 32, r: 18 },
   { x: 22, y: 62, w: 28, r: 36 },
 ];
 ---
+{breadcrumbs && <script type="application/ld+json" set:html={serializeJsonLd(breadcrumbs)} />}
 <header class="page-header">
   <div class:list={['wrap', { 'with-art': seeds.length > 0 || showCypress, 'with-cypress': showCypress }]}>
     <div class="text">

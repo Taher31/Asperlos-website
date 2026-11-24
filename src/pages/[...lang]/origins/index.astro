@@ -14,8 +14,8 @@ const pages = (await getOriginPages(lang)).sort(
   (a, b) => origins.indexOf(slugOf(a) as (typeof origins)[number]) - origins.indexOf(slugOf(b) as (typeof origins)[number]),
 );
 ---
-<BaseLayout lang={lang} title={dict.origins.title} description={dict.origins.intro}>
-  <PageHeader lang={lang} title={dict.origins.title} intro={dict.origins.intro} />
+<BaseLayout lang={lang} title={dict.origins.seoTitle} description={dict.origins.intro}>
+  <PageHeader lang={lang} title={dict.origins.seoTitle} intro={dict.origins.intro} />
   <section class="section alt">
     <div class="wrap list">
       {pages.map((o) => (

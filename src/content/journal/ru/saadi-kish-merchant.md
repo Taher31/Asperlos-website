@@ -12,7 +12,8 @@ sources:
   - label: commons.wikimedia.org
     url: https://commons.wikimedia.org/wiki/File:Marco_Polo_with_elephants_and_camels_arriving_at_Hormuz_on_the_Gulf_of_Persia_from_India.jpeg?utm_source=chatgpt.com
 pinned: true
-image: af50e9cc5df3832e8d40e7f5f10bd00e.jpg
+image: af50e9cc5df3832e8d40e7f5f10bd00e.webp
+mediaAlt: Прибытие купцов в порт Ормуз на миниатюре из рукописи о путешествиях Марко Поло.
 ---
 
 В третьей главе «Гулистана» рассказчик проводит вечер в гостях у купца, в его лавке на острове Киш. Купец рассказывает о предстоящем путешествии, которое должно стать последним. Он собирается отвезти персидскую серу в Китай, купить там фарфор и заключить сделки еще на нескольких рынках, прежде чем вернуться в Персию. Он говорит Саади, что после этого путешествия оставит торговлю.

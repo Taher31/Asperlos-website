@@ -3,6 +3,7 @@
 import type { APIRoute } from 'astro';
 import { channelLink } from '../lib/contact';
 import { getOriginPages, getProducts, productPath, slugOf } from '../lib/content';
+import { tradeServiceSlugs } from '../lib/trade-services';
 import en from '../i18n/en.json';
 
 const TBD = /\[(?:TBD|تکمیل شود|уточняется)[^\]]*\]/;
@@ -37,7 +38,10 @@ export const GET: APIRoute = async ({ site }) => {
     ...facts.map((f) => `- ${f}`),
     '',
     '## Trading services',
-    ...en.home.services.map((service) => `- ${service.title}. ${service.text}`),
+    ...tradeServiceSlugs.map((slug) => {
+      const service = en.home.services[slug];
+      return `- [${service.title}](${abs(`/services/${slug}/`)}): ${service.text}`;
+    }),
     '',
     '## Product catalogue examples',
     ...productLines,

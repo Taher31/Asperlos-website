@@ -8,10 +8,9 @@ interface Props {
   status?: (typeof availability)[number];
 }
 const { lang, status } = Astro.props;
-const { dict, h } = useTranslations(lang);
-const tbd = { en: '[TBD]', fa: '[تکمیل شود]', ru: '[уточняется]' }[lang];
+const { dict } = useTranslations(lang);
 ---
-{status ? <span class={`status ${status}`}>{dict.status[status]}</span> : <span set:html={h(tbd)} />}
+{status ? <span class={`status ${status}`}>{dict.status[status]}</span> : dict.products.confirmOnRequest}
 
 <style>
   .status { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }

@@ -14,14 +14,14 @@ sources:
   - label: commons.wikimedia.org
     url: https://commons.wikimedia.org/wiki/File:Marco_Polo_with_elephants_and_camels_arriving_at_Hormuz_on_the_Gulf_of_Persia_from_India.jpeg?utm_source=chatgpt.com
 pinned: true
-image: af50e9cc5df3832e8d40e7f5f10bd00e.jpg
+image: af50e9cc5df3832e8d40e7f5f10bd00e.webp
 mediaAlt: ورود بازرگانان به بندر هرمز، نگاره‌ای از نسخهٔ خطی سفرنامهٔ مارکوپولو،
   حدود ۱۴۱۰ تا ۱۴۱۲ میلادی. کتابخانهٔ ملی فرانسه، نسخهٔ Français 2810
 ---
 
 به نام خدا
 
-# حکایتی جذاب از سعدی شیرازی
+## حکایتی جذاب از سعدی شیرازی
 
 سعدی شیرازی یکی از بزرگ‌ترین شاعران فارسی‌زبان است و گنجینهٔ اشعار و حکایات او در تمام عالم خریداران بسیاری دارد، اگر قدر آن را بدانند. یکی از حکایت‌های جذاب او در گلستان آمده است.
 
@@ -65,7 +65,7 @@ mediaAlt: ورود بازرگانان به بندر هرمز، نگاره‌ای
 
 تجارت و بازرگانی، به‌دلیل موقعیت جغرافیایی و فرهنگ متعالی ایران، بخشی از دی‌ان‌ای ایرانی‌هاست. با وجود مشکلات و سختی‌هایی که در دوران معاصر از ستم روزگار به این تکه خاک رسیده است، ژنتیک ایرانی کار خود را خواهد کرد.
 
-![ورود بازرگانان به بندر هرمز، نگاره‌ای از نسخهٔ خطی سفرنامهٔ مارکوپولو، حدود ۱۴۱۰ تا ۱۴۱۲ میلادی. کتابخانهٔ ملی فرانسه، نسخهٔ Français 2810](/journal-media/af50e9cc5df3832e8d40e7f5f10bd00e.jpg "Marco Polo with elephants and camels arriving at Hormuz on the Gulf of Persia from India")
+![ورود بازرگانان به بندر هرمز، نگاره‌ای از نسخهٔ خطی سفرنامهٔ مارکوپولو، حدود ۱۴۱۰ تا ۱۴۱۲ میلادی. کتابخانهٔ ملی فرانسه، نسخهٔ Français 2810](/journal-media/af50e9cc5df3832e8d40e7f5f10bd00e.webp "Marco Polo with elephants and camels arriving at Hormuz on the Gulf of Persia from India")
 
 
 

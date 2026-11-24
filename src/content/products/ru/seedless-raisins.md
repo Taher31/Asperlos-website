@@ -4,14 +4,8 @@ category: dried-fruit
 origin: uzbekistan
 order: 1
 featured: true
-summary: "Изюм кишмиш для оптовых покупателей, фасовочных и пищевых предприятий."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Изюм кишмиш из Узбекистана оптом"
+summary: "Запросите оптовое предложение на изюм кишмиш из Узбекистана. Укажите нужный класс, объем и пункт назначения."
 ---
 
-[уточняется: описание товара по спецификации поставщика: сорт, регион выращивания, год урожая.]
+Укажите класс и размер ягод, а также планируете ли вы фасовать изюм для розницы или использовать его в пищевом производстве.

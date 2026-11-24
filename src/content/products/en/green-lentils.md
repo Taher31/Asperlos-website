@@ -4,7 +4,8 @@ category: pulses
 origin: russia
 order: 2
 featured: true
-summary: "Green lentils for wholesalers, packers and food producers."
+seoTitle: "Wholesale Russian green lentils"
+summary: "Wholesale green lentils from Saratov, Russia. Review the specifications and packaging from a previous shipment and request a quote for your order."
 # From supply contract AGRO030926 (IMP-2026-000001). Availability and MOQ still to confirm.
 # availability: in-stock   # in-stock | seasonal | on-request
 # moq: ""
@@ -18,4 +19,4 @@ specs:
 certificates: [phytosanitary, origin]
 ---
 
-Green lentils, calibre 6 mm and above, crop 2026 from the Saratov region of Russia. Supplied in 25 kg PP bags.
+This shipment of green lentils was harvested in 2026 in the Saratov region of Russia and packed in 25 kg polypropylene bags.

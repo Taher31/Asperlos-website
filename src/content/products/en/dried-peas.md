@@ -4,14 +4,8 @@ category: pulses
 origin: russia
 order: 4
 featured: true
-summary: "Dried peas for wholesalers, packers and food producers."
-# Fill in from the supply contract (docs/brand-guide.md, section 8). Until then the page shows a placeholder.
-# availability: in-stock   # in-stock | seasonal | on-request
-# packaging: []
-# moq: ""
-# specs:
-#   - { label: "", value: "" }
-certificates: [phytosanitary, origin]
+seoTitle: "Wholesale Russian dried peas"
+summary: "Enquire about bulk dried peas from Russia. Provide the type of pea, required quantity and destination for a quote."
 ---
 
-[TBD: product description from the supplier specification: variety, growing region, crop year.]
+Let us know the variety or colour you need and whether whole or split peas are suitable. Packaging and availability are confirmed for each order.

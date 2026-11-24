@@ -7,12 +7,17 @@ ErrorDocument 404 /404.html
 # --- HTTPS and canonical host -------------------------------------------------
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.asperlos\.ir$ [NC]
+  RewriteRule ^ https://asperlos.ir%{REQUEST_URI} [L,R=301]
+
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+  # Only redirect explicit index.html requests, since DirectoryIndex loads it for clean URLs.
+  RewriteCond %{THE_REQUEST} "[[:space:]]/[^?[:space:]]*index[.]html[?[:space:]]"
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^(.*/)?index\.html$ https://asperlos.ir/$1 [L,R=301]
 
   # Block hidden files (except .well-known for SSL validation).
   RewriteRule "(^|/)\.(?!well-known/)" - [F]

@@ -19,11 +19,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // English is served from the root, Persian and Russian from /fa/ and /ru/.
-      i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en', fa: 'fa-IR', ru: 'ru' },
-      },
+      // BaseLayout emits hreflang using the translations available for each page.
       filter: (page) => !page.includes('/inquiry/sent/'),
     }),
   ],

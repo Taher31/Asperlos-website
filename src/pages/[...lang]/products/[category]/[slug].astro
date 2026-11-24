@@ -25,10 +25,11 @@ export async function getStaticPaths() {
 }
 
 const { lang, product } = Astro.props as { lang: Lang; product: Product };
-const { dict, t, h } = useTranslations(lang);
+const { dict, t } = useTranslations(lang);
 const { Content } = await render(product);
 const p = product.data;
 const slug = slugOf(product);
+const heading = p.seoTitle ?? p.title;
 const message = t(dict.messenger.product, { product: p.title });
 const messengers = messengersFor(lang).map((c) => ({ ...channelLink(c, message), label: dict.cta[c] }));
 const inquiryHref = `${localizePath(lang, '/inquiry/')}?product=${slug}`;
@@ -42,17 +43,16 @@ const schema = [
     category: dict.categories[p.category].name,
     countryOfOrigin: { '@type': 'Country', name: dict.origins[p.origin] },
     url: new URL(Astro.url.pathname, Astro.site).href,
-    brand: { '@type': 'Brand', name: 'Asperlos' },
     ...(p.specs?.length && {
       additionalProperty: p.specs.map((s) => ({ '@type': 'PropertyValue', name: s.label, value: s.value })),
     }),
   },
 ];
 ---
-<BaseLayout lang={lang} title={p.title} description={p.summary} schema={schema}>
+<BaseLayout lang={lang} title={heading} description={p.summary} schema={schema}>
   <PageHeader
     lang={lang}
-    title={p.title}
+    title={heading}
     intro={p.summary}
     trail={[
       { href: localizePath(lang, '/products/'), label: dict.products.title },
@@ -73,14 +73,12 @@ const schema = [
           </div>
           <div>
             <dt>{dict.products.packaging}</dt>
-            <dd>{p.packaging?.length ? p.packaging.join(listSep[lang]) : <span set:html={h(dict.products.packagingTbd)} />}</dd>
+            <dd>{p.packaging?.length ? p.packaging.join(listSep[lang]) : dict.products.confirmOnRequest}</dd>
           </div>
-          {p.moq && (
-            <div>
-              <dt>{dict.products.moq}</dt>
-              <dd>{p.moq}</dd>
-            </div>
-          )}
+          <div>
+            <dt>{dict.products.moq}</dt>
+            <dd>{p.moq || dict.products.confirmOnRequest}</dd>
+          </div>
           <div>
             <dt>{dict.products.availability}</dt>
             <dd><StatusMark lang={lang} status={p.availability} /></dd>
@@ -93,22 +91,27 @@ const schema = [
           )}
         </dl>
 
-        <h2 class="specs-title">{dict.products.specs}</h2>
-        {p.specs?.length ? (
-          <table class="specs">
-            <thead>
-              <tr><th scope="col">{dict.products.specParameter}</th><th scope="col">{dict.products.specValue}</th></tr>
-            </thead>
-            <tbody>
-              {p.specs.map((s) => <tr><th scope="row">{s.label}</th><td>{s.value}</td></tr>)}
-            </tbody>
-          </table>
-        ) : (
-          <p set:html={h(dict.products.specsTbd)} />
+        {p.specs && p.specs.length > 0 && (
+          <>
+            <h2 class="specs-title">{dict.products.specs}</h2>
+            <table class="specs">
+              <thead>
+                <tr><th scope="col">{dict.products.specParameter}</th><th scope="col">{dict.products.specValue}</th></tr>
+              </thead>
+              <tbody>
+                {p.specs.map((s) => <tr><th scope="row">{s.label}</th><td>{s.value}</td></tr>)}
+              </tbody>
+            </table>
+          </>
         )}
         <p class="spec-note">{dict.products.specNote}</p>
 
-        <div class="prose body"><Content /></div>
+        <div class="prose body">
+          <Content />
+          {slug === 'green-lentils' && (
+            <p><a href={localizePath(lang, '/#lentil-shipment')}>{dict.shipment.title}</a></p>
+          )}
+        </div>
       </div>
 
       <aside class="side">
