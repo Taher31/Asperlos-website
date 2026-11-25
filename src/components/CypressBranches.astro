@@ -102,6 +102,7 @@ const branches = [
 <style>
   @media (prefers-reduced-motion: no-preference) {
     [data-cypress-branch] {
+      --branch-breeze: calc(var(--branch-amplitude) * 1.2);
       --branch-gust: calc(var(--cypress-gust, 0deg) * var(--branch-response));
       transform-box: view-box;
       transform-origin: var(--branch-x) var(--branch-y);
@@ -109,15 +110,16 @@ const branches = [
     }
     :global([data-cypress-visible]) [data-cypress-branch] { animation-play-state: running; }
     .watermark-branches [data-cypress-branch] {
+      --branch-breeze: calc(var(--branch-amplitude) * 1.32);
       animation-duration: 16.8s;
       animation-delay: calc(var(--branch-phase) * 2);
     }
     .paper-watermark [data-cypress-branch] { animation-play-state: running; }
     @keyframes cypress-breeze {
-      0%, 100% { transform: rotate(calc(var(--branch-gust) - .25 * var(--branch-amplitude))); }
-      27% { transform: rotate(calc(var(--branch-gust) + var(--branch-amplitude))); }
-      49% { transform: rotate(calc(var(--branch-gust) + .16 * var(--branch-amplitude))); }
-      76% { transform: rotate(calc(var(--branch-gust) - .83 * var(--branch-amplitude))); }
+      0%, 100% { transform: rotate(calc(var(--branch-gust) - .25 * var(--branch-breeze))); }
+      27% { transform: rotate(calc(var(--branch-gust) + var(--branch-breeze))); }
+      49% { transform: rotate(calc(var(--branch-gust) + .16 * var(--branch-breeze))); }
+      76% { transform: rotate(calc(var(--branch-gust) - .83 * var(--branch-breeze))); }
     }
   }
 </style>
