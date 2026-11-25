@@ -102,7 +102,7 @@ const branches = [
 <style>
   @media (prefers-reduced-motion: no-preference) {
     [data-cypress-branch] {
-      --branch-breeze: calc(var(--branch-amplitude) * 1.2);
+      --branch-breeze: var(--branch-amplitude);
       --branch-gust: calc(var(--cypress-gust, 0deg) * var(--branch-response));
       transform-box: view-box;
       transform-origin: var(--branch-x) var(--branch-y);
