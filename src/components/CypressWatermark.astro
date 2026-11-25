@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import cypress from '../assets/footer-cypress.webp';
+
+interface Props {
+  tone: 'paper' | 'navy';
+}
+const { tone } = Astro.props;
+---
+
+<div class:list={['cypress-watermark', tone]} data-cypress-watermark={tone} aria-hidden="true">
+  <Image src={cypress} alt="" format="webp" loading={tone === 'paper' ? 'eager' : 'lazy'} decoding="async" />
+</div>
+
+<style>
+  .cypress-watermark {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  img {
+    position: absolute;
+    width: auto;
+    max-width: none;
+  }
+  .paper img {
+    height: clamp(22rem, 72svh, 44rem);
+    inset-block-end: 6svh;
+    inset-inline-end: max(-8rem, calc((100% - var(--wrap)) / 2 - 14rem));
+    opacity: .18;
+  }
+  .navy { z-index: -1; }
+  .navy img {
+    height: clamp(13rem, 34vw, 27rem);
+    inset-block-end: 1rem;
+    inset-inline-end: max(0rem, calc((100% - var(--wrap)) / 2 - 1rem));
+    opacity: .14;
+  }
+  @media (max-width: 640px) {
+    .paper img {
+      height: clamp(15rem, 42svh, 22rem);
+      inset-inline-end: -5rem;
+      opacity: .13;
+    }
+    .navy img { inset-inline-end: -2.5rem; opacity: .11; }
+  }
+</style>

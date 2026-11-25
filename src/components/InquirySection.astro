@@ -2,6 +2,7 @@
 // Dark band with the inquiry form and direct channels (home page and inquiry page).
 import InquiryForm from './InquiryForm.astro';
 import ContactChannels from './ContactChannels.astro';
+import CypressWatermark from './CypressWatermark.astro';
 import { useTranslations, type Lang } from '../i18n';
 
 interface Props {
@@ -13,6 +14,7 @@ const { lang, as: Heading = 'h2' } = Astro.props;
 const { dict } = useTranslations(lang);
 ---
 <section class="section dark" id="inquiry">
+  <CypressWatermark tone="navy" />
   <div class="wrap grid">
     <div>
       <Heading class="h2">{dict.inquiry.title}</Heading>
@@ -29,6 +31,7 @@ const { dict } = useTranslations(lang);
 </section>
 
 <style>
+  #inquiry { isolation: isolate; }
   .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
   .channels-title { font-size: 1.125rem; font-weight: 600; margin: 0 0 16px; }
   .native-error { display: none; margin: 0 0 16px; color: #FFB4A8; }
