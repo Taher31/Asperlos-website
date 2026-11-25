@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import cypress from '../assets/footer-cypress.webp';
+import CypressBranches from './CypressBranches.astro';
 
 interface Props {
   variant: 'footer' | 'masthead';
@@ -10,9 +9,7 @@ const { variant } = Astro.props;
 
 <div class:list={['cypress', variant]} data-cypress aria-hidden="true">
   {variant === 'masthead' && <div class="cypress-halo"></div>}
-  <div class="cypress-sway" data-cypress-sway>
-    <Image src={cypress} alt="" width={224} height={336} format="webp" loading={variant === 'footer' ? 'lazy' : 'eager'} decoding="async" />
-  </div>
+  <CypressBranches variant={variant} />
 </div>
 
 <script>
@@ -38,12 +35,12 @@ const { variant } = Astro.props;
     opacity: 0.24;
     pointer-events: none;
   }
-  .cypress-sway {
+  .cypress :global([data-cypress-artwork]) {
     position: relative;
-    transform-origin: 50% 95%;
-    transform: translateX(var(--sway-shift, 0px)) rotate(var(--sway-angle, 0deg));
+    display: block;
+    width: auto;
+    height: var(--cypress-height);
   }
-  .cypress img { width: auto; height: var(--cypress-height); transform-origin: 50% 95%; }
   .footer {
     --cypress-height: clamp(114px, 14vw, 177px);
   }
@@ -60,19 +57,19 @@ const { variant } = Astro.props;
   .masthead .cypress-halo { inset-inline: 14%; inset-block-end: 17px; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .cypress img {
-      animation: cypress-breeze 8.4s ease-in-out infinite;
+    .cypress :global([data-cypress-branch]) {
+      --branch-gust: calc(var(--cypress-gust, 0deg) * var(--branch-response));
+      transform-box: view-box;
+      transform-origin: var(--branch-x) var(--branch-y);
+      animation: cypress-breeze 8.4s ease-in-out var(--branch-phase) infinite;
       animation-play-state: paused;
     }
-    .cypress[data-cypress-visible] img { animation-play-state: running; }
+    .cypress[data-cypress-visible] :global([data-cypress-branch]) { animation-play-state: running; }
     @keyframes cypress-breeze {
-      0%, 100% { transform: skewX(-.55deg); }
-      28% { transform: skewX(1.8deg); }
-      49% { transform: skewX(.3deg); }
-      76% { transform: skewX(-1.45deg); }
+      0%, 100% { transform: rotate(calc(var(--branch-gust) - .25 * var(--branch-amplitude))); }
+      27% { transform: rotate(calc(var(--branch-gust) + var(--branch-amplitude))); }
+      49% { transform: rotate(calc(var(--branch-gust) + .16 * var(--branch-amplitude))); }
+      76% { transform: rotate(calc(var(--branch-gust) - .83 * var(--branch-amplitude))); }
     }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cypress-sway { transform: none; }
   }
 </style>

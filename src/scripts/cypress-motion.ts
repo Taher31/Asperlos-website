@@ -2,7 +2,7 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
 const maxAngle = 3.6;
 
-function animateCypress(area: HTMLElement, artwork: HTMLElement) {
+function animateCypress(area: HTMLElement, artwork: SVGSVGElement) {
   let inView = typeof IntersectionObserver === 'undefined';
   let previousMove: PointerEvent | undefined;
   let frame = 0;
@@ -17,8 +17,7 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
     gust = 0;
     angle = 0;
     speed = 0;
-    artwork.style.removeProperty('--sway-angle');
-    artwork.style.removeProperty('--sway-shift');
+    area.style.removeProperty('--cypress-gust');
   }
 
   function syncVisibility() {
@@ -45,8 +44,8 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
       return;
     }
 
-    artwork.style.setProperty('--sway-angle', angle.toFixed(3) + 'deg');
-    artwork.style.setProperty('--sway-shift', (angle * 1.25).toFixed(3) + 'px');
+    // Branches share the gust but respond at different strengths around their own pivots.
+    area.style.setProperty('--cypress-gust', angle.toFixed(3) + 'deg');
     frame = requestAnimationFrame(step);
   }
 
@@ -122,6 +121,6 @@ function animateCypress(area: HTMLElement, artwork: HTMLElement) {
 }
 
 for (const area of document.querySelectorAll<HTMLElement>('[data-cypress]')) {
-  const artwork = area.querySelector<HTMLElement>('[data-cypress-sway]');
+  const artwork = area.querySelector<SVGSVGElement>('[data-cypress-artwork]');
   if (artwork) animateCypress(area, artwork);
 }

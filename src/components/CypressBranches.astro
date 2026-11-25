@@ -1,0 +1,95 @@
+---
+import { getImage } from 'astro:assets';
+import cypress from '../assets/footer-cypress.webp';
+
+interface Props {
+  variant: 'footer' | 'masthead';
+}
+
+const { variant } = Astro.props;
+const texture = await getImage({ src: cypress, format: 'webp' });
+const prefix = `cypress-${variant}`;
+const textureId = `${prefix}-texture`;
+
+// The paths follow the leaf clusters in the texture's 224 × 336 coordinate space.
+// Adjacent paths overlap at their roots to keep the branches joined as they turn.
+const trunk = 'M102 80 C108 77 115 86 115 100 C113 120 115 131 118 149 C123 168 120 190 119 214 C119 237 123 262 126 284 L130 336 H89 L92 285 C97 271 96 253 99 233 C101 215 96 193 96 176 C95 159 93 147 97 132 C100 116 97 96 102 80Z';
+const branches = [
+  {
+    name: 'crown', anchor: [104, 101], amplitude: 2.1, response: .67, phase: -1.3,
+    path: 'M54 0 H170 V51 C146 54 130 56 121 59 C115 67 115 79 111 89 L107 105 L97 104 C94 88 83 87 55 84Z',
+  },
+  {
+    name: 'upper-right', anchor: [106, 123], amplitude: 2.0, response: .56, phase: -2.1,
+    path: 'M113 56 C128 54 149 51 170 54 V105 C147 99 138 100 131 105 C123 119 116 128 105 135 L98 129 C106 114 110 108 109 90 C111 76 109 67 113 56Z',
+  },
+  {
+    name: 'upper-left', anchor: [100, 146], amplitude: 2.4, response: .66, phase: -3.4,
+    path: 'M55 80 C74 82 89 78 104 74 C105 97 103 107 109 118 L112 152 L98 165 C93 154 88 139 80 123 L55 124Z',
+  },
+  {
+    name: 'shoulder-right', anchor: [102, 160], amplitude: 2.8, response: .78, phase: -2.8,
+    path: 'M110 126 C120 111 128 109 130 103 C145 94 166 94 171 96 V142 C144 145 140 141 130 148 C121 158 111 169 99 172 L94 161 C100 143 102 136 110 126Z',
+  },
+  {
+    name: 'shoulder-left', anchor: [99, 191], amplitude: 2.4, response: .72, phase: -4.1,
+    path: 'M55 120 C74 118 89 114 100 115 C99 133 98 142 107 153 C113 170 106 185 104 205 L89 208 C80 196 75 174 55 171Z',
+  },
+  {
+    name: 'middle-right', anchor: [111, 222], amplitude: 2.7, response: .82, phase: -4.8,
+    path: 'M112 149 C135 141 148 134 171 135 V194 C158 190 150 187 145 193 C128 215 126 229 109 239 L101 227 C110 207 110 180 112 149Z',
+  },
+  {
+    name: 'middle-left', anchor: [102, 239], amplitude: 2.5, response: .74, phase: -5.7,
+    path: 'M55 165 C78 162 92 166 106 161 C105 194 111 206 111 229 L112 265 L91 266 C85 247 75 224 54 220Z',
+  },
+  {
+    name: 'lower-right', anchor: [110, 260], amplitude: 2.3, response: .74, phase: -6.1,
+    path: 'M113 217 C125 198 140 188 154 186 L170 185 V229 C155 229 148 231 147 237 C130 250 124 251 111 275 L100 268 C110 249 104 237 113 217Z',
+  },
+  {
+    name: 'lower-left', anchor: [107, 279], amplitude: 1.9, response: .56, phase: -6.9,
+    path: 'M53 209 C69 207 78 208 89 209 C94 212 102 218 106 233 C108 248 114 263 117 278 L115 286 L87 289 L53 277Z',
+  },
+  {
+    name: 'base-right', anchor: [109, 281], amplitude: 1.5, response: .48, phase: -7.5,
+    path: 'M119 247 C133 243 142 226 154 220 L170 218 V279 L132 288 L113 293 L103 283 C110 271 110 261 119 247Z',
+  },
+];
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={`0 0 ${cypress.width} ${cypress.height}`}
+  width={cypress.width}
+  height={cypress.height}
+  data-cypress-artwork
+  focusable="false"
+  aria-hidden="true"
+>
+  <defs>
+    <image id={textureId} href={texture.src} width={cypress.width} height={cypress.height} />
+    <clipPath id={`${prefix}-trunk`}><path d={trunk} /></clipPath>
+    {branches.map(({ name, path }) => (
+      <clipPath id={`${prefix}-${name}`}><path d={path} /></clipPath>
+    ))}
+  </defs>
+  <g data-cypress-trunk clip-path={`url(#${prefix}-trunk)`}>
+    <use href={`#${textureId}`} />
+  </g>
+  {branches.map(({ name, anchor, amplitude, response, phase }) => (
+    <g
+      data-cypress-branch={name}
+      clip-path={`url(#${prefix}-${name})`}
+      style={{
+        '--branch-x': `${anchor[0]}px`,
+        '--branch-y': `${anchor[1]}px`,
+        '--branch-amplitude': `${amplitude}deg`,
+        '--branch-response': response,
+        '--branch-phase': `${phase}s`,
+      }}
+    >
+      <use href={`#${textureId}`} />
+    </g>
+  ))}
+</svg>
