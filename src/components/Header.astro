@@ -222,11 +222,12 @@ const languageHref = (l: Lang) => localizePath(l, localizedLanguages.includes(l)
     .panel-body { grid-template-columns: 1fr; align-items: start; }
   }
   @media (max-width: 640px) {
-    .bar { grid-template-columns: auto 1fr auto; }
+    .bar { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; }
     .brand { justify-self: center; }
     .brand span { display: none; }
     .brand img { height: 42px; }
-    .lang { gap: 10px; font-size: 0.8125rem; }
+    .lang { flex-wrap: wrap; gap: 2px clamp(4px, 2vw, 10px); font-size: 0.8125rem; }
+    .bar .menu-btn { min-width: 44px; min-height: 44px; justify-content: flex-end; }
     .menu-label { display: none; }
   }
 </style>
