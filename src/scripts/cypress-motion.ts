@@ -111,6 +111,8 @@ function animateCypress(area: HTMLElement, artwork: SVGSVGElement) {
 
   syncVisibility();
   document.addEventListener('visibilitychange', syncVisibility);
+  if (area.dataset.cypressWatermark) return;
+
   reducedMotion.addEventListener('change', motionPreferenceChanged);
   area.addEventListener('pointerdown', touchStart, { passive: true });
   area.addEventListener('pointerenter', handleMove, { passive: true });

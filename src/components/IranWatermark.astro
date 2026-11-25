@@ -1,0 +1,49 @@
+---
+import { geoMercator, geoPath } from 'd3-geo';
+import { feature } from 'topojson-client';
+import world from 'world-atlas/countries-110m.json';
+
+// Render the Natural Earth outline at build time.
+const width = 560;
+const height = 464;
+const geometry = world.objects.countries.geometries.find((country) => String(country.id) === '364')!;
+const iran = feature(world, geometry);
+const projection = geoMercator().fitExtent([[8, 8], [width - 8, height - 8]], iran);
+const outline = geoPath(projection).digits(1)(iran);
+---
+
+<svg data-iran-watermark viewBox={`0 0 ${width} ${height}`} width={width} height={height} aria-hidden="true" focusable="false">
+  <path d={outline} />
+</svg>
+
+<style>
+  svg {
+    position: absolute;
+    inset-block-start: clamp(6rem, 17svh, 11rem);
+    inset-inline-start: max(1.5rem, calc((100% - var(--wrap)) / 2 - 1rem));
+    width: clamp(25rem, 42vw, 37.5rem);
+    height: auto;
+    pointer-events: none;
+  }
+  path {
+    fill: rgb(32 32 32 / 4%);
+    stroke: rgb(32 32 32 / 15%);
+    stroke-width: 1.25;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  @media (max-width: 640px) {
+    svg {
+      inset-block-start: 14svh;
+      inset-inline-start: .75rem;
+      width: clamp(15rem, 69vw, 18rem);
+    }
+    path { stroke-opacity: .8; fill-opacity: .72; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    svg { animation: iran-watermark-drift 22s ease-in-out infinite alternate; }
+  }
+  @keyframes iran-watermark-drift {
+    to { transform: translate(4px, 6px); }
+  }
+</style>

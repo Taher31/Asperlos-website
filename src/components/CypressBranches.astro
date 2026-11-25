@@ -3,7 +3,7 @@ import { getImage } from 'astro:assets';
 import cypress from '../assets/footer-cypress.webp';
 
 interface Props {
-  variant: 'footer' | 'masthead';
+  variant: 'footer' | 'masthead' | 'paper-watermark' | 'navy-watermark';
 }
 
 const { variant } = Astro.props;
@@ -63,6 +63,7 @@ const branches = [
   viewBox={`0 0 ${cypress.width} ${cypress.height}`}
   width={cypress.width}
   height={cypress.height}
+  class:list={{ 'watermark-branches': variant.endsWith('-watermark'), 'paper-watermark': variant === 'paper-watermark' }}
   data-cypress-artwork
   focusable="false"
   aria-hidden="true"
@@ -93,3 +94,30 @@ const branches = [
     </g>
   ))}
 </svg>
+
+<script>
+  import '../scripts/cypress-motion';
+</script>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-cypress-branch] {
+      --branch-gust: calc(var(--cypress-gust, 0deg) * var(--branch-response));
+      transform-box: view-box;
+      transform-origin: var(--branch-x) var(--branch-y);
+      animation: cypress-breeze 8.4s ease-in-out var(--branch-phase) infinite paused;
+    }
+    :global([data-cypress-visible]) [data-cypress-branch] { animation-play-state: running; }
+    .watermark-branches [data-cypress-branch] {
+      animation-duration: 16.8s;
+      animation-delay: calc(var(--branch-phase) * 2);
+    }
+    .paper-watermark [data-cypress-branch] { animation-play-state: running; }
+    @keyframes cypress-breeze {
+      0%, 100% { transform: rotate(calc(var(--branch-gust) - .25 * var(--branch-amplitude))); }
+      27% { transform: rotate(calc(var(--branch-gust) + var(--branch-amplitude))); }
+      49% { transform: rotate(calc(var(--branch-gust) + .16 * var(--branch-amplitude))); }
+      76% { transform: rotate(calc(var(--branch-gust) - .83 * var(--branch-amplitude))); }
+    }
+  }
+</style>

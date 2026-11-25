@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import cypress from '../assets/footer-cypress.webp';
+import CypressBranches from './CypressBranches.astro';
 
 interface Props {
   tone: 'paper' | 'navy';
@@ -8,8 +7,10 @@ interface Props {
 const { tone } = Astro.props;
 ---
 
-<div class:list={['cypress-watermark', tone]} data-cypress-watermark={tone} aria-hidden="true">
-  <Image src={cypress} alt="" format="webp" loading={tone === 'paper' ? 'eager' : 'lazy'} decoding="async" />
+<div class:list={['cypress-watermark', tone]} data-cypress-watermark={tone} data-cypress={tone === 'navy' || undefined} aria-hidden="true">
+  <div class="tree">
+    <CypressBranches variant={`${tone}-watermark`} />
+  </div>
 </div>
 
 <style>
@@ -19,30 +20,36 @@ const { tone } = Astro.props;
     overflow: hidden;
     pointer-events: none;
   }
-  img {
+  .tree {
     position: absolute;
-    width: auto;
+    aspect-ratio: 2 / 3;
+    filter: grayscale(1);
+  }
+  .tree :global([data-cypress-artwork]) {
+    display: block;
+    width: 100%;
+    height: 100%;
     max-width: none;
   }
-  .paper img {
+  .paper .tree {
     height: clamp(22rem, 72svh, 44rem);
     inset-block-end: 6svh;
     inset-inline-end: max(-8rem, calc((100% - var(--wrap)) / 2 - 14rem));
-    opacity: .18;
+    opacity: .16;
   }
   .navy { z-index: -1; }
-  .navy img {
+  .navy .tree {
     height: clamp(13rem, 34vw, 27rem);
     inset-block-end: 1rem;
     inset-inline-end: max(0rem, calc((100% - var(--wrap)) / 2 - 1rem));
     opacity: .14;
   }
   @media (max-width: 640px) {
-    .paper img {
+    .paper .tree {
       height: clamp(15rem, 42svh, 22rem);
       inset-inline-end: -5rem;
-      opacity: .13;
+      opacity: .12;
     }
-    .navy img { inset-inline-end: -2.5rem; opacity: .11; }
+    .navy .tree { inset-inline-end: -2.5rem; opacity: .11; }
   }
 </style>
