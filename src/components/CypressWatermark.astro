@@ -32,10 +32,13 @@ const { tone } = Astro.props;
     max-width: none;
   }
   .paper .tree {
-    height: clamp(22rem, 72svh, 44rem);
-    inset-block-end: 6svh;
-    inset-inline-end: max(-8rem, calc((100% - var(--wrap)) / 2 - 14rem));
-    opacity: .16;
+    --tree-height: clamp(18rem, 52svh, 33rem);
+    height: var(--tree-height);
+    inset-block-end: -1.5rem;
+    inset-inline-end: max(1.75rem, calc((100% - var(--wrap)) / 4 + 1.75rem));
+    margin-inline-end: calc(var(--tree-height) / -3);
+    filter: grayscale(1) sepia(.35);
+    opacity: .29;
   }
   .navy { z-index: -1; }
   .navy .tree {
@@ -46,9 +49,10 @@ const { tone } = Astro.props;
   }
   @media (max-width: 640px) {
     .paper .tree {
-      height: clamp(15rem, 42svh, 22rem);
-      inset-inline-end: -5rem;
-      opacity: .12;
+      --tree-height: clamp(11rem, 32svh, 17rem);
+      inset-block-end: 2.5rem;
+      inset-inline-end: 1.25rem;
+      opacity: .22;
     }
     .navy .tree { inset-inline-end: -2.5rem; opacity: .11; }
   }

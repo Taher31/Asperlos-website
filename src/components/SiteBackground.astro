@@ -1,0 +1,57 @@
+---
+import CypressWatermark from './CypressWatermark.astro';
+import IranWatermark from './IranWatermark.astro';
+---
+
+<div class="sheet" data-site-background aria-hidden="true">
+  <div class="motifs">
+    <IranWatermark />
+    <CypressWatermark tone="paper" />
+  </div>
+</div>
+
+<style>
+  .sheet {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background-color: var(--paper);
+    background-image: radial-gradient(ellipse 77% 115% at 50% 34%, var(--card) 20%, var(--paper) 74%, var(--sand) 100%);
+  }
+  .motifs {
+    position: absolute;
+    inset: 0;
+    /* Keep the print visible in the margins and soften it as it enters the text column. */
+    --margin: max(0px, calc((100% - var(--wrap)) / 2));
+    --text-edge: calc(var(--margin) + var(--gutter));
+    mask-image: linear-gradient(to right,
+      black 0%, rgb(0 0 0 / .85) var(--margin), rgb(0 0 0 / .22) var(--text-edge), transparent calc(var(--text-edge) + 9rem),
+      transparent calc(100% - var(--text-edge) - 9rem), rgb(0 0 0 / .22) calc(100% - var(--text-edge)),
+      rgb(0 0 0 / .85) calc(100% - var(--margin)), black 100%);
+  }
+  .motifs::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: clamp(-5.5rem, -4vw, -1rem);
+    inset-block-start: 12%;
+    height: clamp(22rem, 69svh, 43rem);
+    aspect-ratio: 2 / 3;
+    background: url('../assets/khataei-margin.webp') center / contain no-repeat;
+    opacity: .47;
+    mix-blend-mode: multiply;
+  }
+  :global([dir="rtl"]) .motifs::before { transform: scaleX(-1); }
+  @media (max-width: 640px) {
+    .motifs::before {
+      height: clamp(12rem, 33svh, 17rem);
+      inset-inline-start: -2.5rem;
+      inset-block-start: 18%;
+      opacity: .34;
+    }
+  }
+  @media print, (forced-colors: active) {
+    .sheet { display: none; }
+  }
+</style>
