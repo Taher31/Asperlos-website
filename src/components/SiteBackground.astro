@@ -42,7 +42,19 @@ import IranWatermark from './IranWatermark.astro';
     opacity: .47;
     mix-blend-mode: multiply;
   }
-  :global([dir="rtl"]) .motifs::before { transform: scaleX(-1); }
+  :global([dir="rtl"]) .motifs::before { scale: -1 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .motifs::before {
+      transform-origin: 50% 95%;
+      animation: khataei-breeze 14s ease-in-out -2s infinite;
+    }
+    @keyframes khataei-breeze {
+      0%, 100% { transform: skewX(-.45deg); }
+      32% { transform: skewX(.85deg); }
+      57% { transform: skewX(.12deg); }
+      72% { transform: skewX(.32deg); }
+    }
+  }
   @media (max-width: 640px) {
     .motifs::before {
       height: clamp(12rem, 33svh, 17rem);
